@@ -12,3 +12,7 @@
     }
   ]
 }
+
+// https://code.visualstudio.com/docs/editor/tasks#_operating-system-specific-properties
+// https://code.visualstudio.com/docs/editor/tasks#_background-watching-tasks
+// https://code.visualstudio.com/docs/editor/tasks#_can-a-background-task-be-used-as-a-prelaunchtask-in-launchjson

@@ -1,17 +1,20 @@
 {
+  "extends": "./paths.json",
   "compilerOptions": {
     "target": "ESNext",
     "module": "ESNext",
-    "moduleResolution": "node",
-    "importHelpers": true,
-    "jsx": "preserve",
+    "allowJs": true,
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
     "esModuleInterop": true,
+    "moduleResolution": "Node",
     "resolveJsonModule": true,
-    "sourceMap": true,
-    "baseUrl": "./",
     "strict": true,
-    "paths": {},
-    "allowSyntheticDefaultImports": true,
-    "skipLibCheck": true
-  }
+    "jsx": "react-jsx"
+  },
+  "exclude": [
+    "./dist/**/*",
+    "./scripts/*",
+    "*electron-builder.js"
+  ]
 }
