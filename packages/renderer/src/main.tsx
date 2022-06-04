@@ -7,7 +7,10 @@ import 'virtual:windi.css';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <GeistProvider>
+      {/* <CssBaseline /> */}
+      <App />
+    </GeistProvider>
   </React.StrictMode>,
   document.getElementById('root'),
 );
