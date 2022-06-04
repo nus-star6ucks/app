@@ -3,7 +3,8 @@ import { builtinModules } from 'module'
 import { defineConfig, Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
 import optimizer from 'vite-plugin-optimizer'
-import pkg from '../../package.json'
+import WindiCSS from 'vite-plugin-windicss';
+import pkg from '../../package.json';
 
 /**
  * @see https://vitejs.dev/config/
@@ -12,6 +13,7 @@ export default defineConfig({
   mode: process.env.NODE_ENV,
   root: __dirname,
   plugins: [
+    WindiCSS(),
     react(),
     resolveElectron(
       /**
@@ -23,13 +25,13 @@ export default defineConfig({
        *   'electron-store': 'const Store = require("electron-store"); export default Store;',
        * }
        */
-      
+
       {
         'electron-store': 'const Store = require("electron-store"); export default Store;',
-      }
+      },
     ),
   ],
-  base: process.env.GHPAGES==="TRUE" ?'/Vitron/':'./',
+  base: process.env.GHPAGES === 'TRUE' ? '/Vitron/' : './',
   build: {
     sourcemap: true,
     outDir: '../../dist/renderer',
@@ -43,7 +45,7 @@ export default defineConfig({
     host: pkg.env.VITE_DEV_SERVER_HOST,
     port: pkg.env.VITE_DEV_SERVER_PORT,
   },
-})
+});
 
 /**
  * For usage of Electron and NodeJS APIs in the Renderer process

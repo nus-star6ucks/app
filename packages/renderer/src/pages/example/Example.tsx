@@ -7,14 +7,12 @@ import logoTitle from '@/assets/logotitle.svg';
 import typescript from '@/assets/typescript.svg';
 import immer from '@/assets/immer.svg';
 import reactRouter from '@/assets/reactrouter.svg';
-import styles from '@/styles/app.module.scss';
 import pkg from '../../../../../package.json';
 import { useState, useEffect } from 'react';
 import { Avatar, Button, Paper, Typography, Box, Chip } from '@mui/material';
 import { useStore } from '../../store/useStore';
 import { Link as RouterLink } from 'react-router-dom';
 import { InfoOutlined, Brightness4, Brightness7 } from '@mui/icons-material';
-import HomeTour from '@/docs/HomeTour';
 
 const ipcRenderer = window.ipcRenderer || false;
 
@@ -98,143 +96,184 @@ const Example = () => {
   }, []);
 
   return (
-    <Box
-      sx={{
-        bgcolor: 'background.default',
-        color: 'text.primary',
-        overflowX: 'hidden',
-      }}
-      className={styles.app}>
-      <header
-        className={styles.appHeader}
-        style={{
-          minHeight:
-            ipcRenderer && pkg.env.VITRON_CUSTOM_TITLEBAR
-              ? 'calc(100vh - 30px)'
-              : '100vh',
-        }}>
-        <div className={styles.logos}>
-          <div className={styles.imgBox}>
-            <img src={logoTitle} style={{ width: '480px', filter: darkMode ? 'invert(0)' : 'invert(1)' }} alt='Vitron' />
-          </div>
-        </div>
+      <Box
+          sx={{
+              bgcolor: "background.default",
+              color: "text.primary",
+              overflowX: "hidden",
+          }}
+      >
+          <header
+              style={{
+                  minHeight:
+                      ipcRenderer && pkg.env.VITRON_CUSTOM_TITLEBAR
+                          ? "calc(100vh - 30px)"
+                          : "100vh",
+              }}
+          >
+              <div>
+                  <div>
+                      <img
+                          src={logoTitle}
+                          style={{
+                              width: "480px",
+                              filter: darkMode ? "invert(0)" : "invert(1)",
+                          }}
+                          alt="Vitron"
+                      />
+                  </div>
+              </div>
 
-        <Box sx={{ mb: 5, mt: 2.5, maxWidth: 500 }}>
-          {ipcRenderer && (
-            <Chip
-              avatar={<Avatar alt='Electron' src={electronImg} />}
-              label='Electron'
-            />
-          )}
-          <Chip avatar={<Avatar alt='Vite' src={vite} />} label='Vite' />
-          <Chip avatar={<Avatar alt='React' src={react} />} label='React' />
-          <Chip
-            avatar={<Avatar alt='Typescript' src={typescript} />}
-            label='Typescript'
-          />
-          <Chip
-            avatar={<Avatar alt='Material UI' src={muiImg} />}
-            label='Material UI'
-          />
-          <Chip
-            avatar={<Avatar alt='Zustand' src={zustand} />}
-            label='Zustand'
-          />
-          <Chip avatar={<Avatar alt='Immer' src={immer} />} label='Immer' />
-          <Chip
-            avatar={<Avatar alt='React Router' src={reactRouter} />}
-            label='React Router'
-          />
-        </Box>
+              <Box sx={{ mb: 5, mt: 2.5, maxWidth: 500 }}>
+                  {ipcRenderer && (
+                      <Chip
+                          avatar={<Avatar alt="Electron" src={electronImg} />}
+                          label="Electron"
+                      />
+                  )}
+                  <Chip
+                      avatar={<Avatar alt="Vite" src={vite} />}
+                      label="Vite"
+                  />
+                  <Chip
+                      avatar={<Avatar alt="React" src={react} />}
+                      label="React"
+                  />
+                  <Chip
+                      avatar={<Avatar alt="Typescript" src={typescript} />}
+                      label="Typescript"
+                  />
+                  <Chip
+                      avatar={<Avatar alt="Material UI" src={muiImg} />}
+                      label="Material UI"
+                  />
+                  <Chip
+                      avatar={<Avatar alt="Zustand" src={zustand} />}
+                      label="Zustand"
+                  />
+                  <Chip
+                      avatar={<Avatar alt="Immer" src={immer} />}
+                      label="Immer"
+                  />
+                  <Chip
+                      avatar={<Avatar alt="React Router" src={reactRouter} />}
+                      label="React Router"
+                  />
+              </Box>
 
-        {ipcRenderer && (
-          <Paper elevation={3} sx={{ p: 2, m: 1, minWidth: 480 }}>
-            <Button
-              variant='outlined'
-              size={'small'}
-              sx={{ mr: 1, width: '250px', whiteSpace: 'nowrap' }}>
-              Electron Store: {data}
-            </Button>
-            <Button sx={{ width: 100 }} onClick={() => setCount(data)}>
-              Get
-            </Button>{' '}
-            <Button sx={{ width: 100 }} onClick={() => onClickSetStore()}>
-              Set
-            </Button>
-          </Paper>
-        )}
+              {ipcRenderer && (
+                  <Paper elevation={3} sx={{ p: 2, m: 1, minWidth: 480 }}>
+                      <Button
+                          variant="outlined"
+                          size={"small"}
+                          sx={{ mr: 1, width: "250px", whiteSpace: "nowrap" }}
+                      >
+                          Electron Store: {data}
+                      </Button>
+                      <Button
+                          sx={{ width: 100 }}
+                          onClick={() => setCount(data)}
+                      >
+                          Get
+                      </Button>{" "}
+                      <Button
+                          sx={{ width: 100 }}
+                          onClick={() => onClickSetStore()}
+                      >
+                          Set
+                      </Button>
+                  </Paper>
+              )}
 
-        <Paper elevation={3} sx={{ p: 2, m: 1, minWidth: 480 }}>
-          <Button
-            variant='outlined'
-            sx={{ mr: 1, width: '250px', whiteSpace: 'nowrap' }}>
-            React useState: {count}
-          </Button>
-          <Button
-            sx={{ width: 100 }}
-            onClick={() => setCount((count: number) => count - 1)}>
-            - 1
-          </Button>{' '}
-          <Button
-            sx={{ width: 100 }}
-            onClick={() => setCount((count: number) => count + 1)}>
-            + 1
-          </Button>
-        </Paper>
+              <Paper elevation={3} sx={{ p: 2, m: 1, minWidth: 480 }}>
+                  <Button
+                      variant="outlined"
+                      sx={{ mr: 1, width: "250px", whiteSpace: "nowrap" }}
+                  >
+                      React useState: {count}
+                  </Button>
+                  <Button
+                      sx={{ width: 100 }}
+                      onClick={() => setCount((count: number) => count - 1)}
+                  >
+                      - 1
+                  </Button>{" "}
+                  <Button
+                      sx={{ width: 100 }}
+                      onClick={() => setCount((count: number) => count + 1)}
+                  >
+                      + 1
+                  </Button>
+              </Paper>
 
-        <Paper elevation={3} sx={{ p: 2, m: 1, minWidth: 480 }}>
-          <Button
-            variant='outlined'            
-            sx={{ mr: 1, fontSize: 17, width: '250px', whiteSpace: 'nowrap' }}>
-            Zustand: {bears}
-          </Button>
-          <Button sx={{ width: 100 }} onClick={() => increase(-1)}>
-            - 1
-          </Button>{' '}
-          <Button sx={{ width: 100 }} onClick={() => increase(1)}>
-            + 1
-          </Button>
-        </Paper>       
+              <Paper elevation={3} sx={{ p: 2, m: 1, minWidth: 480 }}>
+                  <Button
+                      variant="outlined"
+                      sx={{
+                          mr: 1,
+                          fontSize: 17,
+                          width: "250px",
+                          whiteSpace: "nowrap",
+                      }}
+                  >
+                      Zustand: {bears}
+                  </Button>
+                  <Button sx={{ width: 100 }} onClick={() => increase(-1)}>
+                      - 1
+                  </Button>{" "}
+                  <Button sx={{ width: 100 }} onClick={() => increase(1)}>
+                      + 1
+                  </Button>
+              </Paper>
 
-        {ipcRenderer && (
-          <Paper elevation={3} sx={{ p: 2, m: 1, minWidth: 480 }}>
-            <Button
-              variant='outlined'
-              sx={{ mr: 1, width: '250px', whiteSpace: 'nowrap' }}>
-              IPC messaging
-            </Button>
-            <Button sx={{ width: 100 }} onClick={onClickWithIpc}>
-              async
-            </Button>{' '}
-            <Button sx={{ width: 100 }} onClick={onClickWithIpcSync}>
-              sync
-            </Button>
-          </Paper>
-        )}
-        
-        <Paper elevation={3} sx={{ p: 2, m: 1, minWidth: 480 }}>
-          <Button
-            variant='outlined'
-            sx={{ mr: 1, width: '250px', whiteSpace: 'nowrap' }}>
-            Extras
-          </Button>
-          <Button size={'large'} sx={{ width: 60 }} onClick={toggleDarkmode}>
-            {darkMode ? <Brightness7 /> : <Brightness4 />}
-          </Button>{' '}
-          <Button size={'large'} sx={{ width: 60 }} component={RouterLink} to={"info"}>
-            <InfoOutlined />
-          </Button>{' '}
-          {pkg.env.VITRON_TOURS && <HomeTour sx={{ width: 60 }} />}
-        </Paper>
+              {ipcRenderer && (
+                  <Paper elevation={3} sx={{ p: 2, m: 1, minWidth: 480 }}>
+                      <Button
+                          variant="outlined"
+                          sx={{ mr: 1, width: "250px", whiteSpace: "nowrap" }}
+                      >
+                          IPC messaging
+                      </Button>
+                      <Button sx={{ width: 100 }} onClick={onClickWithIpc}>
+                          async
+                      </Button>{" "}
+                      <Button sx={{ width: 100 }} onClick={onClickWithIpcSync}>
+                          sync
+                      </Button>
+                  </Paper>
+              )}
 
-        {ipcRenderer && (
-          <Paper elevation={1} sx={{ p: 2, m: 1, minWidth: 480 }}>
-            <Typography color={'textSecondary'}>{message}</Typography>
-          </Paper>
-        )}
-        
-      </header>
-    </Box>
+              <Paper elevation={3} sx={{ p: 2, m: 1, minWidth: 480 }}>
+                  <Button
+                      variant="outlined"
+                      sx={{ mr: 1, width: "250px", whiteSpace: "nowrap" }}
+                  >
+                      Extras
+                  </Button>
+                  <Button
+                      size={"large"}
+                      sx={{ width: 60 }}
+                      onClick={toggleDarkmode}
+                  >
+                      {darkMode ? <Brightness7 /> : <Brightness4 />}
+                  </Button>{" "}
+                  <Button
+                      size={"large"}
+                      sx={{ width: 60 }}
+                      component={RouterLink}
+                      to={"info"}
+                  >
+                      <InfoOutlined />
+                  </Button>{" "}
+              </Paper>
+
+              {ipcRenderer && (
+                  <Paper elevation={1} sx={{ p: 2, m: 1, minWidth: 480 }}>
+                     <p className='text-center'>{message}</p>
+                  </Paper>
+              )}
+          </header>
+      </Box>
   );
 };
 

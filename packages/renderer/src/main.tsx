@@ -1,26 +1,21 @@
-import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client'
-import { ThemeProvider  } from '@mui/material/styles';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { GeistProvider, CssBaseline } from '@geist-ui/core';
 import App from './App';
-import './styles/index.css';
-import theme from './styles/theme';
 
-const root = createRoot(document.getElementById('root')!)
+import 'virtual:windi.css';
 
-root.render(
-  <StrictMode>
-    <ThemeProvider theme={theme}>
-      <App />
-    </ThemeProvider>
-  </StrictMode>
+ReactDOM.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+  document.getElementById('root'),
 );
 
-window.removeLoading && window.removeLoading()
-
-// console.log('fs', window.fs);
-// console.log('ipcRenderer', window.ipcRenderer);
+window.removeLoading && window.removeLoading();
 
 // Usage of ipcRenderer.on
-window.ipcRenderer && window.ipcRenderer.on('main-process-message', (_event, ...args) => {
-  console.log('[Receive Main-process message]:', ...args);
-});
+window.ipcRenderer &&
+  window.ipcRenderer.on('main-process-message', (_event, ...args) => {
+    console.log('[Receive Main-process message]:', ...args);
+  });
