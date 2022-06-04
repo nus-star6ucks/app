@@ -147,20 +147,3 @@ ipcMain.on('ping-pong', async (event, arg) => {
 ipcMain.on('ping-pong-sync', (event, arg) => {
   event.returnValue = `[ipcMain] "${arg}" received synchronously.`;
 });
-
-ipcMain.on('get-darkmode', (event) => {
-  event.returnValue = nativeTheme.shouldUseDarkColors ? 'yes' : 'no';
-});
-ipcMain.on('toggle-darkmode', (event) => {
-  const res =
-    nativeTheme.themeSource === 'system'
-      ? nativeTheme.shouldUseDarkColors
-        ? 'light'
-        : 'dark'
-      : nativeTheme.themeSource === 'dark'
-      ? 'light'
-      : 'dark';
-  event.returnValue = res === 'dark';
-  nativeTheme.themeSource = res;
-  if (pkg.env.STAR6UCKS_CUSTOM_TITLEBAR) win?.reload();
-});
