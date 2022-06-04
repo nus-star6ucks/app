@@ -31,7 +31,7 @@ export default defineConfig({
       },
     ),
   ],
-  base: process.env.GHPAGES === 'TRUE' ? '/Vitron/' : './',
+  base: process.env.GHPAGES === 'TRUE' ? '/Star6ucks/' : './',
   build: {
     sourcemap: true,
     outDir: '../../dist/renderer',

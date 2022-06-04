@@ -73,7 +73,7 @@ const Example = () => {
     >
       <header
         style={{
-          minHeight: ipcRenderer && pkg.env.VITRON_CUSTOM_TITLEBAR ? 'calc(100vh - 30px)' : '100vh',
+          minHeight: ipcRenderer && pkg.env.STAR6UCKS_CUSTOM_TITLEBAR ? 'calc(100vh - 30px)' : '100vh',
         }}
       >
         <div></div>

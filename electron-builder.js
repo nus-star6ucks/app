@@ -2,23 +2,23 @@
  * @see https://www.electron.build/configuration/configuration
  */
 module.exports = {
-  appId: "Vitron",
-  productName: "Vitron",
-  copyright: "Copyright © 2022 ${author}",
+  appId: 'Star6ucks',
+  productName: 'Star6ucks',
+  copyright: 'Copyright © 2022 ${author}',
   asar: true,
   directories: {
-    output: "release/${version}",
-    buildResources: "resources",
+    output: 'release/${version}',
+    buildResources: 'resources',
   },
-  files: ["dist"],
+  files: ['dist'],
   win: {
     target: [
       {
-        target: "nsis",
-        arch: ["x64"],
+        target: 'nsis',
+        arch: ['x64'],
       },
     ],
-    artifactName: "${productName}-${version}-Setup.${ext}",
+    artifactName: '${productName}-${version}-Setup.${ext}',
   },
   nsis: {
     oneClick: false,
@@ -27,11 +27,11 @@ module.exports = {
     deleteAppDataOnUninstall: false,
   },
   mac: {
-    target: ["dmg"],
-    artifactName: "${productName}-${version}-Installer.${ext}",
+    target: ['dmg'],
+    artifactName: '${productName}-${version}-Installer.${ext}',
   },
   linux: {
-    target: ["AppImage"],
-    artifactName: "${productName}-${version}-Installer.${ext}",
+    target: ['AppImage'],
+    artifactName: '${productName}-${version}-Installer.${ext}',
   },
-}
+};

@@ -15,7 +15,7 @@ const { appendLoading, removeLoading } = useLoading();
 
 window.addEventListener('DOMContentLoaded', () => {
   // Title bar implemenation
-  if (pkg.env.VITRON_CUSTOM_TITLEBAR) {
+  if (pkg.env.STAR6UCKS_CUSTOM_TITLEBAR) {
     new Titlebar({
       backgroundColor: Color.fromHex('#eeeeee'),
     });

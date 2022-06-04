@@ -1,13 +1,9 @@
 {
-  "name": "vitron",
-  "productName": "Vitron",
+  "name": "app",
   "private": true,
-  "version": "0.0.7",
-  "description": "Supercharged Starter",
-  "author": "Yeon a.k.a Blade <dev@yeonv.com>",
-  "repository": {
-    "url": "https://github.com/YeonV/vitron"
-  },
+  "version": "1.0.0",
+  "description": "Team 04 of NUS ISS MTech SE Bridge Program Project",
+  "author": "Star6ucks <foo@bar.baz>",
   "license": "MIT",
   "main": "dist/main/index.cjs",
   "scripts": {
@@ -21,13 +17,10 @@
   },
   "dependencies": {
     "@geist-ui/core": "^2.3.8",
-    "@mui/icons-material": "^5.8.0",
-    "@mui/material": "^5.8.1",
     "custom-electron-titlebar": "^4.1.0",
     "electron-devtools-installer": "^3.2.0",
     "electron-store": "^8.0.1",
     "hox": "^1.1.6",
-    "immer": "^9.0.14",
     "react": "^17.x",
     "react-dom": "^17.x",
     "react-router-dom": "6",
@@ -53,9 +46,9 @@
   "env": {
     "VITE_DEV_SERVER_HOST": "127.0.0.1",
     "VITE_DEV_SERVER_PORT": 3000,
-    "VITRON_TOURS": true,
-    "VITRON_PRIMARY_COLOR": "default",
-    "VITRON_CUSTOM_TITLEBAR": true,
-    "VITRON_SAVE_WINDOWSIZE": true
+    "STAR6UCKS_TOURS": true,
+    "STAR6UCKS_PRIMARY_COLOR": "default",
+    "STAR6UCKS_CUSTOM_TITLEBAR": true,
+    "STAR6UCKS_SAVE_WINDOWSIZE": true
   }
 }

@@ -31,16 +31,16 @@ if (!app.requestSingleInstanceLock()) {
 let win: BrowserWindow | null = null;
 
 const store = new Store();
-if (pkg.env.VITRON_CUSTOM_TITLEBAR) setupTitlebar();
+if (pkg.env.STAR6UCKS_CUSTOM_TITLEBAR) setupTitlebar();
 
 async function createWindow() {
-  let windowState: any = await store.get("windowState")
-  if (!pkg.env.VITRON_SAVE_WINDOWSIZE) windowState = null
+  let windowState: any = await store.get('windowState');
+  if (!pkg.env.STAR6UCKS_SAVE_WINDOWSIZE) windowState = null;
   win = new BrowserWindow({
-    title: 'Vitron',
+    title: 'Star6ucks',
     show: false,
-    autoHideMenuBar: pkg.env.VITRON_CUSTOM_TITLEBAR,
-    titleBarStyle: pkg.env.VITRON_CUSTOM_TITLEBAR ? "hidden" : "default",
+    autoHideMenuBar: pkg.env.STAR6UCKS_CUSTOM_TITLEBAR,
+    titleBarStyle: pkg.env.STAR6UCKS_CUSTOM_TITLEBAR ? 'hidden' : 'default',
     x: windowState?.x || 0,
     y: windowState?.y || 0,
     width: windowState?.width || 600,
@@ -57,7 +57,7 @@ async function createWindow() {
     const url = `http://${process.env['VITE_DEV_SERVER_HOST']}:${process.env['VITE_DEV_SERVER_PORT']}`;
 
     win.loadURL(url);
-    if (!app.isPackaged) win.webContents.openDevTools({mode: 'detach'});
+    if (!app.isPackaged) win.webContents.openDevTools({ mode: 'detach' });
   }
 
   // Test active push message to Renderer-process
@@ -72,25 +72,25 @@ async function createWindow() {
   });
 
   win.on('close', () => {
-    const windowState = win?.getBounds()
-    if (pkg.env.VITRON_SAVE_WINDOWSIZE) store.set("windowState", windowState);
+    const windowState = win?.getBounds();
+    if (pkg.env.STAR6UCKS_SAVE_WINDOWSIZE) store.set('windowState', windowState);
   });
 
   win.once('ready-to-show', () => {
     win?.show();
   });
 
-  if (pkg.env.VITRON_CUSTOM_TITLEBAR) attachTitlebarToWindow(win);
+  if (pkg.env.STAR6UCKS_CUSTOM_TITLEBAR) attachTitlebarToWindow(win);
 }
 
-const NOTIFICATION_TITLE = 'Vitron - by Blade'
-const NOTIFICATION_BODY = 'Testing Notification from the Main process'
+const NOTIFICATION_TITLE = 'Star6ucks - by Blade';
+const NOTIFICATION_BODY = 'Testing Notification from the Main process';
 
 function showNotification() {
-    new Notification({ title: NOTIFICATION_TITLE, body: NOTIFICATION_BODY }).show()
+  new Notification({ title: NOTIFICATION_TITLE, body: NOTIFICATION_BODY }).show();
 }
 
-let tray = null as any
+let tray = null as any;
 
 app
   .whenReady()
@@ -148,12 +148,19 @@ ipcMain.on('ping-pong-sync', (event, arg) => {
   event.returnValue = `[ipcMain] "${arg}" received synchronously.`;
 });
 
-ipcMain.on('get-darkmode', (event) => {  
-  event.returnValue = nativeTheme.shouldUseDarkColors ? "yes" : "no";
+ipcMain.on('get-darkmode', (event) => {
+  event.returnValue = nativeTheme.shouldUseDarkColors ? 'yes' : 'no';
 });
 ipcMain.on('toggle-darkmode', (event) => {
-  const res = nativeTheme.themeSource === 'system' ? (nativeTheme.shouldUseDarkColors ?  'light' : 'dark'): nativeTheme.themeSource === 'dark' ? 'light' : 'dark'; 
-  event.returnValue = res === 'dark'
-  nativeTheme.themeSource =  res
-  if (pkg.env.VITRON_CUSTOM_TITLEBAR) win?.reload();
+  const res =
+    nativeTheme.themeSource === 'system'
+      ? nativeTheme.shouldUseDarkColors
+        ? 'light'
+        : 'dark'
+      : nativeTheme.themeSource === 'dark'
+      ? 'light'
+      : 'dark';
+  event.returnValue = res === 'dark';
+  nativeTheme.themeSource = res;
+  if (pkg.env.STAR6UCKS_CUSTOM_TITLEBAR) win?.reload();
 });
