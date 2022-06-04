@@ -92,37 +92,22 @@ function showNotification() {
 
 let tray = null as any
 
-app.whenReady().then(createWindow).then(async () => {
-  if (!app.isPackaged) {
-    await installExtension([REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS], { loadExtensionOptions: { allowFileAccess: true }, forceDownload: false })
-        .then((name:any) => console.log(`Added Extension:  ${name}`))
-        .catch((error:any) => console.log(`An error occurred: , ${error}`));
-  }
-  if (pkg.env.VITRON_TRAY && tray === null) {
-    const icon = join(__dirname, '../../resources/icon.png')
-    tray = new Tray(icon)
-
-    const contextMenu = Menu.buildFromTemplate([
-      { label: 'Show', click: () => win?.show() },
-      { label: 'Minimize', click: () => win?.minimize() },
-      { label: 'Minimize to tray', click: () => win?.hide() },
-      { label: 'Test Notifiation', click: () => showNotification() },
-      { label: 'seperator', type: 'separator' },
-      { label: 'Dev', click: () => win?.webContents.openDevTools() },
-      { label: 'seperator', type: 'separator' },
-      { label: 'Restart Vitron', click: () => { app.relaunch(); app.exit() }},
-      { label: 'seperator', type: 'separator' },
-      { label: 'Exit', click: () => app.quit() }
-    ])
-    tray.setToolTip('Vitron by Blade')
-    tray.setContextMenu(contextMenu)
-    tray.setIgnoreDoubleClickEvents(true)
-    tray.on('click', () => win?.show())
-  }
-});
+app
+  .whenReady()
+  .then(createWindow)
+  .then(async () => {
+    if (!app.isPackaged) {
+      await installExtension([REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS], {
+        loadExtensionOptions: { allowFileAccess: true },
+        forceDownload: false,
+      })
+        .then((name: any) => console.log(`Added Extension:  ${name}`))
+        .catch((error: any) => console.log(`An error occurred: , ${error}`));
+    }
+  });
 
 app.on('window-all-closed', () => {
-  win = null;      
+  win = null;
   if (tray !== null) tray.destroy();
   if (process.platform !== 'darwin') app.quit();
 });
@@ -149,6 +134,7 @@ ipcMain.on('set', async (event, arg) => {
   await store.set(arg[0], arg[1]);
   event.sender.send('ping-pong', `[ipcMain] "${arg}" received asynchronously.`);
 });
+
 ipcMain.on('get', async (event, arg) => {
   const res: any = await store.get(arg);
   event.sender.send('get', res);

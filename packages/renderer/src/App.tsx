@@ -1,5 +1,3 @@
-import { useMemo, useState } from 'react';
-import Example from './pages/Example';
 import { HashRouter, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 
