@@ -11,9 +11,4 @@ class DemoApplicationTests {
 	void contextLoads() {
 	}
 
-	@Test
-	void shouldNotPass() {
-		Assertions.assertEquals(0, 1);
-	}
-
 }
