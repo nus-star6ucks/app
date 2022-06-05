@@ -1,4 +1,4 @@
-package com.star6ucks.demo.model;
+package com.star6ucks.api.model;
 
 public class Item {
 	

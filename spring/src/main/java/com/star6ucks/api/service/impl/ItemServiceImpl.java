@@ -1,12 +1,12 @@
-package com.star6ucks.demo.service.impl;
+package com.star6ucks.api.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.star6ucks.demo.model.Item;
-import com.star6ucks.demo.service.ItemService;
+import com.star6ucks.api.model.Item;
+import com.star6ucks.api.service.ItemService;
 
 @Service("itemService")
 public class ItemServiceImpl implements ItemService {

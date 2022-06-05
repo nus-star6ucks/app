@@ -86,4 +86,6 @@ dist
 release
 .DS_Store
 dist-ssr
-*.local
+*.
+
+libraries/
