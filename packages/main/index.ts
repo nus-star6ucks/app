@@ -4,18 +4,19 @@ import { join } from 'path';
 import Store from 'electron-store';
 import './samples/npm-esm-packages';
 import pkg from '../../package.json'
-
+import logger from 'electron-log';
+import axios from 'axios';
 
 // Conditionally include the dev tools installer to load React Dev Tools
-let installExtension:any, REACT_DEVELOPER_TOOLS:any, REDUX_DEVTOOLS:any; // NEW!
+let installExtension: any, REACT_DEVELOPER_TOOLS: any, REDUX_DEVTOOLS: any; // NEW!
 if (!app.isPackaged) {
-    const devTools = require("electron-devtools-installer");
-    installExtension = devTools.default;
-    REACT_DEVELOPER_TOOLS = devTools.REACT_DEVELOPER_TOOLS;
-    REDUX_DEVTOOLS = devTools.REDUX_DEVTOOLS;
+  const devTools = require('electron-devtools-installer');
+  installExtension = devTools.default;
+  REACT_DEVELOPER_TOOLS = devTools.REACT_DEVELOPER_TOOLS;
+  REDUX_DEVTOOLS = devTools.REDUX_DEVTOOLS;
 }
 
-const { setupTitlebar, attachTitlebarToWindow } = require("custom-electron-titlebar/main");
+const { setupTitlebar, attachTitlebarToWindow } = require('custom-electron-titlebar/main');
 
 // Disable GPU Acceleration for Windows 7
 if (release().startsWith('6.1')) app.disableHardwareAcceleration();
@@ -32,6 +33,72 @@ let win: BrowserWindow | null = null;
 
 const store = new Store();
 if (pkg.env.STAR6UCKS_CUSTOM_TITLEBAR) setupTitlebar();
+
+const JAR = 'spring.jar'; // how to avoid manual update of this?
+
+// The server url and process
+let serverProcess: any;
+const SPRING_PORT = 8081;
+const baseUrl = `http://localhost:${SPRING_PORT}`;
+
+function logServer(data: any) {
+  // data is from server std.out and may includes multiple lines
+  const messages = data.toString().split('\n');
+  messages.forEach((msg: string) => {
+    if (msg.length > 0) {
+      if (msg.startsWith('INFO')) logger.info(msg.substring(6));
+      else if (msg.startsWith('WARN')) logger.warn(msg.substring(6));
+      else if (msg.startsWith('ERROR')) logger.error(msg.substring(6));
+      else if (msg.startsWith('DEBUG')) logger.debug(msg.substring(6));
+      else logger.silly(msg);
+    }
+  });
+}
+
+function startSpringServer(port: number | string) {
+  logger.info(`Starting server at port ${port}`);
+  const server = (() => {
+    if (!app.isPackaged) {
+      return join(process.cwd(), 'libraries', JAR);
+    }
+    return join(process.resourcesPath, '..', 'libraries', JAR);
+  })();
+  logger.info(`Launching server with jar ${server} at port ${port}...`);
+  serverProcess = require('child_process').spawn('java', ['-jar', server, `--server.port=${port}`]);
+
+  serverProcess.stdout.on('data', logServer);
+
+  if (serverProcess.pid) {
+    logger.info('Server PID: ' + serverProcess.pid);
+  } else {
+    logger.error('Failed to launch server process.');
+  }
+}
+
+function stopSpringServer() {
+  logger.info('Stopping server...');
+  axios
+    .post(`${baseUrl}/actuator/shutdown`, null, {
+      headers: { 'Content-Type': 'application/json' },
+    })
+    .then(() => logger.info('Server stopped'))
+    .catch((error) => {
+      logger.error('Failed to stop the server gracefully.', error);
+      if (serverProcess) {
+        logger.info(`Killing server process ${serverProcess.pid}`);
+        const kill = require('tree-kill');
+        kill(serverProcess.pid, 'SIGTERM', function (err: any) {
+          logger.info('Server process killed', err);
+          serverProcess = null;
+          app.quit(); // quit again
+        });
+      }
+    })
+    .finally(() => {
+      serverProcess = null;
+      app.quit(); // quit again
+    });
+}
 
 async function createWindow() {
   let windowState: any = await store.get('windowState');
@@ -83,17 +150,13 @@ async function createWindow() {
   if (pkg.env.STAR6UCKS_CUSTOM_TITLEBAR) attachTitlebarToWindow(win);
 }
 
-const NOTIFICATION_TITLE = 'Star6ucks - by Blade';
-const NOTIFICATION_BODY = 'Testing Notification from the Main process';
-
-function showNotification() {
-  new Notification({ title: NOTIFICATION_TITLE, body: NOTIFICATION_BODY }).show();
+function showNotification(title: string, body: string) {
+  new Notification({ title, body }).show();
 }
-
-let tray = null as any;
 
 app
   .whenReady()
+  .then(() => startSpringServer(SPRING_PORT))
   .then(createWindow)
   .then(async () => {
     if (!app.isPackaged) {
@@ -108,7 +171,6 @@ app
 
 app.on('window-all-closed', () => {
   win = null;
-  if (tray !== null) tray.destroy();
   if (process.platform !== 'darwin') app.quit();
 });
 
@@ -127,6 +189,10 @@ app.on('activate', () => {
   } else {
     createWindow();
   }
+});
+
+app.on('will-quit', (e) => {
+  stopSpringServer();
 });
 
 ipcMain.on('set', async (event, arg) => {

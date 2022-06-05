@@ -10,6 +10,7 @@ module.exports = {
     output: 'release/${version}',
     buildResources: 'resources',
   },
+  extraFiles: ['libraries'],
   files: ['dist'],
   win: {
     target: [

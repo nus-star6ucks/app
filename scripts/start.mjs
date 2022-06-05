@@ -18,9 +18,7 @@ function watchMain(server) {
   })
 }
 
-
 // bootstrap
-const server = await createServer({ configFile: 'packages/renderer/react.config.ts' })
-console.log("http://localhost:3000/")
+const server = await createServer({ configFile: 'packages/renderer/react.config.ts' });
 await watchMain(server)
 await server.listen()
