@@ -8,7 +8,7 @@ import 'virtual:windi.css';
 ReactDOM.render(
   <React.StrictMode>
     <GeistProvider>
-      {/* <CssBaseline /> */}
+      <CssBaseline />
       <App />
     </GeistProvider>
   </React.StrictMode>,
