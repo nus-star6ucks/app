@@ -70,12 +70,6 @@ jobs:
           FILEPART: Setup
 
     steps:
-      - name: Setup java env
-        uses: actions/setup-java@v3
-        with:
-          java-version: '11'
-          distribution: 'temurin'
-          cache: maven
       - name: Checkout code
         uses: actions/checkout@v2
         with:
@@ -88,7 +82,13 @@ jobs:
 
       - name: Install Node Modules
         run: yarn
-
+        
+      - name: Setup java env
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+          cache: maven
       - name: Build Non-Win project
         if: matrix.OSNAME != 'win'
         env:
