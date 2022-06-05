@@ -13,12 +13,6 @@ jobs:
       upload_url: ${{ steps.create_release.outputs.upload_url }}
       current-version: ${{ steps.package-version.outputs.current-version }}
     steps:
-      - name: Setup java env
-        uses: actions/setup-java@v3
-        with:
-          java-version: '11'
-          distribution: 'temurin'
-          cache: maven
       - name: Checkout code
         uses: actions/checkout@v2
         with:
@@ -76,6 +70,12 @@ jobs:
           FILEPART: Setup
 
     steps:
+      - name: Setup java env
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+          cache: maven
       - name: Checkout code
         uses: actions/checkout@v2
         with:
