@@ -33,15 +33,6 @@ export default function Home() {
       <Grid xs={6}>
         <Card shadow width="100%" height="50px" />
       </Grid>
-      <Grid xs={6}>
-        <Card shadow width="100%" height="50px" />
-      </Grid>
-      <Grid xs={12}>
-        <Card shadow width="100%" height="50px" />
-      </Grid>
-      <Grid xs={6}>
-        <Card shadow width="100%" height="50px" />
-      </Grid>
     </Grid.Container>
   );
 }
