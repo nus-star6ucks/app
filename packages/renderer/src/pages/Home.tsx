@@ -1,7 +1,6 @@
 import { Button, useToasts, Grid, Card, Table, Loading } from '@geist-ui/core';
 import { useRequest } from 'ahooks';
 import axios from 'axios';
-import { useEffect } from 'react';
 
 export default function Home() {
   const { data: itemsData, loading } = useRequest(() => axios.get('/items'), {});
