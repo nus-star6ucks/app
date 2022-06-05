@@ -3,34 +3,31 @@ import { useLayoutEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export default function Home() {
-  const navigate = useNavigate();
-
   useLayoutEffect(() => {
     document.title = 'VMCS - Simulator Control Panel';
   }, []);
 
   return (
     <div className="mx-auto max-w-md">
-      <header className="text-black pb-6">
+      <header className="text-black py-6">
         <p className="text-center font-bold text-3xl tracking-tighter">Simulator Control Panel</p>
       </header>
-
       <div className="space-y-4 px-4">
         <div className="grid grid-cols-2 gap-4">
           <button
-            onClick={() => navigate('/customer')}
+            onClick={() => window.open('/#/customer')}
             className="btn-solid bg-white py-4 aspect-square w-full"
           >
             Activate Customer Panel
           </button>
           <button
-            onClick={() => navigate('/maintainer')}
+            onClick={() => window.open('/#/maintainer')}
             className="btn-solid bg-teal-100 py-4 aspect-square w-full"
           >
             Activate Maintainer Panel
           </button>
           <button
-            onClick={() => navigate('/machinery')}
+            onClick={() => window.open('/#/machinery')}
             className="btn-solid bg-red-50 py-4 aspect-square w-full"
           >
             Activate Machinery Panel
