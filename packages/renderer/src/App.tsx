@@ -1,10 +1,15 @@
 import { useToasts } from '@geist-ui/core';
 import { useRequest } from 'ahooks';
 import { HashRouter, Routes, Route } from 'react-router-dom';
-import Home from './pages/Home';
 
 import axios from 'axios';
+
 axios.defaults.baseURL = 'http://localhost:8081/api';
+
+import Home from './pages/Home';
+import CustomerPanel from './pages/CustomerPanel';
+import MaintainerPanel from './pages/MaintainerPanel';
+import MachineryPanel from './pages/MachineryPanel';
 
 import { getHeartbeatService } from './services/heartbeat';
 
@@ -22,11 +27,17 @@ const App = () => {
   });
 
   return (
-    <HashRouter>
-      <Routes>
-        <Route path="/" element={<Home />} />
-      </Routes>
-    </HashRouter>
+    <main>
+      <HashRouter>
+        <Routes>
+          <Route path="/" element={<Home />} />
+
+          <Route path="/customer" element={<CustomerPanel />} />
+          <Route path="/maintainer" element={<MaintainerPanel />} />
+          <Route path="/machinery" element={<MachineryPanel />} />
+        </Routes>
+      </HashRouter>
+    </main>
   );
 };
 

@@ -1,49 +1,49 @@
-import { Button, useToasts, Grid, Card, Table, Loading } from '@geist-ui/core';
-import { useRequest } from 'ahooks';
-import axios from 'axios';
+import { Button, useToasts, Grid, Card, Table, Loading, Text } from '@geist-ui/core';
+import { useLayoutEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function Home() {
-  const { data: itemsData, loading } = useRequest(() => axios.get('/items'), {});
+  const navigate = useNavigate();
+
+  useLayoutEffect(() => {
+    document.title = 'VMCS - Simulator Control Panel';
+  }, []);
 
   return (
-    <Grid.Container gap={2} justify="center">
-      <Grid xs={24}>
-        <Card shadow width="100%">
-          {loading ? (
-            <Loading />
-          ) : (
-            <Table data={itemsData?.data.resultBody}>
-              <Table.Column prop="id" label="id" />
-              <Table.Column prop="name" label="name" />
-            </Table>
-          )}
-        </Card>
-      </Grid>
+    <div className="mx-auto max-w-md">
+      <header className="text-black pb-6">
+        <p className="text-center font-bold text-3xl tracking-tighter">Simulator Control Panel</p>
+      </header>
 
-      <Grid xs={6}>
-        <Card shadow width="100%" height="50px" />
-      </Grid>
-      <Grid xs={6}>
-        <Card shadow width="100%" height="50px" />
-      </Grid>
-      <Grid xs={6}>
-        <Card shadow width="100%" height="50px" />
-      </Grid>
-      <Grid xs={6}>
-        <Card shadow width="100%" height="50px" />
-      </Grid>
-      <Grid xs={6}>
-        <Card shadow width="100%" height="50px" />
-      </Grid>
-      <Grid xs={6}>
-        <Card shadow width="100%" height="50px" />
-      </Grid>
-      <Grid xs={6}>
-        <Card shadow width="100%" height="50px" />
-      </Grid>
-      <Grid xs={6}>
-        <Card shadow width="100%" height="50px" />
-      </Grid>
-    </Grid.Container>
+      <div className="space-y-4 px-4">
+        <div className="grid grid-cols-2 gap-4">
+          <button
+            onClick={() => navigate('/customer')}
+            className="btn-solid bg-white py-4 aspect-square w-full"
+          >
+            Activate Customer Panel
+          </button>
+          <button
+            onClick={() => navigate('/maintainer')}
+            className="btn-solid bg-teal-100 py-4 aspect-square w-full"
+          >
+            Activate Maintainer Panel
+          </button>
+          <button
+            onClick={() => navigate('/machinery')}
+            className="btn-solid bg-red-50 py-4 aspect-square w-full"
+          >
+            Activate Machinery Panel
+          </button>
+        </div>
+      </div>
+
+      <footer className="fixed bottom-0 left-0 px-10 space-y-2 w-full">
+        <button className="btn-solid bg-purple-100 py-4 rounded-md font-bold w-full">
+          Begin Simulation
+        </button>
+        <button className="w-full uppercase font-semibold py-4">End Simulation</button>
+      </footer>
+    </div>
   );
 }

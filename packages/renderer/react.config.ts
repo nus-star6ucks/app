@@ -4,7 +4,6 @@ import { defineConfig, Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
 import optimizer from 'vite-plugin-optimizer';
 import pkg from '../../package.json';
-import WindiCSS from 'vite-plugin-windicss';
 
 /**
  * @see https://vitejs.dev/config/
@@ -13,7 +12,6 @@ export default defineConfig({
   mode: process.env.NODE_ENV,
   root: __dirname,
   plugins: [
-    WindiCSS(),
     react(),
     resolveElectron(),
     /**

@@ -1,14 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { GeistProvider, CssBaseline } from '@geist-ui/core';
+import { GeistProvider } from '@geist-ui/core';
 import App from './App';
 
-import 'virtual:windi.css';
+import './app.css';
 
 ReactDOM.render(
   <React.StrictMode>
     <GeistProvider>
-      <CssBaseline />
       <App />
     </GeistProvider>
   </React.StrictMode>,
