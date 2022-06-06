@@ -161,9 +161,9 @@ async function createWindow(path: string = '', options?: BrowserWindowConstructo
   if (pkg.env.STAR6UCKS_CUSTOM_TITLEBAR) attachTitlebarToWindow(win);
 }
 
-function showNotification(title: string, body: string) {
-  new Notification({ title, body }).show();
-}
+// function showNotification(title: string, body: string) {
+//   new Notification({ title, body }).show();
+// }
 
 app
   .whenReady()
