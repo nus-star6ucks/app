@@ -9,13 +9,13 @@ export default function Home() {
 
   return (
     <div className="mx-auto max-w-md">
-      <header className="text-black py-6">
+      <header className="text-black py-6 mb-2">
         <p className="text-center font-bold text-3xl tracking-tighter">Simulator Control Panel</p>
       </header>
       <div className="space-y-4 px-4">
         <div className="grid grid-cols-2 gap-4">
           <button
-            onClick={() => window.open('/#/customer')}
+            onClick={() => window.open('/#/customer', '_blank', 'frame=false,nodeIntegration=no')}
             className="btn-solid bg-white py-4 aspect-square w-full"
           >
             Activate Customer Panel
@@ -35,7 +35,7 @@ export default function Home() {
         </div>
       </div>
 
-      <footer className="fixed bottom-0 left-0 px-10 space-y-2 w-full">
+      <footer className="fixed bottom-0 left-0 px-4 pb-2 space-y-2 max-w-md w-full mx-auto">
         <button className="btn-solid bg-purple-100 py-4 rounded-md font-bold w-full">
           Begin Simulation
         </button>

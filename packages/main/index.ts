@@ -101,17 +101,15 @@ function stopSpringServer() {
 }
 
 async function createWindow() {
-  let windowState: any = await store.get('windowState');
-  if (!pkg.env.STAR6UCKS_SAVE_WINDOWSIZE) windowState = null;
   win = new BrowserWindow({
     title: 'Star6ucks',
     show: false,
     autoHideMenuBar: pkg.env.STAR6UCKS_CUSTOM_TITLEBAR,
     titleBarStyle: pkg.env.STAR6UCKS_CUSTOM_TITLEBAR ? 'hidden' : 'default',
-    x: windowState?.x || 0,
-    y: windowState?.y || 0,
-    width: windowState?.width || 600,
-    height: windowState?.height || 850,
+    width: 450,
+    height: 700,
+    resizable: false,
+    frame: false,
     webPreferences: {
       preload: join(__dirname, '../preload/index.cjs'),
     },

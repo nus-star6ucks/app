@@ -1,8 +1,8 @@
 {
   "name": "app",
   "private": true,
-  "version": "0.0.1",
-  "description": "Team 04 of NUS ISS MTech SE Bridge Program Project",
+  "version": "0.0.2",
+  "description": "Team 04 of NUS ISS MTech SE Bridging Program Project",
   "author": "Star6ucks <foo@bar.baz>",
   "license": "MIT",
   "main": "dist/main/index.cjs",
