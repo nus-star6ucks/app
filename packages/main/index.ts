@@ -54,7 +54,6 @@ let serverProcess: any;
 const SPRING_PORT = 8081;
 const baseUrl = `http://localhost:${SPRING_PORT}`;
 
-
 function logServer(data: any) {
   // data is from server std.out and may includes multiple lines
   const messages = data.toString().split('\n');
