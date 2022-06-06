@@ -27,6 +27,7 @@ if (!app.isPackaged) {
   REDUX_DEVTOOLS = devTools.REDUX_DEVTOOLS;
 }
 
+
 const { setupTitlebar, attachTitlebarToWindow } = require('custom-electron-titlebar/main');
 
 // Disable GPU Acceleration for Windows 7
@@ -124,19 +125,22 @@ async function createWindow(path: string = '', options?: BrowserWindowConstructo
     resizable: false,
     frame: false,
     webPreferences: {
+      webSecurity: false,
       preload: join(__dirname, '../preload/index.cjs'),
     },
     ...options,
   });
 
   if (app.isPackaged) {
-    win.loadFile(join(__dirname, `../renderer/index.html#${path}`));
+    win.loadFile(join(__dirname, `../renderer/index.html`), {
+      hash: path || undefined,
+    });
   } else {
     // 🚧 Use ['ENV_NAME'] avoid vite:define plugin
     const url = `http://${process.env['VITE_DEV_SERVER_HOST']}:${process.env['VITE_DEV_SERVER_PORT']}/#${path}`;
 
     win.loadURL(url);
-    if (!app.isPackaged) win.webContents.openDevTools({ mode: 'detach' });
+    win.webContents.openDevTools({ mode: 'detach' });
   }
 
   // Test active push message to Renderer-process
