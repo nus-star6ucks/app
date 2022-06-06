@@ -46,7 +46,6 @@ const brands = [
 
 export default function MachineryPanel() {
   const navigate = useNavigate();
-  const [text, setText] = useStateIPC('text', '');
 
   useLayoutEffect(() => {
     document.title = 'VMCS - Machinery Panel';
@@ -54,7 +53,7 @@ export default function MachineryPanel() {
 
   return (
     <>
-      <div className="px-6 my-4 flex items-center space-x-2 -ml-1">
+      <div className="px-6 mb-4 flex items-center space-x-2 -ml-1">
         <CoffeeMachine
           theme="outline"
           size="48"
@@ -122,7 +121,6 @@ export default function MachineryPanel() {
             <div className="flex justify-between items-center mb-2">
               <h2 className="font-bold text-lg tracking-tighter  uppercase">State</h2>
             </div>
-            <Input value={text} onChange={(e) => setText(e.target.value)} />
           </section>
           <Keyboard disabled />
         </aside>

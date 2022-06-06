@@ -27,11 +27,10 @@ const App = () => {
   });
 
   return (
-    <main>
+    <main className="py-4">
       <HashRouter>
         <Routes>
           <Route path="/" element={<Home />} />
-
           <Route path="/customer" element={<CustomerPanel />} />
           <Route path="/maintainer" element={<MaintainerPanel />} />
           <Route path="/machinery" element={<MachineryPanel />} />

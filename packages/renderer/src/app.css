@@ -114,9 +114,9 @@ body {
 }
 
 .led-small {
-  @apply px-1 mt-0.5 rounded-sm bg-black text-yellow-500 font-semibold;
+  @apply px-1 mt-0.5 rounded-sm bg-black text-yellow-500 font-semibold uppercase w-10 text-center;
 }
 
 .led {
-  @apply bg-red-600 text-white px-1 rounded-sm font-semibold;
+  @apply text-white px-1 rounded-sm font-semibold uppercase;
 }

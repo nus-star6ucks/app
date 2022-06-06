@@ -38,7 +38,7 @@ export default function CustomerPanel() {
 
   return (
     <>
-      <div className="px-6 my-4 flex items-center space-x-2 -ml-1">
+      <div className="px-6 mb-4 flex items-center space-x-2 -ml-1">
         <CoffeeMachine
           theme="outline"
           size="48"
@@ -73,7 +73,7 @@ export default function CustomerPanel() {
                       <span className="led-small">{brand.price}</span>
                     </div>
                   </div>
-                  <span className={classNames('led', brand.inStock ? 'opacity-30' : '')}>
+                  <span className={classNames('led bg-red-600', brand.inStock ? 'opacity-30' : '')}>
                     NOT IN STOCK
                   </span>
                 </div>
@@ -87,7 +87,7 @@ export default function CustomerPanel() {
               <h2 className="font-bold text-lg tracking-tighter  uppercase">Enter Coins Here</h2>
               <span
                 className={classNames(
-                  'led',
+                  'led bg-red-600',
                   // brand.inStock ? 'opacity-30' : '',
                 )}
               >
@@ -116,7 +116,7 @@ export default function CustomerPanel() {
               <p className="font-bold">Total Money Inserted</p>
             </div>
             <div className="border-2 border-black rounded-md p-4 uppercase">
-              <span className="led opacity-30">No Change Available</span>
+              <span className="led bg-red-600 opacity-30">No Change Available</span>
               <p className="font-bold mt-1">
                 <button className="btn-solid-small text-xs p-1">Terminate and Return Cash</button>
               </p>
