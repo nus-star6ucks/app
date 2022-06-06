@@ -47,7 +47,7 @@ setupGlobalStateIPC();
 const store = new Store();
 if (pkg.env.STAR6UCKS_CUSTOM_TITLEBAR) setupTitlebar();
 
-const JAR = 'spring.jar'; // how to avoid manual update of this?
+const JAR = 'api.jar'; // how to avoid manual update of this?
 
 // The server url and process
 let serverProcess: any;

@@ -2,16 +2,17 @@ import maven from 'maven';
 import { build } from 'vite';
 import { existsSync, mkdirSync, renameSync } from 'fs';
 import { join } from 'path';
-const mvn = maven.create({
-  cwd: 'spring',
+import { execSync } from 'child_process';
+
+execSync('./gradlew bootJar', {
+  cwd: 'api',
 });
-await mvn.execute(['-B', 'package', '--file', 'pom.xml']);
 if (!existsSync(join(process.cwd(), 'libraries'))) {
   mkdirSync(join(process.cwd(), 'libraries'));
 }
 renameSync(
-  join(process.cwd(), 'spring/target', 'spring.jar'),
-  join(process.cwd(), 'libraries', 'spring.jar'),
+  join(process.cwd(), 'api/build/libs', 'api.jar'),
+  join(process.cwd(), 'libraries', 'api.jar'),
 );
 await build({ configFile: 'packages/main/vite.config.ts' });
 await build({ configFile: 'packages/preload/vite.config.ts' });
