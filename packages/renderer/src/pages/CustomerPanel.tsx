@@ -1,3 +1,4 @@
+import Keyboard from '@/components/Keyboard';
 import { Button } from '@geist-ui/core';
 import { ChevronLeft } from '@geist-ui/icons';
 import { CoffeeMachine, Cola } from '@icon-park/react';
@@ -48,7 +49,7 @@ export default function CustomerPanel() {
         <span className="uppercase font-medium">Soft Drink Dispenser</span>
       </div>
       <section className="px-6 grid gap-12 grid-cols-2">
-        <div className="space-y-4">
+        <div className="space-y-6">
           {/* <header className="flex justify-between text-black pb-6">
         <button className="-ml-2 flex space-x-1" onClick={() => navigate('/')}>
           <ChevronLeft size={24} />
@@ -61,7 +62,10 @@ export default function CustomerPanel() {
             <h2 className="font-bold text-lg tracking-tighter mb-2 uppercase">Brands</h2>
             <div className="space-y-3">
               {brands.map((brand) => (
-                <div className="cursor-pointer btn-solid flex items-center justify-between space-x-2 p-4">
+                <div
+                  key={brand.title}
+                  className="cursor-pointer btn-solid flex items-center justify-between space-x-2 p-4"
+                >
                   <div className="flex items-center space-x-2">
                     <Cola size={36} strokeWidth={2} />
                     <div className="flex items-center space-x-2">
@@ -92,7 +96,9 @@ export default function CustomerPanel() {
             </div>
             <div className="flex space-x-2 justify-between">
               {['5c', '10c', '20c', '50c', '$1', 'Invalid'].map((text) => (
-                <button className="btn-solid-small px-2 h-10">{text}</button>
+                <button key={text} className="btn-solid-small px-2 h-10">
+                  {text}
+                </button>
               ))}
             </div>
           </section>
@@ -116,16 +122,7 @@ export default function CustomerPanel() {
               </p>
             </div>
           </section>
-          <section>
-            <div className="flex justify-between items-center mb-2">
-              <h2 className="font-bold text-lg tracking-tighter  uppercase">KEYBOARD</h2>
-            </div>
-            <div className="grid grid-cols-3 gap-2">
-              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 'Reset', 0, 'Confirm'].map((text) => (
-                <button className="btn-solid-small px-2 h-10">{text}</button>
-              ))}
-            </div>
-          </section>
+          <Keyboard />
         </aside>
       </section>
     </>

@@ -7,9 +7,9 @@
   "license": "MIT",
   "main": "dist/main/index.cjs",
   "scripts": {
-    "start": "node scripts/start.mjs",
+    "start": "NODE_ENV=FRONTEND node scripts/start.mjs",
     "build": "tsc --noEmit -p packages/renderer/tsconfig.json && node scripts/build.mjs",
-    "dev": "node scripts/watch.mjs",
+    "dev": "NODE_ENV=DEVELOPMENT node scripts/watch.mjs",
     "dist": "tsc --noEmit -p packages/renderer/tsconfig.json && node scripts/build.mjs && yarn electron-builder"
   },
   "engines": {
@@ -25,6 +25,7 @@
     "custom-electron-titlebar": "^4.1.0",
     "electron-devtools-installer": "^3.2.0",
     "electron-log": "^4.4.7",
+    "electron-state-ipc": "^1.2.2",
     "electron-store": "^8.0.1",
     "hox": "^1.1.6",
     "maven": "^5.0.0",

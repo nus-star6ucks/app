@@ -1,11 +1,22 @@
-import { app, BrowserWindow, shell, ipcMain, nativeTheme, Tray, Menu, Notification  } from 'electron';
+import {
+  app,
+  BrowserWindow,
+  shell,
+  ipcMain,
+  nativeTheme,
+  Tray,
+  Menu,
+  Notification,
+  BrowserWindowConstructorOptions,
+} from 'electron';
 import { release } from 'os';
 import { join } from 'path';
 import Store from 'electron-store';
 import './samples/npm-esm-packages';
-import pkg from '../../package.json'
+import pkg from '../../package.json';
 import logger from 'electron-log';
 import axios from 'axios';
+import { setupGlobalStateIPC } from 'electron-state-ipc';
 
 // Conditionally include the dev tools installer to load React Dev Tools
 let installExtension: any, REACT_DEVELOPER_TOOLS: any, REDUX_DEVTOOLS: any; // NEW!
@@ -30,6 +41,8 @@ if (!app.requestSingleInstanceLock()) {
 }
 
 let win: BrowserWindow | null = null;
+
+setupGlobalStateIPC();
 
 const store = new Store();
 if (pkg.env.STAR6UCKS_CUSTOM_TITLEBAR) setupTitlebar();
@@ -100,7 +113,7 @@ function stopSpringServer() {
     });
 }
 
-async function createWindow() {
+async function createWindow(path: string = '', options?: BrowserWindowConstructorOptions) {
   win = new BrowserWindow({
     title: 'Star6ucks',
     show: false,
@@ -113,13 +126,14 @@ async function createWindow() {
     webPreferences: {
       preload: join(__dirname, '../preload/index.cjs'),
     },
+    ...options,
   });
 
   if (app.isPackaged) {
-    win.loadFile(join(__dirname, '../renderer/index.html'));
+    win.loadFile(join(__dirname, `../renderer/index.html#${path}`));
   } else {
     // 🚧 Use ['ENV_NAME'] avoid vite:define plugin
-    const url = `http://${process.env['VITE_DEV_SERVER_HOST']}:${process.env['VITE_DEV_SERVER_PORT']}`;
+    const url = `http://${process.env['VITE_DEV_SERVER_HOST']}:${process.env['VITE_DEV_SERVER_PORT']}/#${path}`;
 
     win.loadURL(url);
     if (!app.isPackaged) win.webContents.openDevTools({ mode: 'detach' });
@@ -136,11 +150,6 @@ async function createWindow() {
     return { action: 'deny' };
   });
 
-  win.on('close', () => {
-    const windowState = win?.getBounds();
-    if (pkg.env.STAR6UCKS_SAVE_WINDOWSIZE) store.set('windowState', windowState);
-  });
-
   win.once('ready-to-show', () => {
     win?.show();
   });
@@ -155,7 +164,7 @@ function showNotification(title: string, body: string) {
 app
   .whenReady()
   .then(() => startSpringServer(SPRING_PORT))
-  .then(createWindow)
+  .then(() => createWindow())
   .then(async () => {
     if (!app.isPackaged) {
       await installExtension([REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS], {
@@ -210,4 +219,8 @@ ipcMain.on('ping-pong', async (event, arg) => {
 
 ipcMain.on('ping-pong-sync', (event, arg) => {
   event.returnValue = `[ipcMain] "${arg}" received synchronously.`;
+});
+
+ipcMain.on('window:open', (event, path, options) => {
+  createWindow(path, options);
 });

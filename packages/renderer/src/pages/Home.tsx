@@ -1,11 +1,11 @@
-import { Button, useToasts, Grid, Card, Table, Loading, Text } from '@geist-ui/core';
+import { useElectronStateIPC } from 'electron-state-ipc/react';
 import { useLayoutEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-
 export default function Home() {
   useLayoutEffect(() => {
     document.title = 'VMCS - Simulator Control Panel';
   }, []);
+
+  const state = useElectronStateIPC();
 
   return (
     <div className="mx-auto max-w-md">
@@ -15,19 +15,34 @@ export default function Home() {
       <div className="space-y-4 px-4">
         <div className="grid grid-cols-2 gap-4">
           <button
-            onClick={() => window.open('/#/customer', '_blank', 'frame=false,nodeIntegration=no')}
+            onClick={() => {
+              window.electron.openNewWindow('/customer', {
+                width: 1035,
+                height: 660,
+              });
+            }}
             className="btn-solid bg-white py-4 aspect-square w-full"
           >
             Activate Customer Panel
           </button>
           <button
-            onClick={() => window.open('/#/maintainer')}
+            onClick={() =>
+              window.electron.openNewWindow('/maintainer', {
+                width: 1035,
+                height: 660,
+              })
+            }
             className="btn-solid bg-teal-100 py-4 aspect-square w-full"
           >
             Activate Maintainer Panel
           </button>
           <button
-            onClick={() => window.open('/#/machinery')}
+            onClick={() =>
+              window.electron.openNewWindow('/machinery', {
+                width: 1035,
+                height: 660,
+              })
+            }
             className="btn-solid bg-red-50 py-4 aspect-square w-full"
           >
             Activate Machinery Panel

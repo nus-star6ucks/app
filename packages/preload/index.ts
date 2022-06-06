@@ -1,17 +1,16 @@
 import fs from 'fs';
-import { contextBridge, ipcRenderer } from 'electron';
+import { BrowserWindowConstructorOptions, contextBridge, ipcRenderer } from 'electron';
 import { domReady } from './utils';
 import { useLoading } from './loading';
 import { Titlebar, Color } from 'custom-electron-titlebar';
 import pkg from '../../package.json';
+import { exposeStateIPC } from 'electron-state-ipc';
 const { appendLoading, removeLoading } = useLoading();
 
 (async () => {
   await domReady();
   appendLoading();
 })();
-
-
 
 window.addEventListener('DOMContentLoaded', () => {
   // Title bar implemenation
@@ -23,6 +22,14 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 // --------- Expose some API to the Renderer process. ---------
+export const electron = {
+  openNewWindow: (path: string = '', options?: BrowserWindowConstructorOptions) =>
+    ipcRenderer.send('window:open', path, options),
+};
+
+contextBridge.exposeInMainWorld('electron', electron);
+exposeStateIPC();
+
 contextBridge.exposeInMainWorld('fs', fs);
 contextBridge.exposeInMainWorld('removeLoading', removeLoading);
 contextBridge.exposeInMainWorld('ipcRenderer', withPrototype(ipcRenderer));

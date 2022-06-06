@@ -1,15 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { GeistProvider } from '@geist-ui/core';
+import { ElectronStateIPCContextProvider } from 'electron-state-ipc/react';
 import App from './App';
 
 import './app.css';
 
 ReactDOM.render(
   <React.StrictMode>
-    <GeistProvider>
-      <App />
-    </GeistProvider>
+    <ElectronStateIPCContextProvider>
+      <GeistProvider>
+        <App />
+      </GeistProvider>
+    </ElectronStateIPCContextProvider>
   </React.StrictMode>,
   document.getElementById('root'),
 );

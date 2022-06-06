@@ -107,10 +107,10 @@ body {
 }
 
 .btn-solid {
-    @apply shadow-solid rounded-md border-black border-2 uppercase font-semibold active:border disabled:shadow-none disabled:translate-x-1 disabled:translate-y-1 hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all;
+    @apply shadow-solid rounded-md border-black border-2 uppercase font-semibold active:border disabled:border-2 disabled:shadow-none disabled:translate-x-1 disabled:translate-y-1 hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all;
 }
 .btn-solid-small {
-    @apply shadow-solid-small rounded-md border-black border-2 uppercase font-semibold active:border disabled:shadow-none disabled:translate-x-0.5 disabled:translate-y-0.5 hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5 transition-all;
+    @apply shadow-solid-small rounded-md border-black border-2 uppercase font-semibold active:border disabled:border-2 disabled:shadow-none disabled:translate-x-0.5 disabled:translate-y-0.5 hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5 transition-all;
 }
 
 .led-small {

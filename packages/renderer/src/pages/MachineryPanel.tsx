@@ -1,5 +1,8 @@
+import Keyboard from '@/components/Keyboard';
+import { Input } from '@geist-ui/core';
 import { Checkbox, CheckboxFill } from '@geist-ui/icons';
 import { CoffeeMachine, Cola, Finance } from '@icon-park/react';
+import { useStateIPC } from 'electron-state-ipc/react';
 import { useLayoutEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -43,6 +46,7 @@ const brands = [
 
 export default function MachineryPanel() {
   const navigate = useNavigate();
+  const [text, setText] = useStateIPC('text', '');
 
   useLayoutEffect(() => {
     document.title = 'VMCS - Machinery Panel';
@@ -61,12 +65,15 @@ export default function MachineryPanel() {
         <span className="uppercase font-medium">Machinery Panel</span>
       </div>
       <section className="px-6 grid gap-12 grid-cols-2">
-        <div className="space-y-4">
+        <div className="space-y-6">
           <section>
             <h2 className="font-bold text-lg tracking-tighter mb-2 uppercase">Quantity of Coins</h2>
             <div className="grid grid-cols-2 gap-2">
               {quantities.map((q) => (
-                <div className="border-2 border-black rounded-md p-4 uppercase flex justify-between items-center">
+                <div
+                  key={q.title}
+                  className="border-2 border-black rounded-md p-4 uppercase flex justify-between items-center"
+                >
                   <div className="flex items-center space-x-2 font-semibold">
                     <Finance size={36} strokeWidth={2} />
                     <div className="flex items-center space-x-2">
@@ -82,7 +89,10 @@ export default function MachineryPanel() {
             <h2 className="font-bold text-lg tracking-tighter mb-2 uppercase">Quantity of Cans</h2>
             <div className="grid grid-cols-2 gap-2">
               {brands.map((brand) => (
-                <div className="border-2 border-black rounded-md p-4 uppercase flex justify-between items-center">
+                <div
+                  key={brand.title}
+                  className="border-2 border-black rounded-md p-4 uppercase flex justify-between items-center"
+                >
                   <div className="flex items-center space-x-2 font-semibold">
                     <Cola size={36} strokeWidth={2} />
                     <div className="flex items-center space-x-2">
@@ -110,14 +120,11 @@ export default function MachineryPanel() {
           </section>
           <section>
             <div className="flex justify-between items-center mb-2">
-              <h2 className="font-bold text-lg tracking-tighter  uppercase">KEYBOARD</h2>
+              <h2 className="font-bold text-lg tracking-tighter  uppercase">State</h2>
             </div>
-            <div className="grid grid-cols-3 gap-2">
-              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 'Reset', 0, 'Confirm'].map((text) => (
-                <button className="btn-solid-small px-2 h-10">{text}</button>
-              ))}
-            </div>
+            <Input value={text} onChange={(e) => setText(e.target.value)} />
           </section>
+          <Keyboard disabled />
         </aside>
       </section>
     </>
