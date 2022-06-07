@@ -4,7 +4,13 @@ import { existsSync, mkdirSync, renameSync } from 'fs';
 import { join } from 'path';
 import { execSync } from 'child_process';
 
-execSync('./gradlew bootJar', {
+/**
+ * child_process.spawn works a bit different when using
+ * Windows.
+ */
+const isWin = /^win/.test(process.platform);
+
+execSync(isWin ? `.\\gradlew.bat bootJar` : './gradlew bootJar', {
   cwd: 'api',
 });
 if (!existsSync(join(process.cwd(), 'libraries'))) {
