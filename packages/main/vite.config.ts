@@ -5,11 +5,7 @@ import pkg from '../../package.json'
 
 export default defineConfig({
   root: __dirname,
-  plugins: [
-    esmodule([
-      'execa',
-    ]),
-  ],
+  plugins: [esmodule(['execa'])],
   build: {
     outDir: '../../dist/main',
     lib: {
@@ -17,14 +13,10 @@ export default defineConfig({
       formats: ['cjs'],
       fileName: () => '[name].cjs',
     },
-    minify: process.env./* from mode option */NODE_ENV === 'production',
-    sourcemap: true,
+    minify: process.env./* from mode option */ NODE_ENV === 'production',
+    sourcemap: false,
     rollupOptions: {
-      external: [
-        'electron',
-        ...builtinModules,
-        ...Object.keys(pkg.dependencies || {}),
-      ],
+      external: ['electron', ...builtinModules, ...Object.keys(pkg.dependencies || {})],
     },
   },
-})
+});

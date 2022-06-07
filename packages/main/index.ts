@@ -1,22 +1,13 @@
-import {
-  app,
-  BrowserWindow,
-  shell,
-  ipcMain,
-  nativeTheme,
-  Tray,
-  Menu,
-  Notification,
-  BrowserWindowConstructorOptions,
-} from 'electron';
+import { app, BrowserWindow, shell, ipcMain, BrowserWindowConstructorOptions } from 'electron';
 import { release } from 'os';
 import { join } from 'path';
 import Store from 'electron-store';
-import './samples/npm-esm-packages';
+// import './samples/npm-esm-packages';
 import pkg from '../../package.json';
 import logger from 'electron-log';
 import axios from 'axios';
 import { setupGlobalStateIPC } from 'electron-state-ipc';
+import 'v8-compile-cache';
 
 // Conditionally include the dev tools installer to load React Dev Tools
 let installExtension: any, REACT_DEVELOPER_TOOLS: any, REDUX_DEVTOOLS: any; // NEW!
