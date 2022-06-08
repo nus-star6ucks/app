@@ -3,8 +3,7 @@ import { BrowserWindowConstructorOptions, contextBridge, ipcRenderer } from 'ele
 import { domReady } from './utils';
 import { useLoading } from './loading';
 import { Titlebar, Color } from 'custom-electron-titlebar';
-import pkg from '../../package.json';
-import { exposeStateIPC } from 'electron-state-ipc';
+import pkg from '../../package.json'
 
 const { appendLoading, removeLoading } = useLoading();
 
@@ -28,8 +27,7 @@ export const electron = {
     ipcRenderer.send('window:open', path, options),
 };
 
-contextBridge.exposeInMainWorld('electron', electron);
-exposeStateIPC();
+contextBridge.exposeInMainWorld('electron', electron)
 
 contextBridge.exposeInMainWorld('fs', fs);
 contextBridge.exposeInMainWorld('removeLoading', removeLoading);
