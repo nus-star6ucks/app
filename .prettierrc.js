@@ -1,5 +1,6 @@
-const fabric = require("@umijs/fabric");
-
 module.exports = {
-    ...fabric.prettier,
-};
+  printWidth: 100,
+  singleQuote: true,
+  semi: false,
+  trailingComma: 'es5',
+}

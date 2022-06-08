@@ -5,6 +5,7 @@ import { useLoading } from './loading';
 import { Titlebar, Color } from 'custom-electron-titlebar';
 import pkg from '../../package.json';
 import { exposeStateIPC } from 'electron-state-ipc';
+
 const { appendLoading, removeLoading } = useLoading();
 
 (async () => {

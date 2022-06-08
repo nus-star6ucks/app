@@ -1,7 +1,8 @@
 import { join } from 'path'
 import { builtinModules } from 'module'
 import { defineConfig, Plugin } from 'vite'
-import react from '@vitejs/plugin-react'
+import { createVuePlugin } from 'vite-plugin-vue2'
+import eslintPlugin from 'vite-plugin-eslint'
 import optimizer from 'vite-plugin-optimizer';
 import pkg from '../../package.json';
 
@@ -12,7 +13,8 @@ export default defineConfig({
   mode: process.env.NODE_ENV,
   root: __dirname,
   plugins: [
-    react(),
+    createVuePlugin(),
+    eslintPlugin(),
     resolveElectron(
       /**
        * Here you can specify other modules
@@ -26,7 +28,7 @@ export default defineConfig({
 
       {
         'electron-store': 'const Store = require("electron-store"); export default Store;',
-      },
+      }
     ),
   ],
   base: process.env.GHPAGES === 'TRUE' ? '/Star6ucks/' : './',
@@ -43,7 +45,7 @@ export default defineConfig({
     host: pkg.env.VITE_DEV_SERVER_HOST,
     port: pkg.env.VITE_DEV_SERVER_PORT,
   },
-});
+})
 
 /**
  * For usage of Electron and NodeJS APIs in the Renderer process

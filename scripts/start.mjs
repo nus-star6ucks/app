@@ -19,6 +19,6 @@ function watchMain(server) {
 }
 
 // bootstrap
-const server = await createServer({ configFile: 'packages/renderer/react.config.ts' });
+const server = await createServer({ configFile: 'packages/renderer/vue.config.ts' })
 await watchMain(server)
 await server.listen()
