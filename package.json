@@ -13,13 +13,19 @@
     "init": "git config core.hooksPath .git/hooks/ && rm -rf .git/hooks && npx simple-git-hooks",
     "test:e2e": "npx playwright test",
     "test:e2e:headless": "npx playwright test --headed",
-    "lint": "eslint --fix packages/**/*.{ts,vue} && eslint --fix packages/**/*.{ts,vue}",
+    "lint": "eslint --fix packages/**/*.{ts,vue}",
     "format": "prettier -w packages/**/*.{ts,vue} && prettier -w packages/**/*.{ts,vue}",
     "fix": "npm run format && npm run lint"
   },
   "main": "dist/main/index.cjs",
   "engines": {
     "node": ">=14.17.0"
+  },
+  "nano-staged": {
+    "packages/**/*.{ts,vue}": [
+      "prettier -w",
+      "eslint --fix"
+    ]
   },
   "devDependencies": {
     "@icon-park/vue": "^1.4.0",
