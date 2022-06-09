@@ -81,7 +81,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Install Node Modules
-        run: yarn
+        run: npm install
         
       - name: Setup java env
         uses: actions/setup-java@v3
@@ -94,14 +94,14 @@ jobs:
         env:
           release_version: ${{ steps.package-version.outputs.current-version}}
           REACT_APP_VERSION: ${{ steps.package-version.outputs.current-version}}
-        run: GH_TOKEN=${{secrets.GH_TOKEN}} yarn dist -p "never"
+        run: GH_TOKEN=${{secrets.GH_TOKEN}} npm run dist
 
       - name: Build Win project
         if: matrix.OSNAME == 'win'
         env:
           release_version: ${{ steps.package-version.outputs.current-version}}
           REACT_APP_VERSION: ${{ steps.package-version.outputs.current-version}}
-        run: set GH_TOKEN=${{secrets.GH_TOKEN}} && yarn dist -p "never"
+        run: set GH_TOKEN=${{secrets.GH_TOKEN}} && npm run dist
 
       - name: Upload Release Asset
         id: upload-release-asset
