@@ -93,16 +93,16 @@
             </h2>
           </div>
         </section>
-        <keyboard disabled />
+        <keyboard-section disabled />
       </aside>
     </section>
   </div>
 </template>
 
 <script lang="ts">
-import Keyboard from '@/components/Keyboard.vue'
 import { CoffeeMachine, Cola, Finance } from '@icon-park/vue'
 import Vue from 'vue'
+import KeyboardSection from '../components/KeyboardSection.vue'
 
 const quantities = [
   {
@@ -143,7 +143,7 @@ const brands = [
 ]
 
 export default Vue.extend({
-  components: { Keyboard, CoffeeMachine, Cola, Finance },
+  components: { CoffeeMachine, Cola, Finance, KeyboardSection },
   data() {
     return {
       brands,

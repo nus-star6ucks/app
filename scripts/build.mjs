@@ -8,6 +8,7 @@ const isWin = /^win/.test(process.platform);
 execSync(isWin ? `.\\gradlew.bat bootJar` : "./gradlew bootJar", {
     cwd: "api",
 });
+
 if (!existsSync(join(process.cwd(), "libraries"))) {
     mkdirSync(join(process.cwd(), "libraries"));
 }
