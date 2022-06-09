@@ -29,7 +29,7 @@ let win: BrowserWindow | null = null;
 Store.initRenderer();
 
 async function createWindow(
-    path: string = "",
+    path = "",
     options?: BrowserWindowConstructorOptions
 ) {
     win = new BrowserWindow({
@@ -87,6 +87,7 @@ function startSpringServer(port: number | string) {
         return join(process.resourcesPath, "..", "libraries", JAR);
     })();
     console.info(`Launching server with jar ${server} at port ${port}...`);
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     serverProcess = require("child_process").spawn("java", [
         "-jar",
         server,
@@ -112,6 +113,7 @@ function stopSpringServer(port: number | string) {
             console.error("Failed to stop the server gracefully.", error);
             if (serverProcess) {
                 console.info(`Killing server process ${serverProcess.pid}`);
+                // eslint-disable-next-line @typescript-eslint/no-var-requires
                 const kill = require("tree-kill");
                 kill(serverProcess.pid, "SIGTERM", function (err: any) {
                     console.info("Server process killed", err);
