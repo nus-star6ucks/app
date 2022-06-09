@@ -74,7 +74,7 @@ let serverProcess: any
 const SPRING_PORT = 8081
 
 function startSpringServer(port: number | string) {
-  const JAR = 'api.jar' // how to avoid manual update of this?
+  const JAR = 'api.jar' 
   console.info(`Starting server at port ${port}`)
   const server = (() => {
     if (!app.isPackaged) {
