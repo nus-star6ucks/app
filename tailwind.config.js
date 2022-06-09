@@ -6,4 +6,4 @@ module.exports = {
       body: ['IBM Plex Mono', 'Menlo', 'monospace'],
     },
   },
-};
+}

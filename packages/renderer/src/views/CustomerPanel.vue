@@ -27,7 +27,12 @@
                   <span class="led-small" v-text="brand.price"></span>
                 </div>
               </div>
-              <span :class="{ 'led bg-red-600': true, 'opacity-30': brand.inStock }">
+              <span
+                :class="{
+                  'led bg-red-600': true,
+                  'opacity-30': brand.inStock,
+                }"
+              >
                 NOT IN STOCK
               </span>
             </div>
@@ -76,6 +81,8 @@
           </div>
         </section>
         <keyboard />
+        <p>一下</p>
+        <p v-text="$store.state.text" />
       </aside>
     </section>
   </div>
@@ -85,6 +92,7 @@
 import Vue from 'vue'
 import { CoffeeMachine, Cola } from '@icon-park/vue'
 import Keyboard from '@/components/Keyboard.vue'
+
 export default Vue.extend({
   components: {
     Keyboard,
