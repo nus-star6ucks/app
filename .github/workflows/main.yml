@@ -81,7 +81,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Install Node Modules
-        run: npm
+        run: npm install
         
       - name: Setup java env
         uses: actions/setup-java@v3
