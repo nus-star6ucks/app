@@ -70,7 +70,6 @@ async function createWindow(
   })
 }
 
-// The server url and process
 let serverProcess: any
 const SPRING_PORT = 8081
 
