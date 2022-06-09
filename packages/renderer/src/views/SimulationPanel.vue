@@ -1,7 +1,9 @@
 <template>
   <div class="mx-auto max-w-md">
     <header class="text-black py-6 mb-2">
-      <p class="text-center font-bold text-3xl tracking-tighter">Simulator Control Panel</p>
+      <p class="text-center font-bold text-3xl tracking-tighter">
+        Simulator Control Panel
+      </p>
     </header>
     <div class="space-y-4 px-4">
       <div class="grid grid-cols-2 gap-4">
@@ -25,11 +27,15 @@
         </button>
       </div>
     </div>
-    <footer class="fixed bottom-0 left-0 px-4 pb-2 space-y-2 max-w-md w-full mx-auto">
+    <footer
+      class="fixed bottom-0 left-0 px-4 pb-2 space-y-2 max-w-md w-full mx-auto"
+    >
       <button class="btn-solid bg-purple-100 py-4 rounded-md font-bold w-full">
         Begin Simulation
       </button>
-      <button class="w-full uppercase font-semibold py-4">End Simulation</button>
+      <button class="w-full uppercase font-semibold py-4">
+        End Simulation
+      </button>
     </footer>
   </div>
 </template>
