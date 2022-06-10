@@ -19,7 +19,7 @@
         </button>
         <button
           class="btn-solid bg-teal-100 py-4 aspect-square w-full"
-          @Click="
+          @click="
             () =>
               newWindow('/maintainer', {
                 width: 1035,
