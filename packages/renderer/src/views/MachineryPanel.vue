@@ -116,5 +116,8 @@ export default Vue.extend({
       quantities,
     };
   },
+  mounted() {
+    document.title = 'VMCS - Machinery Panel'
+  },
 });
 </script>

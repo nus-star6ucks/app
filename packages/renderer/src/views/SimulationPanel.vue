@@ -5,13 +5,40 @@
     </header>
     <div class="space-y-4 px-4">
       <div class="grid grid-cols-2 gap-4">
-        <button class="btn-solid bg-white py-4 aspect-square w-full" @click="() => newWindow('/customer')">
+        <button
+          class="btn-solid bg-white py-4 aspect-square w-full"
+          @click="
+            () =>
+              newWindow('/customer', {
+                width: 1035,
+                height: 660,
+              })
+          "
+        >
           Activate Customer Panel
         </button>
-        <button class="btn-solid bg-teal-100 py-4 aspect-square w-full" @Click="() => newWindow('/maintainer')">
+        <button
+          class="btn-solid bg-teal-100 py-4 aspect-square w-full"
+          @Click="
+            () =>
+              newWindow('/maintainer', {
+                width: 1035,
+                height: 660,
+              })
+          "
+        >
           Activate Maintainer Panel
         </button>
-        <button class="btn-solid bg-red-50 py-4 aspect-square w-full" @click="() => newWindow('/machinery')">
+        <button
+          class="btn-solid bg-red-50 py-4 aspect-square w-full"
+          @click="
+            () =>
+              newWindow('/machinery', {
+                width: 1035,
+                height: 660,
+              })
+          "
+        >
           Activate Machinery Panel
         </button>
       </div>
@@ -24,7 +51,7 @@
 </template>
 
 <script lang="ts">
-import { ipcRenderer } from 'electron';
+import { BrowserWindowConstructorOptions, ipcRenderer } from 'electron';
 import Vue from 'vue';
 
 export default Vue.extend({
@@ -35,8 +62,8 @@ export default Vue.extend({
   },
 
   methods: {
-    newWindow(path: string) {
-      ipcRenderer.invoke('open-win', path);
+    newWindow(path: string, options?: BrowserWindowConstructorOptions) {
+      ipcRenderer.invoke('open-win', path, options);
     },
   },
 });

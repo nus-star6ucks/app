@@ -156,5 +156,8 @@ export default Vue.extend({
       quantities,
     };
   },
+  mounted() {
+    document.title = 'VMCS - Maintainer Panel';
+  },
 });
 </script>

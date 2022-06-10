@@ -20,3 +20,10 @@ export type TResponseResult<T> = AxiosResponse<{
   resultBody: Array<T>;
   status: number;
 }>;
+
+
+export type Brand = {
+  title: string;
+  price: number;
+  inStock: boolean;
+};

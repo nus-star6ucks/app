@@ -145,22 +145,23 @@ app.on('activate', () => {
 });
 
 // new window example arg: new windows url
-ipcMain.handle('open-win', (event, arg) => {
+ipcMain.handle('open-win', (event, path, options?: BrowserWindowConstructorOptions) => {
   const childWindow = new BrowserWindow({
     webPreferences: {
       preload: join(__dirname, '../preload/index.cjs'),
       nodeIntegration: true,
       contextIsolation: false,
     },
+    ...options,
   });
 
   if (app.isPackaged) {
     childWindow.loadFile(join(__dirname, `../renderer/index.html`), {
-      hash: `${arg}`,
+      hash: `${path}`,
     });
   } else {
     // 🚧 Use ['ENV_NAME'] avoid vite:define plugin
-    const url = `http://${process.env['VITE_DEV_SERVER_HOST']}:${process.env['VITE_DEV_SERVER_PORT']}/#${arg}`;
+    const url = `http://${process.env['VITE_DEV_SERVER_HOST']}:${process.env['VITE_DEV_SERVER_PORT']}/#${path}`;
     childWindow.loadURL(url);
     // childWindow.webContents.openDevTools({ mode: "undocked", activate: true })
   }

@@ -15,7 +15,7 @@
               :disabled="!brand.inStock"
               :class="{
                 'w-full cursor-pointer btn-solid flex items-center justify-between space-x-2 p-4': true,
-                active: brand.title === selectedBrand,
+                active: selectedBrand && brand.title === selectedBrand.title,
               }"
               @click="() => selectBrand(brand)"
             >
@@ -23,7 +23,7 @@
                 <cola size="36" stroke-width="2" />
                 <div class="flex items-center space-x-2">
                   <h2 class="text-2xl tracking-tighter" v-text="brand.title" />
-                  <span class="led-small" v-text="brand.price" />
+                  <span class="led-small" v-text="formatCentsText(brand.price)" />
                 </div>
               </div>
               <span
@@ -45,6 +45,7 @@
             <span
               :class="{
                 'led bg-red-600': true,
+                'opacity-30': !invalidCoin,
               }"
             >
               INVALID COIN
@@ -52,11 +53,12 @@
           </div>
           <div class="flex space-x-2 justify-between">
             <button
-              v-for="coin in ['5c', '10c', '20c', '50c', '$1', 'Invalid']"
+              v-for="coin in [5, 10, 20, 50, 100, 'Invalid']"
               :key="coin"
-              class="btn-solid-small px-2 h-10"
+              :class="{ 'btn-solid-small px-2 h-10': true, 'with-click': !!selectedBrand }"
               :disabled="!selectedBrand"
-              v-text="coin"
+              @click="insertCoin(coin)"
+              v-text="formatCentsText(coin)"
             />
           </div>
         </section>
@@ -68,7 +70,7 @@
             </p>
           </div>
           <div class="border-2 border-black rounded-md p-4 uppercase">
-            <span class="led-small">No Can</span>
+            <span class="led-small" v-text="collectCanHereText"></span>
             <p class="font-bold">Collect Can Here</p>
           </div>
           <div class="border-2 border-black rounded-md p-4 uppercase">
@@ -76,7 +78,7 @@
             <p class="font-bold">Collect Coins</p>
           </div>
           <div class="border-2 border-black rounded-md p-4 uppercase">
-            <span class="led-small">30c</span>
+            <span class="led-small" v-text="formatCentsText(totalMoneyInserted)"></span>
             <p class="font-bold">Total Money Inserted</p>
           </div>
         </section>
@@ -90,7 +92,8 @@
 import Vue from 'vue';
 import { CoffeeMachine, Cola } from '@icon-park/vue';
 import KeyboardSection from '../components/KeyboardSection.vue';
-
+import { AVAILABLE_NOMIALS, formatCentsText } from '../utils';
+import { Brand } from '../global';
 export default Vue.extend({
   components: {
     KeyboardSection,
@@ -99,43 +102,68 @@ export default Vue.extend({
   },
   data() {
     return {
-      selectedBrand: '',
+      selectedBrand: null as Brand | null,
+      invalidCoin: false,
+      totalMoneyInserted: 0,
+      collectCoins: 0,
     };
   },
   computed: {
+    collectCanHereText() {
+      if (this.selectedBrand && this.totalMoneyInserted >= this.selectedBrand?.price) {
+        return this.selectedBrand.title;
+      }
+      return 'NO CAN';
+    },
+    formatCentsText() {
+      return formatCentsText;
+    },
     brands() {
       return [
         {
           title: 'Coca-Cola',
-          price: '75c',
+          price: 75,
           inStock: true,
         },
         {
           title: 'Sarsi',
-          price: '70c',
+          price: 70,
           inStock: true,
         },
         {
           title: 'Soya Bean',
-          price: '60c',
+          price: 60,
           inStock: false,
         },
         {
           title: 'Sevenup',
-          price: '75c',
+          price: 75,
           inStock: true,
         },
-      ];
+      ] as Array<Brand>;
     },
   },
+  mounted() {
+    document.title = 'VMCS - Customer Panel';
+  },
   methods: {
-    selectBrand(brand: any) {
-      if (!brand.inStock) return;
-      if (this.selectedBrand === brand.title) {
-        this.selectedBrand = '';
+    selectBrand(brand: Brand) {
+      if (!brand.inStock || this.selectedBrand) return;
+      this.selectedBrand = brand;
+    },
+    insertCoin(nomial: number) {
+      if (!AVAILABLE_NOMIALS.includes(nomial)) {
+        this.invalidCoin = true;
         return;
       }
-      this.selectedBrand = brand.title;
+      this.invalidCoin = false;
+      this.totalMoneyInserted += nomial;
+    },
+    terminateAndReturnCash() {
+      this.totalMoneyInserted = 0;
+      this.invalidCoin = false;
+      this.collectCoins = 0;
+      this.selectedBrand = null;
     },
   },
 });
