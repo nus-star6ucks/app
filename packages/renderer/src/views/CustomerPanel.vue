@@ -12,7 +12,7 @@
             <button
               v-for="brand in brands"
               :key="brand.title"
-              :disabled="!brand.inStock"
+              :disabled="brand.quantity > 0"
               :class="{
                 'w-full cursor-pointer btn-solid flex items-center justify-between space-x-2 p-4': true,
                 active: selectedBrand && brand.title === selectedBrand.title,
@@ -29,7 +29,7 @@
               <span
                 :class="{
                   'led bg-red-600': true,
-                  'opacity-30': brand.inStock,
+                  'opacity-30': brand.quantity > 0,
                 }"
               >
                 NOT IN STOCK
@@ -109,7 +109,7 @@ export default Vue.extend({
     };
   },
   computed: {
-    collectCanHereText() {
+    collectCanHereText(): string {
       if (this.selectedBrand && this.totalMoneyInserted >= this.selectedBrand?.price) {
         return this.selectedBrand.title;
       }
@@ -123,22 +123,22 @@ export default Vue.extend({
         {
           title: 'Coca-Cola',
           price: 75,
-          inStock: true,
+          quantity: 75,
         },
         {
           title: 'Sarsi',
           price: 70,
-          inStock: true,
+          quantity: 23,
         },
         {
           title: 'Soya Bean',
           price: 60,
-          inStock: false,
+          quantity: 12,
         },
         {
           title: 'Sevenup',
           price: 75,
-          inStock: true,
+          quantity: 12,
         },
       ] as Array<Brand>;
     },
@@ -148,7 +148,7 @@ export default Vue.extend({
   },
   methods: {
     selectBrand(brand: Brand) {
-      if (!brand.inStock || this.selectedBrand) return;
+      if (brand.quantity === 0 || this.selectedBrand) return;
       this.selectedBrand = brand;
     },
     insertCoin(nomial: number) {

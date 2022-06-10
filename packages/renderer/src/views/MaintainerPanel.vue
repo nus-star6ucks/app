@@ -9,26 +9,28 @@
         <section>
           <h2 class="font-bold text-lg tracking-tighter mb-2 uppercase">Quantity of Coins Available</h2>
           <div class="space-y-3">
-            <div
-              v-for="q in quantities"
-              :key="q.title"
-              class="cursor-pointer btn-solid flex items-center justify-between space-x-2 px-4 py-2"
+            <button
+              v-for="coin in coins"
+              :key="coin.nomial"
+              class="btn-solid with-click w-full flex items-center justify-between space-x-2 px-4 py-2"
+              @click="selectedCoin = coin"
             >
               <div class="flex items-center space-x-2">
                 <finance :size="36" :stroke-width="2" />
-                <h2 class="text-2xl tracking-tighter" v-text="q.title" />
+                <h2 class="text-2xl tracking-tighter" v-text="formatCentsText(coin.nomial)" />
               </div>
-              <span class="led-small" v-text="q.quantity" />
-            </div>
+              <span v-if="selectedCoin === coin" class="led-small" v-text="coin.quantity" />
+            </button>
           </div>
         </section>
         <section>
-          <h2 class="font-bold text-lg tracking-tighter mb-2 uppercase">Quantity of Drinks Available</h2>
+          <h2 class="font-bold text-lg tracking-tighter mb-2 uppercase">Quantity of brands Available</h2>
           <div class="space-y-3">
-            <div
+            <button
               v-for="brand in brands"
               :key="brand.title"
-              class="cursor-pointer btn-solid flex items-center justify-between space-x-2 px-4 py-2"
+              class="w-full btn-solid with-click flex items-center justify-between space-x-2 px-4 py-2"
+              @click="selectedBrand = brand"
             >
               <div class="flex items-center space-x-2">
                 <Cola size="36" stroke-width="2" />
@@ -36,8 +38,8 @@
                   <h2 class="text-2xl tracking-tighter" v-text="brand.title" />
                 </div>
               </div>
-              <span class="led-small" v-text="brand.quantity" />
-            </div>
+              <span v-if="selectedBrand == brand" class="led-small" v-text="brand.quantity" />
+            </button>
           </div>
         </section>
       </div>
@@ -53,7 +55,7 @@
                 type="text"
                 class="px-1 text-sm w-full font-bold border-2 border-black rounded-md transition-all"
                 width="100%"
-                value="75c"
+                :value="selectedBrand?.price"
               />
             </div>
             <div class="border-2 border-black rounded-md p-4 uppercase">
@@ -73,10 +75,10 @@
             <div class="border-2 border-black rounded-md p-4 uppercase">
               <span class="font-bold">
                 <span class="tracking-tighter">Total Cash</span>
-                <span class="ml-2 led-small">4470c</span>
+                <span v-if="totalCashHeld !== null" class="ml-2 led-small" v-text="formatCentsText(totalCashHeld)"></span>
               </span>
               <p class="font-bold mt-1">
-                <button class="w-full btn-solid-small text-xs p-1">Show Total Cash Held</button>
+                <button class="w-full btn-solid-small text-xs p-1 with-click" @click="totalCashHeld = 123">Show Total Cash Held</button>
               </p>
             </div>
           </section>
@@ -87,14 +89,27 @@
             <h2 class="font-bold text-lg tracking-tighter uppercase">Password</h2>
           </div>
           <div class="flex justify-between items-center">
-            <span class="led bg-teal-600">Valid Password</span>
-            <span class="led bg-red-600 opacity-30">Invalid Password</span>
+            <span
+              :class="{
+                'led bg-teal-600': true,
+                'opacity-30': !valid || password.length < 6,
+              }"
+              >Valid Password</span
+            >
+            <span
+              :class="{
+                'led bg-red-600': true,
+                'opacity-30': valid || password.length < 6,
+              }"
+              >Invalid Password</span
+            >
           </div>
           <input
             type="password"
             maxLength="6"
             class="p-1 w-full font-bold border-2 border-black rounded-md transition-all"
             width="100%"
+            @input="validate"
           />
         </section>
       </aside>
@@ -105,44 +120,53 @@
 <script lang="ts">
 import Vue from 'vue';
 import { CoffeeMachine, Cola, Finance } from '@icon-park/vue';
+import { Coin, Brand } from '../global';
+import { formatCentsText } from '../utils';
 
-const brands = [
+const brands: Brand[] = [
   {
     title: 'Coca-Cola',
     quantity: 75,
+    price: 75,
   },
   {
     title: 'Sarsi',
     quantity: 13,
+    price: 75,
+
   },
   {
     title: 'Soya Bean',
     quantity: 21,
+    price: 75,
   },
   {
     title: 'Sevenup',
     quantity: 57,
+    price: 75,
   },
 ];
 
-const quantities = [
+const coins: Coin[] = [
   {
-    title: '5c',
+    nomial: 5,
     quantity: 22,
   },
   {
-    title: '10c',
+    nomial: 10,
     quantity: 37,
   },
   {
-    title: '20c',
+    nomial: 20,
     quantity: 9,
   },
   {
-    title: '$1',
+    nomial: 100,
     quantity: 10,
   },
 ];
+
+const CORRECT_PASSWORD = '432199';
 
 export default Vue.extend({
   components: {
@@ -153,11 +177,33 @@ export default Vue.extend({
   data() {
     return {
       brands,
-      quantities,
+      coins,
+      password: '',
+      valid: false,
+      selectedCoin: null,
+      selectedBrand: null,
+      totalCashHeld: null
     };
+  },
+  computed: {
+    formatCentsText() {
+      return formatCentsText;
+    },
+    allowToUse(): boolean {
+      return this.password.length === 6 && this.valid === true;
+    },
   },
   mounted() {
     document.title = 'VMCS - Maintainer Panel';
+  },
+  methods: {
+    validate(e: any) {
+      this.password = e.target.value;
+      // ...
+      if (this.password.length === 6) {
+        this.valid = CORRECT_PASSWORD === this.password;
+      }
+    },
   },
 });
 </script>

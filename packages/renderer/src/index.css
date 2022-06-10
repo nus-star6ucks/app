@@ -137,7 +137,7 @@ body {
 }
 
 .btn-solid.with-click {
-    @apply active:shadow-none active:translate-x-0 active:translate-y-0 active:border-2;
+    @apply active:shadow-none active:translate-x-1 active:translate-y-1 active:border-2;
 }
 
 .btn-solid.active {

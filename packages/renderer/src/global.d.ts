@@ -25,5 +25,10 @@ export type TResponseResult<T> = AxiosResponse<{
 export type Brand = {
   title: string;
   price: number;
-  inStock: boolean;
+  quantity: number;
+};
+
+export type Coin = {
+  nomial: number;
+  quantity: number;
 };
