@@ -50,8 +50,6 @@
           </div>
           <div>
             <label class="font-semibold text-lg flex items-center">
-              <!-- <Checkbox />
-              <CheckboxFill /> -->
               <span class="ml-2">Door Locked?</span>
             </label>
           </div>
