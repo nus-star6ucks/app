@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+import Vue from 'vue';
 export default Vue.extend({
   props: {
     disabled: {
@@ -28,5 +28,5 @@ export default Vue.extend({
       default: () => ({}),
     },
   },
-})
+});
 </script>

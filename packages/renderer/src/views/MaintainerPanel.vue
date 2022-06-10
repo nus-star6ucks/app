@@ -1,21 +1,13 @@
 <template>
   <div>
     <div class="px-6 mb-4 flex items-center space-x-2 -ml-1">
-      <coffee-machine
-        theme="outline"
-        size="48"
-        stroke-width="3"
-        stroke-linejoin="bevel"
-        stroke-linecap="butt"
-      />
+      <coffee-machine theme="outline" size="48" stroke-width="3" stroke-linejoin="bevel" stroke-linecap="butt" />
       <span class="uppercase font-medium">Maintainer Panel</span>
     </div>
     <section class="px-6 grid gap-12 grid-cols-2">
       <div class="space-y-6">
         <section>
-          <h2 class="font-bold text-lg tracking-tighter mb-2 uppercase">
-            Quantity of Coins Available
-          </h2>
+          <h2 class="font-bold text-lg tracking-tighter mb-2 uppercase">Quantity of Coins Available</h2>
           <div class="space-y-3">
             <div
               v-for="q in quantities"
@@ -31,9 +23,7 @@
           </div>
         </section>
         <section>
-          <h2 class="font-bold text-lg tracking-tighter mb-2 uppercase">
-            Quantity of Drinks Available
-          </h2>
+          <h2 class="font-bold text-lg tracking-tighter mb-2 uppercase">Quantity of Drinks Available</h2>
           <div class="space-y-3">
             <div
               v-for="brand in brands"
@@ -77,9 +67,7 @@
               </span>
 
               <p class="font-bold mt-1">
-                <button class="w-full btn-solid-small text-xs p-1">
-                  Press to Collect All Cash
-                </button>
+                <button class="w-full btn-solid-small text-xs p-1">Press to Collect All Cash</button>
               </p>
             </div>
             <div class="border-2 border-black rounded-md p-4 uppercase">
@@ -88,23 +76,15 @@
                 <span class="ml-2 led-small">4470c</span>
               </span>
               <p class="font-bold mt-1">
-                <button class="w-full btn-solid-small text-xs p-1">
-                  Show Total Cash Held
-                </button>
+                <button class="w-full btn-solid-small text-xs p-1">Show Total Cash Held</button>
               </p>
             </div>
           </section>
-          <button
-            class="btn-solid bg-purple-100 py-4 rounded-md font-bold w-full"
-          >
-            Press Here When Finished
-          </button>
+          <button class="btn-solid bg-purple-100 py-4 rounded-md font-bold w-full">Press Here When Finished</button>
         </section>
         <section class="space-y-2">
           <div class="flex justify-between items-center">
-            <h2 class="font-bold text-lg tracking-tighter uppercase">
-              Password
-            </h2>
+            <h2 class="font-bold text-lg tracking-tighter uppercase">Password</h2>
           </div>
           <div class="flex justify-between items-center">
             <span class="led bg-teal-600">Valid Password</span>
@@ -123,8 +103,8 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { CoffeeMachine, Cola, Finance } from '@icon-park/vue'
+import Vue from 'vue';
+import { CoffeeMachine, Cola, Finance } from '@icon-park/vue';
 
 const brands = [
   {
@@ -143,7 +123,7 @@ const brands = [
     title: 'Sevenup',
     quantity: 57,
   },
-]
+];
 
 const quantities = [
   {
@@ -162,7 +142,7 @@ const quantities = [
     title: '$1',
     quantity: 10,
   },
-]
+];
 
 export default Vue.extend({
   components: {
@@ -174,7 +154,7 @@ export default Vue.extend({
     return {
       brands,
       quantities,
-    }
+    };
   },
-})
+});
 </script>

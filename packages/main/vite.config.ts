@@ -1,7 +1,7 @@
-import { builtinModules } from 'module'
-import { defineConfig } from 'vite'
-import { join } from 'path'
-import pkg from '../../package.json'
+import { builtinModules } from 'module';
+import { defineConfig } from 'vite';
+import { join } from 'path';
+import pkg from '../../package.json';
 
 export default defineConfig({
   root: __dirname,
@@ -29,4 +29,4 @@ export default defineConfig({
       ],
     },
   },
-})
+});

@@ -1,21 +1,13 @@
 <template>
   <div>
     <div class="px-6 mb-4 flex items-center space-x-2 -ml-1">
-      <coffee-machine
-        theme="outline"
-        size="48"
-        stroke-width="3"
-        stroke-linejoin="bevel"
-        stroke-linecap="butt"
-      />
+      <coffee-machine theme="outline" size="48" stroke-width="3" stroke-linejoin="bevel" stroke-linecap="butt" />
       <span class="uppercase font-medium">Soft Drink Dispenser</span>
     </div>
     <section class="px-6 grid gap-12 grid-cols-2">
       <div class="space-y-6">
         <section>
-          <h2 class="font-bold text-lg tracking-tighter mb-2 uppercase">
-            Brands
-          </h2>
+          <h2 class="font-bold text-lg tracking-tighter mb-2 uppercase">Brands</h2>
           <div class="space-y-3">
             <button
               v-for="brand in brands"
@@ -49,9 +41,7 @@
       <aside class="space-y-6">
         <section>
           <div class="flex justify-between items-center mb-2">
-            <h2 class="font-bold text-lg tracking-tighter uppercase">
-              Enter Coins Here
-            </h2>
+            <h2 class="font-bold text-lg tracking-tighter uppercase">Enter Coins Here</h2>
             <span
               :class="{
                 'led bg-red-600': true,
@@ -74,9 +64,7 @@
           <div class="border-2 border-black rounded-md p-4 uppercase">
             <span class="led bg-red-600 opacity-30">No Change Available</span>
             <p class="font-bold mt-1">
-              <button class="btn-solid-small text-xs p-1">
-                Terminate and Return Cash
-              </button>
+              <button class="btn-solid-small text-xs p-1">Terminate and Return Cash</button>
             </p>
           </div>
           <div class="border-2 border-black rounded-md p-4 uppercase">
@@ -99,9 +87,9 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { CoffeeMachine, Cola } from '@icon-park/vue'
-import KeyboardSection from '../components/KeyboardSection.vue'
+import Vue from 'vue';
+import { CoffeeMachine, Cola } from '@icon-park/vue';
+import KeyboardSection from '../components/KeyboardSection.vue';
 
 export default Vue.extend({
   components: {
@@ -112,7 +100,7 @@ export default Vue.extend({
   data() {
     return {
       selectedBrand: '',
-    }
+    };
   },
   computed: {
     brands() {
@@ -137,18 +125,18 @@ export default Vue.extend({
           price: '75c',
           inStock: true,
         },
-      ]
+      ];
     },
   },
   methods: {
     selectBrand(brand: any) {
-      if (!brand.inStock) return
+      if (!brand.inStock) return;
       if (this.selectedBrand === brand.title) {
-        this.selectedBrand = ''
-        return
+        this.selectedBrand = '';
+        return;
       }
-      this.selectedBrand = brand.title
+      this.selectedBrand = brand.title;
     },
   },
-})
+});
 </script>

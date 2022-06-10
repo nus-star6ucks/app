@@ -1,9 +1,9 @@
-import { defineConfig } from 'vite'
-import resolve, { lib2esm } from 'vite-plugin-resolve'
-import { createVuePlugin } from 'vite-plugin-vue2'
-import electron from 'vite-plugin-electron/renderer'
-import pkg from '../../package.json'
-import { join } from 'path'
+import { defineConfig } from 'vite';
+import resolve, { lib2esm } from 'vite-plugin-resolve';
+import { createVuePlugin } from 'vite-plugin-vue2';
+import electron from 'vite-plugin-electron/renderer';
+import pkg from '../../package.json';
+import { join } from 'path';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -59,4 +59,4 @@ export default defineConfig({
     host: pkg.env.VITE_DEV_SERVER_HOST,
     port: pkg.env.VITE_DEV_SERVER_PORT,
   },
-})
+});
