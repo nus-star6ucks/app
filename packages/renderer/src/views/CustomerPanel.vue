@@ -28,19 +28,10 @@
               @click="() => selectBrand(brand)"
             >
               <div class="flex items-center space-x-2">
-                <cola
-                  size="36"
-                  stroke-width="2"
-                />
+                <cola size="36" stroke-width="2" />
                 <div class="flex items-center space-x-2">
-                  <h2
-                    class="text-2xl tracking-tighter"
-                    v-text="brand.title"
-                  />
-                  <span
-                    class="led-small"
-                    v-text="brand.price"
-                  />
+                  <h2 class="text-2xl tracking-tighter" v-text="brand.title" />
+                  <span class="led-small" v-text="brand.price" />
                 </div>
               </div>
               <span
@@ -90,21 +81,15 @@
           </div>
           <div class="border-2 border-black rounded-md p-4 uppercase">
             <span class="led-small">No Can</span>
-            <p class="font-bold">
-              Collect Can Here
-            </p>
+            <p class="font-bold">Collect Can Here</p>
           </div>
           <div class="border-2 border-black rounded-md p-4 uppercase">
             <span class="led-small">0c</span>
-            <p class="font-bold">
-              Collect Coins
-            </p>
+            <p class="font-bold">Collect Coins</p>
           </div>
           <div class="border-2 border-black rounded-md p-4 uppercase">
             <span class="led-small">30c</span>
-            <p class="font-bold">
-              Total Money Inserted
-            </p>
+            <p class="font-bold">Total Money Inserted</p>
           </div>
         </section>
         <keyboard-section />

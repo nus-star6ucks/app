@@ -23,21 +23,12 @@
               class="border-2 border-black rounded-md p-4 uppercase flex justify-between items-center"
             >
               <div class="flex items-center space-x-2 font-semibold">
-                <finance
-                  :size="36"
-                  :stroke-width="2"
-                />
+                <finance :size="36" :stroke-width="2" />
                 <div class="flex items-center space-x-2">
-                  <h2
-                    class="text-2xl tracking-tighter"
-                    v-text="q.title"
-                  />
+                  <h2 class="text-2xl tracking-tighter" v-text="q.title" />
                 </div>
               </div>
-              <span
-                class="led-small"
-                v-text="q.quantity"
-              />
+              <span class="led-small" v-text="q.quantity" />
             </div>
           </div>
         </section>
@@ -52,21 +43,12 @@
               class="border-2 border-black rounded-md p-4 uppercase flex justify-between items-center"
             >
               <div class="flex items-center space-x-2 font-semibold">
-                <cola
-                  :size="36"
-                  :stroke-width="2"
-                />
+                <cola :size="36" :stroke-width="2" />
                 <div class="flex items-center space-x-2">
-                  <h2
-                    class="text-xl tracking-tighter"
-                    v-text="brand.title"
-                  />
+                  <h2 class="text-xl tracking-tighter" v-text="brand.title" />
                 </div>
               </div>
-              <span
-                class="led-small"
-                v-text="brand.quantity"
-              />
+              <span class="led-small" v-text="brand.quantity" />
             </div>
           </div>
         </section>
@@ -74,9 +56,7 @@
       <aside class="space-y-6">
         <section>
           <div class="flex justify-between items-center mb-2">
-            <h2 class="font-bold text-lg tracking-tighter uppercase">
-              Misc
-            </h2>
+            <h2 class="font-bold text-lg tracking-tighter uppercase">Misc</h2>
           </div>
           <div>
             <label class="font-semibold text-lg flex items-center">
@@ -88,9 +68,7 @@
         </section>
         <section>
           <div class="flex justify-between items-center mb-2">
-            <h2 class="font-bold text-lg tracking-tighter uppercase">
-              State
-            </h2>
+            <h2 class="font-bold text-lg tracking-tighter uppercase">State</h2>
           </div>
         </section>
         <keyboard-section disabled />

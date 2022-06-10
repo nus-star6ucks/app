@@ -1,9 +1,7 @@
 <template>
   <section>
     <div class="flex justify-between items-center mb-2">
-      <h2 class="font-bold text-lg tracking-tighter uppercase">
-        KEYBOARD
-      </h2>
+      <h2 class="font-bold text-lg tracking-tighter uppercase">KEYBOARD</h2>
     </div>
     <div :class="{ 'grid grid-cols-3 gap-2': true, 'opacity-30': disabled }">
       <button

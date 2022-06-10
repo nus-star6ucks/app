@@ -23,19 +23,10 @@
               class="cursor-pointer btn-solid flex items-center justify-between space-x-2 px-4 py-2"
             >
               <div class="flex items-center space-x-2">
-                <finance
-                  :size="36"
-                  :stroke-width="2"
-                />
-                <h2
-                  class="text-2xl tracking-tighter"
-                  v-text="q.title"
-                />
+                <finance :size="36" :stroke-width="2" />
+                <h2 class="text-2xl tracking-tighter" v-text="q.title" />
               </div>
-              <span
-                class="led-small"
-                v-text="q.quantity"
-              />
+              <span class="led-small" v-text="q.quantity" />
             </div>
           </div>
         </section>
@@ -50,21 +41,12 @@
               class="cursor-pointer btn-solid flex items-center justify-between space-x-2 px-4 py-2"
             >
               <div class="flex items-center space-x-2">
-                <Cola
-                  size="36"
-                  stroke-width="2"
-                />
+                <Cola size="36" stroke-width="2" />
                 <div class="flex items-center space-x-2">
-                  <h2
-                    class="text-2xl tracking-tighter"
-                    v-text="brand.title"
-                  />
+                  <h2 class="text-2xl tracking-tighter" v-text="brand.title" />
                 </div>
               </div>
-              <span
-                class="led-small"
-                v-text="brand.quantity"
-              />
+              <span class="led-small" v-text="brand.quantity" />
             </div>
           </div>
         </section>
@@ -72,27 +54,21 @@
       <aside class="space-y-6">
         <section class="space-y-2">
           <div class="flex justify-between items-center">
-            <h2 class="font-bold text-lg tracking-tighter uppercase">
-              Misc
-            </h2>
+            <h2 class="font-bold text-lg tracking-tighter uppercase">Misc</h2>
           </div>
           <section class="grid grid-cols-2 gap-2">
             <div class="border-2 border-black rounded-md p-4 uppercase">
-              <p class="font-bold tracking-tighter">
-                Brand Price
-              </p>
+              <p class="font-bold tracking-tighter">Brand Price</p>
               <input
                 type="text"
                 class="px-1 text-sm w-full font-bold border-2 border-black rounded-md transition-all"
                 width="100%"
                 value="75c"
-              >
+              />
             </div>
             <div class="border-2 border-black rounded-md p-4 uppercase">
               <span class="led-small">No Can</span>
-              <p class="font-bold tracking-tighter">
-                Collect Can Here
-              </p>
+              <p class="font-bold tracking-tighter">Collect Can Here</p>
             </div>
             <div class="border-2 border-black rounded-md p-4 uppercase">
               <span class="font-bold">
@@ -139,7 +115,7 @@
             maxLength="6"
             class="p-1 w-full font-bold border-2 border-black rounded-md transition-all"
             width="100%"
-          >
+          />
         </section>
       </aside>
     </section>

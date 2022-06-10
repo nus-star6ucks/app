@@ -1,3 +1,5 @@
+require('@rushstack/eslint-patch/modern-module-resolution')
+
 module.exports = {
   env: {
     browser: true,
@@ -5,9 +7,9 @@ module.exports = {
   },
 
   extends: [
-    'plugin:vue/vue3-recommended',
-    'eslint:recommended',
-    '@vue/typescript/recommended',
+    'plugin:vue/vue3-essential',
+    '@vue/eslint-config-typescript/recommended',
+    '@vue/eslint-config-prettier',
   ],
 
   parserOptions: {
