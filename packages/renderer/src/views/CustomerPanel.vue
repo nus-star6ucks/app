@@ -17,7 +17,7 @@
                 'w-full cursor-pointer btn-solid flex items-center justify-between space-x-2 p-4': true,
                 active: selectedBrand && brand.title === selectedBrand.title,
               }"
-              @click="() => selectBrand(brand)"
+              @click="selectBrand(brand)"
             >
               <div class="flex items-center space-x-2">
                 <cola size="36" stroke-width="2" />
@@ -94,77 +94,76 @@ import { CoffeeMachine, Cola } from '@icon-park/vue';
 import KeyboardSection from '../components/KeyboardSection.vue';
 import { AVAILABLE_NOMIALS, formatCentsText } from '../utils';
 import { Brand } from '../global';
-export default Vue.extend({
+import Component from 'vue-class-component';
+
+@Component({
   components: {
     KeyboardSection,
     CoffeeMachine,
     Cola,
   },
-  data() {
-    return {
-      selectedBrand: null as Brand | null,
-      invalidCoin: false,
-      totalMoneyInserted: 0,
-      collectCoins: 0,
-    };
-  },
-  computed: {
-    collectCanHereText(): string {
-      if (this.selectedBrand && this.totalMoneyInserted >= this.selectedBrand?.price) {
-        return this.selectedBrand.title;
-      }
-      return 'NO CAN';
+})
+export default class CustomerPanel extends Vue {
+  selectedBrand: Brand | null = null;
+  invalidCoin = false;
+  totalMoneyInserted = 0;
+  collectCoins = 0;
+  brands = [
+    {
+      title: 'Coca-Cola',
+      price: 75,
+      quantity: 75,
     },
-    formatCentsText() {
-      return formatCentsText;
+    {
+      title: 'Sarsi',
+      price: 70,
+      quantity: 23,
     },
-    brands() {
-      return [
-        {
-          title: 'Coca-Cola',
-          price: 75,
-          quantity: 75,
-        },
-        {
-          title: 'Sarsi',
-          price: 70,
-          quantity: 23,
-        },
-        {
-          title: 'Soya Bean',
-          price: 60,
-          quantity: 12,
-        },
-        {
-          title: 'Sevenup',
-          price: 75,
-          quantity: 12,
-        },
-      ] as Array<Brand>;
+    {
+      title: 'Soya Bean',
+      price: 60,
+      quantity: 12,
     },
-  },
+    {
+      title: 'Sevenup',
+      price: 75,
+      quantity: 12,
+    },
+  ];
+
+  get formatCentsText() {
+    return formatCentsText;
+  }
+
+  get collectCanHereText(): string {
+    if (this.selectedBrand && this.totalMoneyInserted >= this.selectedBrand?.price) {
+      return this.selectedBrand.title;
+    }
+    return 'NO CAN';
+  }
+
   mounted() {
     document.title = 'VMCS - Customer Panel';
-  },
-  methods: {
-    selectBrand(brand: Brand) {
-      if (brand.quantity === 0 || this.selectedBrand) return;
-      this.selectedBrand = brand;
-    },
-    insertCoin(nomial: number) {
-      if (!AVAILABLE_NOMIALS.includes(nomial)) {
-        this.invalidCoin = true;
-        return;
-      }
-      this.invalidCoin = false;
-      this.totalMoneyInserted += nomial;
-    },
-    terminateAndReturnCash() {
-      this.totalMoneyInserted = 0;
-      this.invalidCoin = false;
-      this.collectCoins = 0;
-      this.selectedBrand = null;
-    },
-  },
-});
+  }
+
+  selectBrand(brand: Brand) {
+    console.log('wtf');
+    if (brand.quantity === 0 || this.selectedBrand) return;
+    this.selectedBrand = brand;
+  }
+  insertCoin(nomial: number) {
+    if (!AVAILABLE_NOMIALS.includes(nomial)) {
+      this.invalidCoin = true;
+      return;
+    }
+    this.invalidCoin = false;
+    this.totalMoneyInserted += nomial;
+  }
+  terminateAndReturnCash() {
+    this.totalMoneyInserted = 0;
+    this.invalidCoin = false;
+    this.collectCoins = 0;
+    this.selectedBrand = null;
+  }
+}
 </script>

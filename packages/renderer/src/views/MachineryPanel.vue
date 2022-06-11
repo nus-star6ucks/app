@@ -68,9 +68,10 @@
 <script lang="ts">
 import { CoffeeMachine, Cola, Finance } from '@icon-park/vue';
 import Vue from 'vue';
+import Component from 'vue-class-component';
 import KeyboardSection from '../components/KeyboardSection.vue';
 
-const quantities = [
+const quantitiesData = [
   {
     title: '5c',
     quantity: 22,
@@ -89,7 +90,7 @@ const quantities = [
   },
 ];
 
-const brands = [
+const brandsData = [
   {
     title: 'Coca-Cola',
     quantity: 5,
@@ -108,16 +109,15 @@ const brands = [
   },
 ];
 
-export default Vue.extend({
+@Component({
   components: { CoffeeMachine, Cola, Finance, KeyboardSection },
-  data() {
-    return {
-      brands,
-      quantities,
-    };
-  },
+})
+export default class CustomerPanel extends Vue {
+  brands = brandsData;
+  quantities = quantitiesData;
+
   mounted() {
     document.title = 'VMCS - Machinery Panel';
-  },
-});
+  }
+}
 </script>

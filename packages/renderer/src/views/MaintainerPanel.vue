@@ -128,6 +128,7 @@ import Vue from 'vue';
 import { CoffeeMachine, Cola, Finance } from '@icon-park/vue';
 import { Coin, Brand } from '../global';
 import { formatCentsText } from '../utils';
+import Component from 'vue-class-component';
 
 const brands: Brand[] = [
   {
@@ -173,42 +174,38 @@ const coins: Coin[] = [
 
 const CORRECT_PASSWORD = '432199';
 
-export default Vue.extend({
+@Component({
   components: {
     CoffeeMachine,
     Cola,
     Finance,
   },
-  data() {
-    return {
-      brands,
-      coins,
-      password: '' as string,
-      valid: false,
-      selectedCoin: null! as Coin,
-      selectedBrand: null! as Brand,
-      totalCashHeld: null,
-    };
-  },
-  computed: {
-    formatCentsText() {
-      return formatCentsText;
-    },
-    allowToUse(): boolean {
-      return this.password.length === 6 && this.valid === true;
-    },
-  },
+})
+export default class CustomerPanel extends Vue {
+  brands = brands;
+  coins = coins;
+  password = '';
+  valid = false;
+  selectedCoin: Coin | null = null;
+  selectedBrand: Brand | null = null;
+  totalCashHeld = 0;
+
+  get formatCentsText() {
+    return formatCentsText;
+  }
+  get allowToUse(): boolean {
+    return this.password.length === 6 && this.valid === true;
+  }
+
+  validate(e: any) {
+    this.password = e.target.value;
+    // ...
+    if (this.password.length === 6) {
+      this.valid = CORRECT_PASSWORD === this.password;
+    }
+  }
   mounted() {
     document.title = 'VMCS - Maintainer Panel';
-  },
-  methods: {
-    validate(e: any) {
-      this.password = e.target.value;
-      // ...
-      if (this.password.length === 6) {
-        this.valid = CORRECT_PASSWORD === this.password;
-      }
-    },
-  },
-});
+  }
+}
 </script>

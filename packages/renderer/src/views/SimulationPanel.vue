@@ -53,18 +53,14 @@
 <script lang="ts">
 import { BrowserWindowConstructorOptions, ipcRenderer } from 'electron';
 import Vue from 'vue';
+import Component from 'vue-class-component';
 
-export default Vue.extend({
-  data() {
-    return {
-      text: '',
-    };
-  },
+@Component({})
+export default class CustomerPanel extends Vue {
+  text = '';
 
-  methods: {
-    newWindow(path: string, options?: BrowserWindowConstructorOptions) {
-      ipcRenderer.invoke('open-win', path, options);
-    },
-  },
-});
+  newWindow(path: string, options?: BrowserWindowConstructorOptions) {
+    ipcRenderer.invoke('open-win', path, options);
+  }
+}
 </script>

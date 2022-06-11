@@ -28,7 +28,8 @@
     ]
   },
   "dependencies": {
-    "electron-store": "^8.0.1"
+    "electron-store": "^8.0.1",
+    "vue-class-component": "^7.2.6"
   },
   "devDependencies": {
     "@icon-park/vue": "^1.4.0",
