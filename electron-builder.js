@@ -15,7 +15,7 @@ module.exports = {
   win: {
     target: [
       {
-        target: 'nsis',
+        target: 'portable',
         arch: ['x64'],
       },
     ],
@@ -35,4 +35,4 @@ module.exports = {
     target: ['AppImage'],
     artifactName: '${productName}-${version}-Installer.${ext}',
   },
-}
+};
