@@ -75,10 +75,16 @@
             <div class="border-2 border-black rounded-md p-4 uppercase">
               <span class="font-bold">
                 <span class="tracking-tighter">Total Cash</span>
-                <span v-if="totalCashHeld !== null" class="ml-2 led-small" v-text="formatCentsText(totalCashHeld)"></span>
+                <span
+                  v-if="totalCashHeld !== null"
+                  class="ml-2 led-small"
+                  v-text="formatCentsText(totalCashHeld)"
+                ></span>
               </span>
               <p class="font-bold mt-1">
-                <button class="w-full btn-solid-small text-xs p-1 with-click" @click="totalCashHeld = 123">Show Total Cash Held</button>
+                <button class="w-full btn-solid-small text-xs p-1 with-click" @click="totalCashHeld = 123">
+                  Show Total Cash Held
+                </button>
               </p>
             </div>
           </section>
@@ -133,7 +139,6 @@ const brands: Brand[] = [
     title: 'Sarsi',
     quantity: 13,
     price: 75,
-
   },
   {
     title: 'Soya Bean',
@@ -178,11 +183,11 @@ export default Vue.extend({
     return {
       brands,
       coins,
-      password: '',
+      password: '' as string,
       valid: false,
-      selectedCoin: null,
-      selectedBrand: null,
-      totalCashHeld: null
+      selectedCoin: null! as Coin,
+      selectedBrand: null! as Brand,
+      totalCashHeld: null,
     };
   },
   computed: {

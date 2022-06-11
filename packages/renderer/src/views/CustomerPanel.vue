@@ -53,7 +53,7 @@
           </div>
           <div class="flex space-x-2 justify-between">
             <button
-              v-for="coin in [5, 10, 20, 50, 100, 'Invalid']"
+              v-for="coin in [5, 10, 20, 50, 100, 999999]"
               :key="coin"
               :class="{ 'btn-solid-small px-2 h-10': true, 'with-click': !!selectedBrand }"
               :disabled="!selectedBrand"
