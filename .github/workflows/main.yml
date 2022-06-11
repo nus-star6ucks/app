@@ -50,7 +50,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        node-version: [16.x]
+        node-version: [14.x]
 
         os: [macos-latest, ubuntu-latest, windows-latest]
         # os: [ubuntu-latest, windows-latest]
@@ -63,7 +63,6 @@ jobs:
           OSNAME: linux
           OSEND: AppImage
           FILEPART: Installer
-
         - os: windows-latest
           OSNAME: win
           OSEND: exe
