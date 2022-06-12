@@ -52,7 +52,7 @@ jobs:
       matrix:
         node-version: [14.x]
 
-        os: [macos-latest, ubuntu-latest, windows-latest]
+        os: [macos-latest, ubuntu-latest]
         # os: [ubuntu-latest, windows-latest]
         include:
         - os: macos-latest
@@ -63,10 +63,10 @@ jobs:
           OSNAME: linux
           OSEND: AppImage
           FILEPART: Installer
-        - os: windows-latest
-          OSNAME: win
-          OSEND: exe
-          FILEPART: Setup
+#         - os: windows-latest
+#           OSNAME: win
+#           OSEND: exe
+#           FILEPART: Setup
 
     steps:
       - name: Checkout code
@@ -96,11 +96,11 @@ jobs:
         run: GH_TOKEN=${{ secrets.GITHUB_TOKEN }} yarn run dist
 
       - name: Build Win project
-        if: matrix.OSNAME == 'win'
+        if: matrix.OSNAME == 'mac'
         env:
           release_version: ${{ steps.package-version.outputs.current-version}}
           REACT_APP_VERSION: ${{ steps.package-version.outputs.current-version}}
-        run: set GH_TOKEN=${{ secrets.GITHUB_TOKEN }} && yarn run dist
+        run: set GH_TOKEN=${{ secrets.GITHUB_TOKEN }} && yarn run dist-win
 
       - name: Upload Release Asset
         id: upload-release-asset
@@ -112,3 +112,15 @@ jobs:
           asset_path: ./release/${{ needs.create_release.outputs.current-version}}/Star6ucks-${{ needs.create_release.outputs.current-version}}-${{matrix.FILEPART}}.${{matrix.OSEND}}
           asset_name: Star6ucks-${{ needs.create_release.outputs.current-version}}-${{matrix.FILEPART}}-${{matrix.OSNAME}}.${{matrix.OSEND}}
           asset_content_type: application/${{matrix.OSEND}}
+
+      - name: Upload Release Asset (Win)
+        if: matrix.OSNAME == 'mac'
+        id: upload-release-asset-win
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create_release.outputs.upload_url }}
+          asset_path: ./release/${{ needs.create_release.outputs.current-version}}/Star6ucks-${{ needs.create_release.outputs.current-version}}-Setup-win.exe
+          asset_name: Star6ucks-${{ needs.create_release.outputs.current-version}}-Setup-win.exe
+          asset_content_type: application/exe
