@@ -6,7 +6,7 @@
     <div class="space-y-4 px-4">
       <div class="grid grid-cols-2 gap-4">
         <button
-          class="btn-solid bg-white py-4 aspect-square w-full"
+          class="btn-solid with-click bg-white py-4 aspect-square w-full"
           @click="
             () =>
               newWindow('/customer', {
@@ -18,7 +18,7 @@
           Activate Customer Panel
         </button>
         <button
-          class="btn-solid bg-teal-100 py-4 aspect-square w-full"
+          class="btn-solid with-click bg-teal-100 py-4 aspect-square w-full"
           @click="
             () =>
               newWindow('/maintainer', {
@@ -30,7 +30,7 @@
           Activate Maintainer Panel
         </button>
         <button
-          class="btn-solid bg-red-50 py-4 aspect-square w-full"
+          class="btn-solid with-click bg-red-50 py-4 aspect-square w-full"
           @click="
             () =>
               newWindow('/machinery', {

@@ -17,7 +17,7 @@
                 'w-full cursor-pointer btn-solid flex items-center justify-between space-x-2 p-4': true,
                 active: selectedBrand && brand.title === selectedBrand.title,
               }"
-              @click="selectBrand(brand)"
+              @click="() => selectBrand(brand)"
             >
               <div class="flex items-center space-x-2">
                 <cola size="36" stroke-width="2" />
@@ -147,10 +147,10 @@ export default class CustomerPanel extends Vue {
   }
 
   selectBrand(brand: Brand) {
-    console.log('wtf');
     if (brand.quantity === 0 || this.selectedBrand) return;
     this.selectedBrand = brand;
   }
+
   insertCoin(nomial: number) {
     if (!AVAILABLE_NOMIALS.includes(nomial)) {
       this.invalidCoin = true;
@@ -159,7 +159,9 @@ export default class CustomerPanel extends Vue {
     this.invalidCoin = false;
     this.totalMoneyInserted += nomial;
   }
+
   terminateAndReturnCash() {
+    console.log('wtf');
     this.totalMoneyInserted = 0;
     this.invalidCoin = false;
     this.collectCoins = 0;
