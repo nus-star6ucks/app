@@ -161,7 +161,6 @@ export default class CustomerPanel extends Vue {
   }
 
   terminateAndReturnCash() {
-    console.log('wtf');
     this.totalMoneyInserted = 0;
     this.invalidCoin = false;
     this.collectCoins = 0;
