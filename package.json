@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "electron-store": "^8.0.1",
+    "pinia": "^2.0.14",
     "vue-class-component": "^7.2.6",
     "vue-template-compiler": "^2.6.14"
   },

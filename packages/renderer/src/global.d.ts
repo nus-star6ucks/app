@@ -1,4 +1,5 @@
 import { AxiosResponse } from 'axios';
+import { BrowserWindow } from 'electron';
 
 export {};
 
@@ -13,22 +14,3 @@ declare global {
     };
   }
 }
-
-export type TResponseResult<T> = AxiosResponse<{
-  errorCode: string;
-  errorMsg: string;
-  resultBody: Array<T>;
-  status: number;
-}>;
-
-
-export type Brand = {
-  title: string;
-  price: number;
-  quantity: number;
-};
-
-export type Coin = {
-  nomial: number;
-  quantity: number;
-};
