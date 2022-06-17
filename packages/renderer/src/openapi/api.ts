@@ -32,25 +32,25 @@ export interface Coin {
      */
     id: number;
     /**
-     * 名称，如 $1, 50 cents
+     * ex. $1, 50 c
      * @type {string}
      * @memberof Coin
      */
     name: string;
     /**
-     * 面额，分为单位，$1 填 100
+     * face value ($1 for 100)
      * @type {number}
      * @memberof Coin
      */
     value: number;
     /**
-     * 库存
+     * stock
      * @type {number}
      * @memberof Coin
      */
     quantity: number;
     /**
-     * 重量
+     * 
      * @type {number}
      * @memberof Coin
      */
@@ -69,25 +69,25 @@ export interface Drink {
      */
     id: number;
     /**
-     * 品牌名称
+     * drink brand name
      * @type {string}
      * @memberof Drink
      */
     name: string;
     /**
-     * 库存
+     * stock
      * @type {number}
      * @memberof Drink
      */
     quantity: number;
     /**
-     * 分为单位
+     * unit: cent
      * @type {number}
      * @memberof Drink
      */
     price: number;
     /**
-     * 槽位
+     * slot no
      * @type {number}
      * @memberof Drink
      */
@@ -107,49 +107,23 @@ export interface InlineObject {
     password: string;
 }
 /**
- * 直接传整个 object
+ * 
  * @export
  * @interface InlineObject1
  */
 export interface InlineObject1 {
     /**
-     * 门锁状态
-     * @type {boolean}
-     * @memberof InlineObject1
-     */
-    doorLocked?: boolean;
-}
-/**
- * 
- * @export
- * @interface InlineObject2
- */
-export interface InlineObject2 {
-    /**
      * 
      * @type {number}
-     * @memberof InlineObject2
+     * @memberof InlineObject1
      */
     drinkId: number;
     /**
-     * 
-     * @type {Coin}
-     * @memberof InlineObject2
+     * 合并 object 的 quantity
+     * @type {Array<Coin>}
+     * @memberof InlineObject1
      */
-    coins: Coin;
-}
-/**
- * 
- * @export
- * @interface InlineObject3
- */
-export interface InlineObject3 {
-    /**
-     * 库存
-     * @type {number}
-     * @memberof InlineObject3
-     */
-    stock: number;
+    coins: Array<Coin>;
 }
 /**
  * 
@@ -164,25 +138,25 @@ export interface InlineResponse200 {
      */
     id: number;
     /**
-     * 名称，如 $1, 50 cents
+     * ex. $1, 50 c
      * @type {string}
      * @memberof InlineResponse200
      */
     name: string;
     /**
-     * 面额，分为单位，$1 填 100
+     * face value ($1 for 100)
      * @type {number}
      * @memberof InlineResponse200
      */
     value: number;
     /**
-     * 库存
+     * stock
      * @type {number}
      * @memberof InlineResponse200
      */
     quantity: number;
     /**
-     * 重量
+     * 
      * @type {number}
      * @memberof InlineResponse200
      */
@@ -226,13 +200,13 @@ export interface Machine {
      */
     id: number;
     /**
-     * Soft Drink Dispenser
+     * ex. Soft Drink Dispenser
      * @type {string}
      * @memberof Machine
      */
     name: string;
     /**
-     * 门锁状态
+     * 
      * @type {boolean}
      * @memberof Machine
      */
@@ -251,13 +225,13 @@ export interface User {
      */
     id: number;
     /**
-     * Maintainer
+     * ex. Maintainer
      * @type {string}
      * @memberof User
      */
     role: string;
     /**
-     * 固定 6 位
+     * 6 alphanumeric chars
      * @type {string}
      * @memberof User
      */
@@ -414,11 +388,11 @@ export const CoinApiAxiosParamCreator = function (configuration?: Configuration)
         /**
          * 3.2.4 (1) The number of coins held of a denomination shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 40).
          * @summary Modify Coin(s)
-         * @param {InlineObject3} [inlineObject3] 
+         * @param {Array<Coin>} [coin] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        coinsPut: async (inlineObject3?: InlineObject3, options: any = {}): Promise<RequestArgs> => {
+        coinsPut: async (coin?: Array<Coin>, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/coins/`;
             const localVarUrlObj = globalImportUrl.parse(localVarPath, true);
             let baseOptions;
@@ -438,8 +412,8 @@ export const CoinApiAxiosParamCreator = function (configuration?: Configuration)
             delete localVarUrlObj.search;
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const needsSerialization = (typeof inlineObject3 !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(inlineObject3 !== undefined ? inlineObject3 : {}) : (inlineObject3 || "");
+            const needsSerialization = (typeof coin !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(coin !== undefined ? coin : {}) : (coin || "");
 
             return {
                 url: globalImportUrl.format(localVarUrlObj),
@@ -513,12 +487,12 @@ export const CoinApiFp = function(configuration?: Configuration) {
         /**
          * 3.2.4 (1) The number of coins held of a denomination shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 40).
          * @summary Modify Coin(s)
-         * @param {InlineObject3} [inlineObject3] 
+         * @param {Array<Coin>} [coin] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async coinsPut(inlineObject3?: InlineObject3, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Drink>>> {
-            const localVarAxiosArgs = await CoinApiAxiosParamCreator(configuration).coinsPut(inlineObject3, options);
+        async coinsPut(coin?: Array<Coin>, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Drink>>> {
+            const localVarAxiosArgs = await CoinApiAxiosParamCreator(configuration).coinsPut(coin, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -575,12 +549,12 @@ export const CoinApiFactory = function (configuration?: Configuration, basePath?
         /**
          * 3.2.4 (1) The number of coins held of a denomination shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 40).
          * @summary Modify Coin(s)
-         * @param {InlineObject3} [inlineObject3] 
+         * @param {Array<Coin>} [coin] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        coinsPut(inlineObject3?: InlineObject3, options?: any): AxiosPromise<Array<Drink>> {
-            return CoinApiFp(configuration).coinsPut(inlineObject3, options).then((request) => request(axios, basePath));
+        coinsPut(coin?: Array<Coin>, options?: any): AxiosPromise<Array<Drink>> {
+            return CoinApiFp(configuration).coinsPut(coin, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -642,13 +616,13 @@ export class CoinApi extends BaseAPI {
     /**
      * 3.2.4 (1) The number of coins held of a denomination shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 40).
      * @summary Modify Coin(s)
-     * @param {InlineObject3} [inlineObject3] 
+     * @param {Array<Coin>} [coin] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof CoinApi
      */
-    public coinsPut(inlineObject3?: InlineObject3, options?: any) {
-        return CoinApiFp(this.configuration).coinsPut(inlineObject3, options).then((request) => request(this.axios, this.basePath));
+    public coinsPut(coin?: Array<Coin>, options?: any) {
+        return CoinApiFp(this.configuration).coinsPut(coin, options).then((request) => request(this.axios, this.basePath));
     }
 
 }
@@ -763,11 +737,11 @@ export const DrinkApiAxiosParamCreator = function (configuration?: Configuration
         /**
          * 
          * @summary Purchase
-         * @param {InlineObject2} [inlineObject2] 
+         * @param {InlineObject1} [inlineObject1] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        drinksPurchasePost: async (inlineObject2?: InlineObject2, options: any = {}): Promise<RequestArgs> => {
+        drinksPurchasePost: async (inlineObject1?: InlineObject1, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/drinks/purchase`;
             const localVarUrlObj = globalImportUrl.parse(localVarPath, true);
             let baseOptions;
@@ -787,8 +761,8 @@ export const DrinkApiAxiosParamCreator = function (configuration?: Configuration
             delete localVarUrlObj.search;
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const needsSerialization = (typeof inlineObject2 !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(inlineObject2 !== undefined ? inlineObject2 : {}) : (inlineObject2 || "");
+            const needsSerialization = (typeof inlineObject1 !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(inlineObject1 !== undefined ? inlineObject1 : {}) : (inlineObject1 || "");
 
             return {
                 url: globalImportUrl.format(localVarUrlObj),
@@ -883,12 +857,12 @@ export const DrinkApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Purchase
-         * @param {InlineObject2} [inlineObject2] 
+         * @param {InlineObject1} [inlineObject1] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async drinksPurchasePost(inlineObject2?: InlineObject2, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2001>> {
-            const localVarAxiosArgs = await DrinkApiAxiosParamCreator(configuration).drinksPurchasePost(inlineObject2, options);
+        async drinksPurchasePost(inlineObject1?: InlineObject1, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2001>> {
+            const localVarAxiosArgs = await DrinkApiAxiosParamCreator(configuration).drinksPurchasePost(inlineObject1, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -949,12 +923,12 @@ export const DrinkApiFactory = function (configuration?: Configuration, basePath
         /**
          * 
          * @summary Purchase
-         * @param {InlineObject2} [inlineObject2] 
+         * @param {InlineObject1} [inlineObject1] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        drinksPurchasePost(inlineObject2?: InlineObject2, options?: any): AxiosPromise<InlineResponse2001> {
-            return DrinkApiFp(configuration).drinksPurchasePost(inlineObject2, options).then((request) => request(axios, basePath));
+        drinksPurchasePost(inlineObject1?: InlineObject1, options?: any): AxiosPromise<InlineResponse2001> {
+            return DrinkApiFp(configuration).drinksPurchasePost(inlineObject1, options).then((request) => request(axios, basePath));
         },
         /**
          * 3.2.4 (2) The number of cans held of a brand shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 20).
@@ -1014,13 +988,13 @@ export class DrinkApi extends BaseAPI {
     /**
      * 
      * @summary Purchase
-     * @param {InlineObject2} [inlineObject2] 
+     * @param {InlineObject1} [inlineObject1] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof DrinkApi
      */
-    public drinksPurchasePost(inlineObject2?: InlineObject2, options?: any) {
-        return DrinkApiFp(this.configuration).drinksPurchasePost(inlineObject2, options).then((request) => request(this.axios, this.basePath));
+    public drinksPurchasePost(inlineObject1?: InlineObject1, options?: any) {
+        return DrinkApiFp(this.configuration).drinksPurchasePost(inlineObject1, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1152,11 +1126,11 @@ export const MachineApiAxiosParamCreator = function (configuration?: Configurati
         /**
          * 3.2.4 (3) When the maintainer successfully logs-in this checkbox shall be automatically unchecked by the system to indicate that the door status is unlocked. The door status shall be able to be changed to locked by checking the checkbox.
          * @summary Modify Machine
-         * @param {InlineObject1} [inlineObject1] 
+         * @param {Array<Machine>} [machine] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        machinesPut: async (inlineObject1?: InlineObject1, options: any = {}): Promise<RequestArgs> => {
+        machinesPut: async (machine?: Array<Machine>, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/machines/`;
             const localVarUrlObj = globalImportUrl.parse(localVarPath, true);
             let baseOptions;
@@ -1176,8 +1150,8 @@ export const MachineApiAxiosParamCreator = function (configuration?: Configurati
             delete localVarUrlObj.search;
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const needsSerialization = (typeof inlineObject1 !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(inlineObject1 !== undefined ? inlineObject1 : {}) : (inlineObject1 || "");
+            const needsSerialization = (typeof machine !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(machine !== undefined ? machine : {}) : (machine || "");
 
             return {
                 url: globalImportUrl.format(localVarUrlObj),
@@ -1238,12 +1212,12 @@ export const MachineApiFp = function(configuration?: Configuration) {
         /**
          * 3.2.4 (3) When the maintainer successfully logs-in this checkbox shall be automatically unchecked by the system to indicate that the door status is unlocked. The door status shall be able to be changed to locked by checking the checkbox.
          * @summary Modify Machine
-         * @param {InlineObject1} [inlineObject1] 
+         * @param {Array<Machine>} [machine] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async machinesPut(inlineObject1?: InlineObject1, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
-            const localVarAxiosArgs = await MachineApiAxiosParamCreator(configuration).machinesPut(inlineObject1, options);
+        async machinesPut(machine?: Array<Machine>, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
+            const localVarAxiosArgs = await MachineApiAxiosParamCreator(configuration).machinesPut(machine, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -1291,12 +1265,12 @@ export const MachineApiFactory = function (configuration?: Configuration, basePa
         /**
          * 3.2.4 (3) When the maintainer successfully logs-in this checkbox shall be automatically unchecked by the system to indicate that the door status is unlocked. The door status shall be able to be changed to locked by checking the checkbox.
          * @summary Modify Machine
-         * @param {InlineObject1} [inlineObject1] 
+         * @param {Array<Machine>} [machine] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        machinesPut(inlineObject1?: InlineObject1, options?: any): AxiosPromise<object> {
-            return MachineApiFp(configuration).machinesPut(inlineObject1, options).then((request) => request(axios, basePath));
+        machinesPut(machine?: Array<Machine>, options?: any): AxiosPromise<object> {
+            return MachineApiFp(configuration).machinesPut(machine, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -1347,13 +1321,13 @@ export class MachineApi extends BaseAPI {
     /**
      * 3.2.4 (3) When the maintainer successfully logs-in this checkbox shall be automatically unchecked by the system to indicate that the door status is unlocked. The door status shall be able to be changed to locked by checking the checkbox.
      * @summary Modify Machine
-     * @param {InlineObject1} [inlineObject1] 
+     * @param {Array<Machine>} [machine] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof MachineApi
      */
-    public machinesPut(inlineObject1?: InlineObject1, options?: any) {
-        return MachineApiFp(this.configuration).machinesPut(inlineObject1, options).then((request) => request(this.axios, this.basePath));
+    public machinesPut(machine?: Array<Machine>, options?: any) {
+        return MachineApiFp(this.configuration).machinesPut(machine, options).then((request) => request(this.axios, this.basePath));
     }
 
 }

@@ -86,7 +86,7 @@ export default class CustomerPanel extends Vue {
 
 <template>
   <div class="mx-auto max-w-md">
-    <header class="text-black py-6 mb-2">
+    <header class="text-black py-4 mb-2">
       <p class="text-center font-bold text-3xl tracking-tighter">
         Simulator Control Panel
       </p>
@@ -136,7 +136,7 @@ export default class CustomerPanel extends Vue {
         </button>
       </div>
     </div>
-    <footer class="fixed bottom-0 left-0 px-4 pb-2 space-y-2 max-w-md w-full mx-auto">
+    <footer class="fixed bottom-0 left-0 px-4 pb-4 space-y-2 max-w-md w-full mx-auto">
       <button
         :class="{
           'btn-solid bg-purple-100 py-4 rounded-md font-bold w-full with-click': !fileLoaded,
