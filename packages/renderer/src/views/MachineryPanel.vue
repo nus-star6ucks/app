@@ -1,53 +1,23 @@
 <script lang="ts">
-import { CoffeeMachine, Cola, Finance } from '@icon-park/vue'
+import { CheckCorrect, Checkbox, CoffeeMachine, Cola, Finance } from '@icon-park/vue'
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import KeyboardSection from '../components/KeyboardSection.vue'
-
-const quantitiesData = [
-  {
-    title: '5c',
-    quantity: 22,
-  },
-  {
-    title: '10c',
-    quantity: 37,
-  },
-  {
-    title: '20c',
-    quantity: 9,
-  },
-  {
-    title: '$1',
-    quantity: 10,
-  },
-]
-
-const brandsData = [
-  {
-    title: 'Coca-Cola',
-    quantity: 5,
-  },
-  {
-    title: 'Sarsi',
-    quantity: 7,
-  },
-  {
-    title: 'Soya Bean',
-    quantity: 12,
-  },
-  {
-    title: 'Sevenup',
-    quantity: 1,
-  },
-]
+import { useStore } from '../stores/machine'
 
 @Component({
-  components: { CoffeeMachine, Cola, Finance, KeyboardSection },
+  components: { CoffeeMachine, Cola, Finance, KeyboardSection, Checkbox, CheckCorrect },
 })
 export default class CustomerPanel extends Vue {
-  brands = brandsData
-  quantities = quantitiesData
+  get drinks() {
+    const store = useStore()
+    return store.$state.drinks
+  }
+
+  get coins() {
+    const store = useStore()
+    return store.$state.coins
+  }
 
   mounted() {
     document.title = 'VMCS - Machinery Panel'
@@ -69,42 +39,42 @@ export default class CustomerPanel extends Vue {
           </h2>
           <div class="grid grid-cols-2 gap-2">
             <div
-              v-for="q in quantities"
-              :key="q.title"
+              v-for="coin in coins"
+              :key="coin.id"
               class="border-2 border-black rounded-md p-4 uppercase flex justify-between items-center"
             >
               <div class="flex items-center space-x-2 font-semibold">
                 <finance :size="36" :stroke-width="2" />
                 <div class="flex items-center space-x-2">
-                  <h2 class="text-2xl tracking-tighter" v-text="q.title" />
+                  <h2 class="text-2xl tracking-tighter" v-text="coin.name" />
                 </div>
               </div>
-              <span class="led-small" v-text="q.quantity" />
+              <span class="led-small" v-text="coin.quantity" />
             </div>
           </div>
         </section>
+      </div>
+      <aside class="space-y-6">
         <section>
           <h2 class="font-bold text-lg tracking-tighter mb-2 uppercase">
             Quantity of Cans
           </h2>
           <div class="grid grid-cols-2 gap-2">
             <div
-              v-for="brand in brands"
-              :key="brand.title"
+              v-for="drink in drinks"
+              :key="drink.id"
               class="border-2 border-black rounded-md p-4 uppercase flex justify-between items-center"
             >
               <div class="flex items-center space-x-2 font-semibold">
                 <cola :size="36" :stroke-width="2" />
                 <div class="flex items-center space-x-2">
-                  <h2 class="text-xl tracking-tighter" v-text="brand.title" />
+                  <h2 class="text-xl tracking-tighter" v-text="drink.name" />
                 </div>
               </div>
-              <span class="led-small" v-text="brand.quantity" />
+              <span class="led-small" v-text="drink.quantity" />
             </div>
           </div>
         </section>
-      </div>
-      <aside class="space-y-6">
         <section>
           <div class="flex justify-between items-center mb-2">
             <h2 class="font-bold text-lg tracking-tighter uppercase">
@@ -112,19 +82,13 @@ export default class CustomerPanel extends Vue {
             </h2>
           </div>
           <div>
-            <label class="font-semibold text-lg flex items-center">
+            <button class="font-semibold text-lg flex items-center">
+              <checkbox theme="outline" size="36" :stroke-width="2" stroke-linejoin="bevel" stroke-linecap="butt" />
+              <check-correct theme="outline" size="36" :stroke-width="2" stroke-linejoin="bevel" stroke-linecap="butt" />
               <span class="ml-2">Door Locked?</span>
-            </label>
+            </button>
           </div>
         </section>
-        <section>
-          <div class="flex justify-between items-center mb-2">
-            <h2 class="font-bold text-lg tracking-tighter uppercase">
-              State
-            </h2>
-          </div>
-        </section>
-        <keyboard-section disabled />
       </aside>
     </section>
   </div>
