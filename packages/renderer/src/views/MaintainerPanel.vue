@@ -4,7 +4,7 @@ import { CoffeeMachine, Cola, Finance } from '@icon-park/vue'
 import Component from 'vue-class-component'
 import { formatCentsText } from '../utils'
 import type { Coin, Drink } from '../openapi'
-import { useMachineStore } from '../stores/machine'
+import { useStore } from '../stores/machine'
 
 @Component({
   components: {
@@ -25,13 +25,13 @@ export default class CustomerPanel extends Vue {
   }
 
   get coins(): Coin[] {
-    const machine = useMachineStore()
-    return machine.$state.coins
+    const store = useStore()
+    return store.$state.coins
   }
 
   get drinks(): Drink[] {
-    const machine = useMachineStore()
-    return machine.$state.drinks
+    const store = useStore()
+    return store.$state.drinks
   }
 
   get allowToUse(): boolean {
@@ -39,11 +39,11 @@ export default class CustomerPanel extends Vue {
   }
 
   validate(e: any) {
-    const machine = useMachineStore()
+    const store = useStore()
     this.password = e.target.value
     // ...
     if (this.password.length === 6)
-      this.valid = machine.$state.users[0].password === this.password
+      this.valid = store.$state.users[0].password === this.password
   }
 
   mounted() {

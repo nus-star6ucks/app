@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import type { Coin, Drink, Machine, User } from '../openapi'
 
-export const useMachineStore = defineStore('machine', {
+export const useStore = defineStore('machine', {
   state: () => {
     return {
       machines: [] as Machine[],

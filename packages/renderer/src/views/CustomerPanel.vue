@@ -4,8 +4,8 @@ import { CoffeeMachine, Cola } from '@icon-park/vue'
 import Component from 'vue-class-component'
 import KeyboardSection from '../components/KeyboardSection.vue'
 import { AVAILABLE_NOMIALS, formatCentsText } from '../utils'
-import type { Drink } from '../openapi'
-import { useMachineStore } from '../stores/machine'
+import type { Drink, Machine } from '../openapi'
+import { useStore } from '../stores/machine'
 
 @Component({
   components: {
@@ -21,8 +21,13 @@ export default class CustomerPanel extends Vue {
   collectCoins = 0
 
   get drinks(): Drink[] {
-    const machine = useMachineStore()
-    return machine.$state.drinks
+    const store = useStore()
+    return store.$state.drinks
+  }
+
+  get machine(): Machine {
+    const store = useStore()
+    return store.$state.machines[0]
   }
 
   get formatCentsText() {
@@ -68,7 +73,7 @@ export default class CustomerPanel extends Vue {
   <div>
     <div class="px-6 mb-4 flex items-center space-x-2 -ml-1">
       <coffee-machine theme="outline" size="48" stroke-width="3" stroke-linejoin="bevel" stroke-linecap="butt" />
-      <span class="uppercase font-medium">Soft Drink Dispenser</span>
+      <span class="uppercase font-medium" v-text="machine.name" />
     </div>
     <section class="px-6 grid gap-12 grid-cols-2">
       <div class="space-y-6">

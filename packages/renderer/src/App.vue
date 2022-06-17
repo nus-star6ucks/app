@@ -2,32 +2,32 @@
 import Vue from 'vue'
 import Store from 'electron-store'
 import { MutationType } from 'pinia'
-import { useMachineStore } from './stores/machine'
+import { useStore } from './stores/machine'
 
 const electronStore = new Store({ watch: true })
 
 export default Vue.extend({
   setup() {
-    const machine = useMachineStore()
-    Object.keys(machine.$state).forEach((key) => {
-      machine.$patch({
+    const store = useStore()
+    Object.keys(store.$state).forEach((key) => {
+      store.$patch({
         [key]: electronStore.get(key) || [],
       })
     })
   },
   mounted() {
-    const machine = useMachineStore()
+    const store = useStore()
     // sync electron-store <-> pinia
-    Object.keys(machine.$state).forEach((key) => {
+    Object.keys(store.$state).forEach((key) => {
       electronStore.onDidChange(key, (value) => {
-        machine.$patch({
+        store.$patch({
           [key]: value,
         })
       })
     })
 
     // listen pinia change
-    machine.$subscribe(
+    store.$subscribe(
       (mutation) => {
         if (mutation.type === MutationType.patchObject) {
           Object.entries(mutation.payload).forEach(([key, value]) => {

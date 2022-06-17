@@ -1,11 +1,11 @@
 <script lang="ts">
-import { readFileSync } from 'fs'
+import { fstat, readFileSync, writeFileSync } from 'fs'
 import type { BrowserWindowConstructorOptions } from 'electron'
 import { ipcRenderer } from 'electron'
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import type { Coin, Drink, Machine, User } from '../openapi'
-import { useMachineStore } from '../stores/machine'
+import { useStore } from '../stores/machine'
 import { baseApi } from '../utils'
 
 interface IInitialDataFileDto {
@@ -17,13 +17,15 @@ interface IInitialDataFileDto {
 
 @Component({})
 export default class CustomerPanel extends Vue {
+  filePath = ''
+
   $refs!: {
     input: HTMLInputElement
   }
 
   get fileLoaded(): boolean {
-    const machine = useMachineStore()
-    return Object.values(machine.$state).every(data => data.length > 0)
+    const store = useStore()
+    return Object.values(store.$state).every(data => data.length > 0)
   }
 
   newWindow(path: string, options?: BrowserWindowConstructorOptions) {
@@ -31,8 +33,9 @@ export default class CustomerPanel extends Vue {
   }
 
   async handleFileInput(e: any) {
-    const machine = useMachineStore()
+    const store = useStore()
     const [{ path }] = e.target.files
+    this.filePath = `${path}`
     const data: IInitialDataFileDto = JSON.parse(readFileSync(path) as any)
 
     await baseApi.coinsPost(data.coins)
@@ -40,8 +43,16 @@ export default class CustomerPanel extends Vue {
     await baseApi.usersPost(data.users)
     await baseApi.machinesPost(data.machines)
 
-    // for mock use, should fetch all details from the backend
-    machine.$patch(data)
+    store.$patch(data)
+  }
+
+  async handleEndSimulation() {
+    const store = useStore()
+    writeFileSync(this.filePath, JSON.stringify(store.$state), {
+      flag: 'w',
+    })
+
+    store.$reset()
   }
 }
 </script>
@@ -114,6 +125,8 @@ export default class CustomerPanel extends Vue {
           'w-full uppercase font-semibold py-4': !fileLoaded,
           'btn-solid bg-purple-100 py-4 rounded-md font-bold w-full with-click': fileLoaded,
         }"
+        :disabled="!fileLoaded"
+        @click="handleEndSimulation"
       >
         End Simulation
       </button>
