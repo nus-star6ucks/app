@@ -1,0 +1,3 @@
+{
+    "ignorePatterns": [ "**/main/*.ts",  "**/preload/*.ts", "**/openapi/*.ts"],
+}
