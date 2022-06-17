@@ -40,13 +40,27 @@ export default class CustomerPanel extends Vue {
   }
 
   async updateCoinQuantity(coin: Coin, quantity: number) {
+    const store = useStore()
+
     coin.quantity = quantity
     await coinApi.coinsPut([coin])
+
+    // mock use
+    store.$patch({
+      coins: store.$state.coins.map(c => c.id === coin.id ? coin : c),
+    })
   }
 
   async updateDrinkQuantity(drink: Drink, quantity: number) {
+    const store = useStore()
+
     drink.quantity = quantity
     await drinkApi.drinksPut([drink])
+
+    // mock use
+    store.$patch({
+      drinks: store.$state.drinks.map(d => d.id === drink.id ? drink : d),
+    })
   }
 
   mounted() {
