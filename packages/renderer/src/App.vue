@@ -32,6 +32,7 @@ export default Vue.extend({
         if (mutation.type === MutationType.patchObject) {
           Object.entries(mutation.payload).forEach(([key, value]) => {
             const prev = electronStore.get(key)
+            console.log(prev, value)
             if (JSON.stringify(prev || []) === JSON.stringify(value || []))
               return
             electronStore.set(key, value)

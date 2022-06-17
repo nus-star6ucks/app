@@ -127,7 +127,7 @@ export default class CustomerPanel extends Vue {
           </div>
           <div>
             <button class="font-semibold text-lg flex items-center" @click="switchDoorLocked">
-              <checkbox v-if="machine.doorLocked" theme="outline" size="36" :stroke-width="2" stroke-linejoin="bevel" stroke-linecap="butt" />
+              <checkbox v-if="!machine.doorLocked" theme="outline" size="36" :stroke-width="2" stroke-linejoin="bevel" stroke-linecap="butt" />
               <check-correct v-else theme="outline" size="36" :stroke-width="2" stroke-linejoin="bevel" stroke-linecap="butt" />
               <span class="ml-2">Door Locked?</span>
             </button>
