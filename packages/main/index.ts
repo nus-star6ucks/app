@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { app, BrowserWindow, shell, ipcMain, BrowserWindowConstructorOptions } from 'electron';
 import { release } from 'os';
 import { join } from 'path';
@@ -23,6 +24,12 @@ let win: BrowserWindow | null = null;
 Store.initRenderer();
 
 async function createWindow(path = '', options?: BrowserWindowConstructorOptions) {
+  // clear storage when creates main window
+  if (!path) {
+    const store = new Store()
+    store.clear()
+  }
+
   win = new BrowserWindow({
     title: 'Star6ucks',
     width: 450,
@@ -74,7 +81,7 @@ function startSpringServer(port: number | string) {
     return join(process.resourcesPath, '..', 'libraries', JAR);
   })();
   console.info(`Launching server with jar ${server} at port ${port}...`);
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
+   
   serverProcess = require('child_process').spawn('java', ['-jar', server, `--server.port=${port}`]);
 
   if (serverProcess.pid) {
@@ -96,7 +103,7 @@ function stopSpringServer(port: number | string) {
       console.error('Failed to stop the server gracefully.', error);
       if (serverProcess) {
         console.info(`Killing server process ${serverProcess.pid}`);
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
+         
         const kill = require('tree-kill');
         kill(serverProcess.pid, 'SIGTERM', function (err: any) {
           console.info('Server process killed', err);
