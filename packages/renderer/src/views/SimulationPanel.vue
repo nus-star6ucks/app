@@ -6,7 +6,7 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 import type { Coin, Drink, Machine, User } from '../openapi'
 import { useStore } from '../stores/machine'
-import { baseApi, coinApi, drinkApi, machineApi, userApi } from '../utils'
+import { coinApi, drinkApi, machineApi, userApi } from '../utils'
 
 interface IInitialDataFileDto {
   coins: Coin[]
