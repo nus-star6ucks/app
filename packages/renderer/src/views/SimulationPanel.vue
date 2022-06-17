@@ -6,7 +6,7 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 import type { Coin, Drink, Machine, User } from '../openapi'
 import { useStore } from '../stores/machine'
-import { baseApi } from '../utils'
+import { baseApi, coinApi, drinkApi, machineApi, userApi } from '../utils'
 
 interface IInitialDataFileDto {
   coins: Coin[]
@@ -28,6 +28,26 @@ export default class CustomerPanel extends Vue {
     return Object.values(store.$state).every(data => data.length > 0)
   }
 
+  get machines(): Machine[] {
+    const store = useStore()
+    return store.$state.machines
+  }
+
+  get users(): User[] {
+    const store = useStore()
+    return store.$state.users
+  }
+
+  get drinks(): Drink[] {
+    const store = useStore()
+    return store.$state.drinks
+  }
+
+  get coins(): Coin[] {
+    const store = useStore()
+    return store.$state.coins
+  }
+
   newWindow(path: string, options?: BrowserWindowConstructorOptions) {
     ipcRenderer.invoke('open-win', path, options)
   }
@@ -38,19 +58,26 @@ export default class CustomerPanel extends Vue {
     this.filePath = `${path}`
     const data: IInitialDataFileDto = JSON.parse(readFileSync(path) as any)
 
-    await baseApi.coinsPost(data.coins)
-    await baseApi.drinksPost(data.drinks)
-    await baseApi.usersPost(data.users)
-    await baseApi.machinesPost(data.machines)
+    await coinApi.coinsPost(data.coins)
+    await drinkApi.drinksPost(data.drinks)
+    await userApi.usersPost(data.users)
+    await machineApi.machinesPost(data.machines)
 
     store.$patch(data)
   }
 
   async handleEndSimulation() {
     const store = useStore()
+
+    ipcRenderer.invoke('close-other-wins')
     writeFileSync(this.filePath, JSON.stringify(store.$state), {
       flag: 'w',
     })
+
+    await coinApi.coinsDelete(this.coins.map(c => c.id))
+    await userApi.usersDelete(this.users.map(u => u.id))
+    await machineApi.machinesDelete(this.machines.map(m => m.id))
+    await drinkApi.drinksDelete(this.machines.map(m => m.id))
 
     store.$reset()
   }

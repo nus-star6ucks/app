@@ -107,36 +107,36 @@ export interface InlineObject {
     password: string;
 }
 /**
- * 
+ * 直接传整个 object
  * @export
  * @interface InlineObject1
  */
 export interface InlineObject1 {
     /**
-     * 
-     * @type {number}
+     * 门锁状态
+     * @type {boolean}
      * @memberof InlineObject1
      */
-    drinkId: number;
-    /**
-     * 
-     * @type {Coin}
-     * @memberof InlineObject1
-     */
-    coins: Coin;
+    doorLocked?: boolean;
 }
 /**
- * 直接传整个 object
+ * 
  * @export
  * @interface InlineObject2
  */
 export interface InlineObject2 {
     /**
-     * 门锁状态
-     * @type {boolean}
+     * 
+     * @type {number}
      * @memberof InlineObject2
      */
-    doorLocked?: boolean;
+    drinkId: number;
+    /**
+     * 
+     * @type {Coin}
+     * @memberof InlineObject2
+     */
+    coins: Coin;
 }
 /**
  * 
@@ -271,81 +271,11 @@ export interface User {
 }
 
 /**
- * DefaultApi - axios parameter creator
+ * CoinApi - axios parameter creator
  * @export
  */
-export const DefaultApiAxiosParamCreator = function (configuration?: Configuration) {
+export const CoinApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
-        /**
-         * 3.2.4 (3) When the maintainer successfully logs-in this checkbox shall be automatically unchecked by the system to indicate that the door status is unlocked. The door status shall be able to be changed to locked by checking the checkbox.
-         * @summary Login
-         * @param {InlineObject} [inlineObject] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        authLoginPost: async (inlineObject?: InlineObject, options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/auth/login`;
-            const localVarUrlObj = globalImportUrl.parse(localVarPath, true);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            delete localVarUrlObj.search;
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const needsSerialization = (typeof inlineObject !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(inlineObject !== undefined ? inlineObject : {}) : (inlineObject || "");
-
-            return {
-                url: globalImportUrl.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * The user (ie: the maintainer) shall terminate use of the maintenance panel (ie: log-out) by pressing a button with the caption “Press Here when Finished”. If the state of the vending machine door is locked, then the log-out request shall be successful and the maintenance panel shall become inactive (ie: the functions can not be used) except for the “Password” text field. However, if the state of the vending machine door is unlocked, then the log-out request shall be ignored.
-         * @summary Logout
-         * @param {object} [body] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        authLogoutPost: async (body?: object, options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/auth/logout`;
-            const localVarUrlObj = globalImportUrl.parse(localVarPath, true);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            delete localVarUrlObj.search;
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const needsSerialization = (typeof body !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(body !== undefined ? body : {}) : (body || "");
-
-            return {
-                url: globalImportUrl.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
         /**
          * 3.2.4 (1) The number of coins held of a denomination shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 40).
          * @summary Check Coin
@@ -516,6 +446,220 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
                 options: localVarRequestOptions,
             };
         },
+    }
+};
+
+/**
+ * CoinApi - functional programming interface
+ * @export
+ */
+export const CoinApiFp = function(configuration?: Configuration) {
+    return {
+        /**
+         * 3.2.4 (1) The number of coins held of a denomination shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 40).
+         * @summary Check Coin
+         * @param {Coin} [coin] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async coinsCheckCoinPost(coin?: Coin, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse200>> {
+            const localVarAxiosArgs = await CoinApiAxiosParamCreator(configuration).coinsCheckCoinPost(coin, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 3.2.4 (1) The number of coins held of a denomination shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 40).
+         * @summary Delete Coin(s)
+         * @param {Array<number>} [requestBody] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async coinsDelete(requestBody?: Array<number>, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<number>>> {
+            const localVarAxiosArgs = await CoinApiAxiosParamCreator(configuration).coinsDelete(requestBody, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
+         * @summary Fetch Coins
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async coinsGet(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Coin>>> {
+            const localVarAxiosArgs = await CoinApiAxiosParamCreator(configuration).coinsGet(options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 3.2.4 (1) The number of coins held of a denomination shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 40).
+         * @summary Add Coin(s)
+         * @param {Array<Coin>} [coin] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async coinsPost(coin?: Array<Coin>, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
+            const localVarAxiosArgs = await CoinApiAxiosParamCreator(configuration).coinsPost(coin, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 3.2.4 (1) The number of coins held of a denomination shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 40).
+         * @summary Modify Coin(s)
+         * @param {InlineObject3} [inlineObject3] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async coinsPut(inlineObject3?: InlineObject3, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Drink>>> {
+            const localVarAxiosArgs = await CoinApiAxiosParamCreator(configuration).coinsPut(inlineObject3, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+    }
+};
+
+/**
+ * CoinApi - factory interface
+ * @export
+ */
+export const CoinApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    return {
+        /**
+         * 3.2.4 (1) The number of coins held of a denomination shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 40).
+         * @summary Check Coin
+         * @param {Coin} [coin] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        coinsCheckCoinPost(coin?: Coin, options?: any): AxiosPromise<InlineResponse200> {
+            return CoinApiFp(configuration).coinsCheckCoinPost(coin, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 3.2.4 (1) The number of coins held of a denomination shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 40).
+         * @summary Delete Coin(s)
+         * @param {Array<number>} [requestBody] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        coinsDelete(requestBody?: Array<number>, options?: any): AxiosPromise<Array<number>> {
+            return CoinApiFp(configuration).coinsDelete(requestBody, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Fetch Coins
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        coinsGet(options?: any): AxiosPromise<Array<Coin>> {
+            return CoinApiFp(configuration).coinsGet(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 3.2.4 (1) The number of coins held of a denomination shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 40).
+         * @summary Add Coin(s)
+         * @param {Array<Coin>} [coin] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        coinsPost(coin?: Array<Coin>, options?: any): AxiosPromise<object> {
+            return CoinApiFp(configuration).coinsPost(coin, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 3.2.4 (1) The number of coins held of a denomination shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 40).
+         * @summary Modify Coin(s)
+         * @param {InlineObject3} [inlineObject3] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        coinsPut(inlineObject3?: InlineObject3, options?: any): AxiosPromise<Array<Drink>> {
+            return CoinApiFp(configuration).coinsPut(inlineObject3, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * CoinApi - object-oriented interface
+ * @export
+ * @class CoinApi
+ * @extends {BaseAPI}
+ */
+export class CoinApi extends BaseAPI {
+    /**
+     * 3.2.4 (1) The number of coins held of a denomination shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 40).
+     * @summary Check Coin
+     * @param {Coin} [coin] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CoinApi
+     */
+    public coinsCheckCoinPost(coin?: Coin, options?: any) {
+        return CoinApiFp(this.configuration).coinsCheckCoinPost(coin, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 3.2.4 (1) The number of coins held of a denomination shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 40).
+     * @summary Delete Coin(s)
+     * @param {Array<number>} [requestBody] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CoinApi
+     */
+    public coinsDelete(requestBody?: Array<number>, options?: any) {
+        return CoinApiFp(this.configuration).coinsDelete(requestBody, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Fetch Coins
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CoinApi
+     */
+    public coinsGet(options?: any) {
+        return CoinApiFp(this.configuration).coinsGet(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 3.2.4 (1) The number of coins held of a denomination shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 40).
+     * @summary Add Coin(s)
+     * @param {Array<Coin>} [coin] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CoinApi
+     */
+    public coinsPost(coin?: Array<Coin>, options?: any) {
+        return CoinApiFp(this.configuration).coinsPost(coin, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 3.2.4 (1) The number of coins held of a denomination shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 40).
+     * @summary Modify Coin(s)
+     * @param {InlineObject3} [inlineObject3] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CoinApi
+     */
+    public coinsPut(inlineObject3?: InlineObject3, options?: any) {
+        return CoinApiFp(this.configuration).coinsPut(inlineObject3, options).then((request) => request(this.axios, this.basePath));
+    }
+
+}
+
+
+/**
+ * DrinkApi - axios parameter creator
+ * @export
+ */
+export const DrinkApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
         /**
          * 3.2.4 (2) The number of cans held of a brand shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 20).
          * @summary Delete Drink(s)
@@ -619,11 +763,11 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
         /**
          * 
          * @summary Purchase
-         * @param {InlineObject1} [inlineObject1] 
+         * @param {InlineObject2} [inlineObject2] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        drinksPurchasePost: async (inlineObject1?: InlineObject1, options: any = {}): Promise<RequestArgs> => {
+        drinksPurchasePost: async (inlineObject2?: InlineObject2, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/drinks/purchase`;
             const localVarUrlObj = globalImportUrl.parse(localVarPath, true);
             let baseOptions;
@@ -643,8 +787,8 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             delete localVarUrlObj.search;
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const needsSerialization = (typeof inlineObject1 !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(inlineObject1 !== undefined ? inlineObject1 : {}) : (inlineObject1 || "");
+            const needsSerialization = (typeof inlineObject2 !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(inlineObject2 !== undefined ? inlineObject2 : {}) : (inlineObject2 || "");
 
             return {
                 url: globalImportUrl.format(localVarUrlObj),
@@ -686,6 +830,220 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
                 options: localVarRequestOptions,
             };
         },
+    }
+};
+
+/**
+ * DrinkApi - functional programming interface
+ * @export
+ */
+export const DrinkApiFp = function(configuration?: Configuration) {
+    return {
+        /**
+         * 3.2.4 (2) The number of cans held of a brand shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 20).
+         * @summary Delete Drink(s)
+         * @param {Array<number>} [requestBody] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async drinksDelete(requestBody?: Array<number>, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
+            const localVarAxiosArgs = await DrinkApiAxiosParamCreator(configuration).drinksDelete(requestBody, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
+         * @summary Fetch Drinks
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async drinksGet(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Drink>>> {
+            const localVarAxiosArgs = await DrinkApiAxiosParamCreator(configuration).drinksGet(options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 3.2.4 (2) The number of cans held of a brand shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 20).
+         * @summary Add Drink(s)
+         * @param {Array<Drink>} [drink] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async drinksPost(drink?: Array<Drink>, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
+            const localVarAxiosArgs = await DrinkApiAxiosParamCreator(configuration).drinksPost(drink, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
+         * @summary Purchase
+         * @param {InlineObject2} [inlineObject2] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async drinksPurchasePost(inlineObject2?: InlineObject2, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2001>> {
+            const localVarAxiosArgs = await DrinkApiAxiosParamCreator(configuration).drinksPurchasePost(inlineObject2, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 3.2.4 (2) The number of cans held of a brand shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 20).
+         * @summary Modify Drink(s)
+         * @param {Array<Drink>} [drink] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async drinksPut(drink?: Array<Drink>, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
+            const localVarAxiosArgs = await DrinkApiAxiosParamCreator(configuration).drinksPut(drink, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+    }
+};
+
+/**
+ * DrinkApi - factory interface
+ * @export
+ */
+export const DrinkApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    return {
+        /**
+         * 3.2.4 (2) The number of cans held of a brand shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 20).
+         * @summary Delete Drink(s)
+         * @param {Array<number>} [requestBody] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        drinksDelete(requestBody?: Array<number>, options?: any): AxiosPromise<object> {
+            return DrinkApiFp(configuration).drinksDelete(requestBody, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Fetch Drinks
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        drinksGet(options?: any): AxiosPromise<Array<Drink>> {
+            return DrinkApiFp(configuration).drinksGet(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 3.2.4 (2) The number of cans held of a brand shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 20).
+         * @summary Add Drink(s)
+         * @param {Array<Drink>} [drink] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        drinksPost(drink?: Array<Drink>, options?: any): AxiosPromise<object> {
+            return DrinkApiFp(configuration).drinksPost(drink, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Purchase
+         * @param {InlineObject2} [inlineObject2] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        drinksPurchasePost(inlineObject2?: InlineObject2, options?: any): AxiosPromise<InlineResponse2001> {
+            return DrinkApiFp(configuration).drinksPurchasePost(inlineObject2, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 3.2.4 (2) The number of cans held of a brand shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 20).
+         * @summary Modify Drink(s)
+         * @param {Array<Drink>} [drink] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        drinksPut(drink?: Array<Drink>, options?: any): AxiosPromise<object> {
+            return DrinkApiFp(configuration).drinksPut(drink, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * DrinkApi - object-oriented interface
+ * @export
+ * @class DrinkApi
+ * @extends {BaseAPI}
+ */
+export class DrinkApi extends BaseAPI {
+    /**
+     * 3.2.4 (2) The number of cans held of a brand shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 20).
+     * @summary Delete Drink(s)
+     * @param {Array<number>} [requestBody] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DrinkApi
+     */
+    public drinksDelete(requestBody?: Array<number>, options?: any) {
+        return DrinkApiFp(this.configuration).drinksDelete(requestBody, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Fetch Drinks
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DrinkApi
+     */
+    public drinksGet(options?: any) {
+        return DrinkApiFp(this.configuration).drinksGet(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 3.2.4 (2) The number of cans held of a brand shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 20).
+     * @summary Add Drink(s)
+     * @param {Array<Drink>} [drink] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DrinkApi
+     */
+    public drinksPost(drink?: Array<Drink>, options?: any) {
+        return DrinkApiFp(this.configuration).drinksPost(drink, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Purchase
+     * @param {InlineObject2} [inlineObject2] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DrinkApi
+     */
+    public drinksPurchasePost(inlineObject2?: InlineObject2, options?: any) {
+        return DrinkApiFp(this.configuration).drinksPurchasePost(inlineObject2, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 3.2.4 (2) The number of cans held of a brand shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 20).
+     * @summary Modify Drink(s)
+     * @param {Array<Drink>} [drink] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DrinkApi
+     */
+    public drinksPut(drink?: Array<Drink>, options?: any) {
+        return DrinkApiFp(this.configuration).drinksPut(drink, options).then((request) => request(this.axios, this.basePath));
+    }
+
+}
+
+
+/**
+ * MachineApi - axios parameter creator
+ * @export
+ */
+export const MachineApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
         /**
          * 
          * @summary Fetch Machine
@@ -715,6 +1073,41 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             const needsSerialization = (typeof machine !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
             localVarRequestOptions.data =  needsSerialization ? JSON.stringify(machine !== undefined ? machine : {}) : (machine || "");
+
+            return {
+                url: globalImportUrl.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Delete Machine(s)
+         * @param {Array<number>} [requestBody] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        machinesDelete: async (requestBody?: Array<number>, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/machines/`;
+            const localVarUrlObj = globalImportUrl.parse(localVarPath, true);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete localVarUrlObj.search;
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            const needsSerialization = (typeof requestBody !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(requestBody !== undefined ? requestBody : {}) : (requestBody || "");
 
             return {
                 url: globalImportUrl.format(localVarUrlObj),
@@ -759,11 +1152,11 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
         /**
          * 3.2.4 (3) When the maintainer successfully logs-in this checkbox shall be automatically unchecked by the system to indicate that the door status is unlocked. The door status shall be able to be changed to locked by checking the checkbox.
          * @summary Modify Machine
-         * @param {InlineObject2} [inlineObject2] 
+         * @param {InlineObject1} [inlineObject1] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        machinesPut: async (inlineObject2?: InlineObject2, options: any = {}): Promise<RequestArgs> => {
+        machinesPut: async (inlineObject1?: InlineObject1, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/machines/`;
             const localVarUrlObj = globalImportUrl.parse(localVarPath, true);
             let baseOptions;
@@ -783,8 +1176,324 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             delete localVarUrlObj.search;
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const needsSerialization = (typeof inlineObject2 !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(inlineObject2 !== undefined ? inlineObject2 : {}) : (inlineObject2 || "");
+            const needsSerialization = (typeof inlineObject1 !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(inlineObject1 !== undefined ? inlineObject1 : {}) : (inlineObject1 || "");
+
+            return {
+                url: globalImportUrl.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * MachineApi - functional programming interface
+ * @export
+ */
+export const MachineApiFp = function(configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @summary Fetch Machine
+         * @param {Machine} [machine] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async machineGet(machine?: Machine, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Machine>> {
+            const localVarAxiosArgs = await MachineApiAxiosParamCreator(configuration).machineGet(machine, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
+         * @summary Delete Machine(s)
+         * @param {Array<number>} [requestBody] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async machinesDelete(requestBody?: Array<number>, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
+            const localVarAxiosArgs = await MachineApiAxiosParamCreator(configuration).machinesDelete(requestBody, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 3.2.4 (1) The number of coins held of a denomination shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 40).
+         * @summary Add Machine(s)
+         * @param {Array<Machine>} [machine] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async machinesPost(machine?: Array<Machine>, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
+            const localVarAxiosArgs = await MachineApiAxiosParamCreator(configuration).machinesPost(machine, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 3.2.4 (3) When the maintainer successfully logs-in this checkbox shall be automatically unchecked by the system to indicate that the door status is unlocked. The door status shall be able to be changed to locked by checking the checkbox.
+         * @summary Modify Machine
+         * @param {InlineObject1} [inlineObject1] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async machinesPut(inlineObject1?: InlineObject1, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
+            const localVarAxiosArgs = await MachineApiAxiosParamCreator(configuration).machinesPut(inlineObject1, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+    }
+};
+
+/**
+ * MachineApi - factory interface
+ * @export
+ */
+export const MachineApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    return {
+        /**
+         * 
+         * @summary Fetch Machine
+         * @param {Machine} [machine] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        machineGet(machine?: Machine, options?: any): AxiosPromise<Machine> {
+            return MachineApiFp(configuration).machineGet(machine, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Delete Machine(s)
+         * @param {Array<number>} [requestBody] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        machinesDelete(requestBody?: Array<number>, options?: any): AxiosPromise<object> {
+            return MachineApiFp(configuration).machinesDelete(requestBody, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 3.2.4 (1) The number of coins held of a denomination shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 40).
+         * @summary Add Machine(s)
+         * @param {Array<Machine>} [machine] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        machinesPost(machine?: Array<Machine>, options?: any): AxiosPromise<object> {
+            return MachineApiFp(configuration).machinesPost(machine, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 3.2.4 (3) When the maintainer successfully logs-in this checkbox shall be automatically unchecked by the system to indicate that the door status is unlocked. The door status shall be able to be changed to locked by checking the checkbox.
+         * @summary Modify Machine
+         * @param {InlineObject1} [inlineObject1] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        machinesPut(inlineObject1?: InlineObject1, options?: any): AxiosPromise<object> {
+            return MachineApiFp(configuration).machinesPut(inlineObject1, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * MachineApi - object-oriented interface
+ * @export
+ * @class MachineApi
+ * @extends {BaseAPI}
+ */
+export class MachineApi extends BaseAPI {
+    /**
+     * 
+     * @summary Fetch Machine
+     * @param {Machine} [machine] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MachineApi
+     */
+    public machineGet(machine?: Machine, options?: any) {
+        return MachineApiFp(this.configuration).machineGet(machine, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Delete Machine(s)
+     * @param {Array<number>} [requestBody] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MachineApi
+     */
+    public machinesDelete(requestBody?: Array<number>, options?: any) {
+        return MachineApiFp(this.configuration).machinesDelete(requestBody, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 3.2.4 (1) The number of coins held of a denomination shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 40).
+     * @summary Add Machine(s)
+     * @param {Array<Machine>} [machine] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MachineApi
+     */
+    public machinesPost(machine?: Array<Machine>, options?: any) {
+        return MachineApiFp(this.configuration).machinesPost(machine, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 3.2.4 (3) When the maintainer successfully logs-in this checkbox shall be automatically unchecked by the system to indicate that the door status is unlocked. The door status shall be able to be changed to locked by checking the checkbox.
+     * @summary Modify Machine
+     * @param {InlineObject1} [inlineObject1] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MachineApi
+     */
+    public machinesPut(inlineObject1?: InlineObject1, options?: any) {
+        return MachineApiFp(this.configuration).machinesPut(inlineObject1, options).then((request) => request(this.axios, this.basePath));
+    }
+
+}
+
+
+/**
+ * UserApi - axios parameter creator
+ * @export
+ */
+export const UserApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 3.2.4 (3) When the maintainer successfully logs-in this checkbox shall be automatically unchecked by the system to indicate that the door status is unlocked. The door status shall be able to be changed to locked by checking the checkbox.
+         * @summary Login
+         * @param {InlineObject} [inlineObject] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        authLoginPost: async (inlineObject?: InlineObject, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/auth/login`;
+            const localVarUrlObj = globalImportUrl.parse(localVarPath, true);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete localVarUrlObj.search;
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            const needsSerialization = (typeof inlineObject !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(inlineObject !== undefined ? inlineObject : {}) : (inlineObject || "");
+
+            return {
+                url: globalImportUrl.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * The user (ie: the maintainer) shall terminate use of the maintenance panel (ie: log-out) by pressing a button with the caption “Press Here when Finished”. If the state of the vending machine door is locked, then the log-out request shall be successful and the maintenance panel shall become inactive (ie: the functions can not be used) except for the “Password” text field. However, if the state of the vending machine door is unlocked, then the log-out request shall be ignored.
+         * @summary Logout
+         * @param {object} [body] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        authLogoutPost: async (body?: object, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/auth/logout`;
+            const localVarUrlObj = globalImportUrl.parse(localVarPath, true);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete localVarUrlObj.search;
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            const needsSerialization = (typeof body !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(body !== undefined ? body : {}) : (body || "");
+
+            return {
+                url: globalImportUrl.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Delete User(s)
+         * @param {Array<number>} [requestBody] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        usersDelete: async (requestBody?: Array<number>, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/users/`;
+            const localVarUrlObj = globalImportUrl.parse(localVarPath, true);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete localVarUrlObj.search;
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            const needsSerialization = (typeof requestBody !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(requestBody !== undefined ? requestBody : {}) : (requestBody || "");
+
+            return {
+                url: globalImportUrl.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Fetch Users
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        usersGet: async (options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/users`;
+            const localVarUrlObj = globalImportUrl.parse(localVarPath, true);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete localVarUrlObj.search;
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
                 url: globalImportUrl.format(localVarUrlObj),
@@ -830,10 +1539,10 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
 };
 
 /**
- * DefaultApi - functional programming interface
+ * UserApi - functional programming interface
  * @export
  */
-export const DefaultApiFp = function(configuration?: Configuration) {
+export const UserApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 3.2.4 (3) When the maintainer successfully logs-in this checkbox shall be automatically unchecked by the system to indicate that the door status is unlocked. The door status shall be able to be changed to locked by checking the checkbox.
@@ -843,7 +1552,7 @@ export const DefaultApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         async authLoginPost(inlineObject?: InlineObject, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
-            const localVarAxiosArgs = await DefaultApiAxiosParamCreator(configuration).authLoginPost(inlineObject, options);
+            const localVarAxiosArgs = await UserApiAxiosParamCreator(configuration).authLoginPost(inlineObject, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -857,35 +1566,21 @@ export const DefaultApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         async authLogoutPost(body?: object, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
-            const localVarAxiosArgs = await DefaultApiAxiosParamCreator(configuration).authLogoutPost(body, options);
+            const localVarAxiosArgs = await UserApiAxiosParamCreator(configuration).authLogoutPost(body, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
             };
         },
         /**
-         * 3.2.4 (1) The number of coins held of a denomination shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 40).
-         * @summary Check Coin
-         * @param {Coin} [coin] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async coinsCheckCoinPost(coin?: Coin, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse200>> {
-            const localVarAxiosArgs = await DefaultApiAxiosParamCreator(configuration).coinsCheckCoinPost(coin, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 3.2.4 (1) The number of coins held of a denomination shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 40).
-         * @summary Delete Coin(s)
+         * 
+         * @summary Delete User(s)
          * @param {Array<number>} [requestBody] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async coinsDelete(requestBody?: Array<number>, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
-            const localVarAxiosArgs = await DefaultApiAxiosParamCreator(configuration).coinsDelete(requestBody, options);
+        async usersDelete(requestBody?: Array<number>, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<number>>> {
+            const localVarAxiosArgs = await UserApiAxiosParamCreator(configuration).usersDelete(requestBody, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -893,151 +1588,12 @@ export const DefaultApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @summary Fetch Coins
+         * @summary Fetch Users
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async coinsGet(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Coin>>> {
-            const localVarAxiosArgs = await DefaultApiAxiosParamCreator(configuration).coinsGet(options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 3.2.4 (1) The number of coins held of a denomination shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 40).
-         * @summary Add Coin(s)
-         * @param {Array<Coin>} [coin] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async coinsPost(coin?: Array<Coin>, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
-            const localVarAxiosArgs = await DefaultApiAxiosParamCreator(configuration).coinsPost(coin, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 3.2.4 (1) The number of coins held of a denomination shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 40).
-         * @summary Modify Coin(s)
-         * @param {InlineObject3} [inlineObject3] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async coinsPut(inlineObject3?: InlineObject3, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Drink>>> {
-            const localVarAxiosArgs = await DefaultApiAxiosParamCreator(configuration).coinsPut(inlineObject3, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 3.2.4 (2) The number of cans held of a brand shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 20).
-         * @summary Delete Drink(s)
-         * @param {Array<number>} [requestBody] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async drinksDelete(requestBody?: Array<number>, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
-            const localVarAxiosArgs = await DefaultApiAxiosParamCreator(configuration).drinksDelete(requestBody, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Fetch Drinks
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async drinksGet(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Drink>>> {
-            const localVarAxiosArgs = await DefaultApiAxiosParamCreator(configuration).drinksGet(options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 3.2.4 (2) The number of cans held of a brand shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 20).
-         * @summary Add Drink(s)
-         * @param {Array<Drink>} [drink] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async drinksPost(drink?: Array<Drink>, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
-            const localVarAxiosArgs = await DefaultApiAxiosParamCreator(configuration).drinksPost(drink, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Purchase
-         * @param {InlineObject1} [inlineObject1] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async drinksPurchasePost(inlineObject1?: InlineObject1, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2001>> {
-            const localVarAxiosArgs = await DefaultApiAxiosParamCreator(configuration).drinksPurchasePost(inlineObject1, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 3.2.4 (2) The number of cans held of a brand shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 20).
-         * @summary Modify Drink(s)
-         * @param {Array<Drink>} [drink] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async drinksPut(drink?: Array<Drink>, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
-            const localVarAxiosArgs = await DefaultApiAxiosParamCreator(configuration).drinksPut(drink, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Fetch Machine
-         * @param {Machine} [machine] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async machineGet(machine?: Machine, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Machine>> {
-            const localVarAxiosArgs = await DefaultApiAxiosParamCreator(configuration).machineGet(machine, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 3.2.4 (1) The number of coins held of a denomination shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 40).
-         * @summary Add Machine(s)
-         * @param {Array<Machine>} [machine] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async machinesPost(machine?: Array<Machine>, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
-            const localVarAxiosArgs = await DefaultApiAxiosParamCreator(configuration).machinesPost(machine, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 3.2.4 (3) When the maintainer successfully logs-in this checkbox shall be automatically unchecked by the system to indicate that the door status is unlocked. The door status shall be able to be changed to locked by checking the checkbox.
-         * @summary Modify Machine
-         * @param {InlineObject2} [inlineObject2] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async machinesPut(inlineObject2?: InlineObject2, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
-            const localVarAxiosArgs = await DefaultApiAxiosParamCreator(configuration).machinesPut(inlineObject2, options);
+        async usersGet(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<User>>> {
+            const localVarAxiosArgs = await UserApiAxiosParamCreator(configuration).usersGet(options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -1051,7 +1607,7 @@ export const DefaultApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         async usersPost(user?: Array<User>, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
-            const localVarAxiosArgs = await DefaultApiAxiosParamCreator(configuration).usersPost(user, options);
+            const localVarAxiosArgs = await UserApiAxiosParamCreator(configuration).usersPost(user, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -1061,10 +1617,10 @@ export const DefaultApiFp = function(configuration?: Configuration) {
 };
 
 /**
- * DefaultApi - factory interface
+ * UserApi - factory interface
  * @export
  */
-export const DefaultApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+export const UserApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     return {
         /**
          * 3.2.4 (3) When the maintainer successfully logs-in this checkbox shall be automatically unchecked by the system to indicate that the door status is unlocked. The door status shall be able to be changed to locked by checking the checkbox.
@@ -1074,7 +1630,7 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
          * @throws {RequiredError}
          */
         authLoginPost(inlineObject?: InlineObject, options?: any): AxiosPromise<object> {
-            return DefaultApiFp(configuration).authLoginPost(inlineObject, options).then((request) => request(axios, basePath));
+            return UserApiFp(configuration).authLoginPost(inlineObject, options).then((request) => request(axios, basePath));
         },
         /**
          * The user (ie: the maintainer) shall terminate use of the maintenance panel (ie: log-out) by pressing a button with the caption “Press Here when Finished”. If the state of the vending machine door is locked, then the log-out request shall be successful and the maintenance panel shall become inactive (ie: the functions can not be used) except for the “Password” text field. However, if the state of the vending machine door is unlocked, then the log-out request shall be ignored.
@@ -1084,135 +1640,26 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
          * @throws {RequiredError}
          */
         authLogoutPost(body?: object, options?: any): AxiosPromise<object> {
-            return DefaultApiFp(configuration).authLogoutPost(body, options).then((request) => request(axios, basePath));
+            return UserApiFp(configuration).authLogoutPost(body, options).then((request) => request(axios, basePath));
         },
         /**
-         * 3.2.4 (1) The number of coins held of a denomination shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 40).
-         * @summary Check Coin
-         * @param {Coin} [coin] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        coinsCheckCoinPost(coin?: Coin, options?: any): AxiosPromise<InlineResponse200> {
-            return DefaultApiFp(configuration).coinsCheckCoinPost(coin, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 3.2.4 (1) The number of coins held of a denomination shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 40).
-         * @summary Delete Coin(s)
+         * 
+         * @summary Delete User(s)
          * @param {Array<number>} [requestBody] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        coinsDelete(requestBody?: Array<number>, options?: any): AxiosPromise<object> {
-            return DefaultApiFp(configuration).coinsDelete(requestBody, options).then((request) => request(axios, basePath));
+        usersDelete(requestBody?: Array<number>, options?: any): AxiosPromise<Array<number>> {
+            return UserApiFp(configuration).usersDelete(requestBody, options).then((request) => request(axios, basePath));
         },
         /**
          * 
-         * @summary Fetch Coins
+         * @summary Fetch Users
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        coinsGet(options?: any): AxiosPromise<Array<Coin>> {
-            return DefaultApiFp(configuration).coinsGet(options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 3.2.4 (1) The number of coins held of a denomination shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 40).
-         * @summary Add Coin(s)
-         * @param {Array<Coin>} [coin] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        coinsPost(coin?: Array<Coin>, options?: any): AxiosPromise<object> {
-            return DefaultApiFp(configuration).coinsPost(coin, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 3.2.4 (1) The number of coins held of a denomination shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 40).
-         * @summary Modify Coin(s)
-         * @param {InlineObject3} [inlineObject3] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        coinsPut(inlineObject3?: InlineObject3, options?: any): AxiosPromise<Array<Drink>> {
-            return DefaultApiFp(configuration).coinsPut(inlineObject3, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 3.2.4 (2) The number of cans held of a brand shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 20).
-         * @summary Delete Drink(s)
-         * @param {Array<number>} [requestBody] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        drinksDelete(requestBody?: Array<number>, options?: any): AxiosPromise<object> {
-            return DefaultApiFp(configuration).drinksDelete(requestBody, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Fetch Drinks
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        drinksGet(options?: any): AxiosPromise<Array<Drink>> {
-            return DefaultApiFp(configuration).drinksGet(options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 3.2.4 (2) The number of cans held of a brand shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 20).
-         * @summary Add Drink(s)
-         * @param {Array<Drink>} [drink] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        drinksPost(drink?: Array<Drink>, options?: any): AxiosPromise<object> {
-            return DefaultApiFp(configuration).drinksPost(drink, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Purchase
-         * @param {InlineObject1} [inlineObject1] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        drinksPurchasePost(inlineObject1?: InlineObject1, options?: any): AxiosPromise<InlineResponse2001> {
-            return DefaultApiFp(configuration).drinksPurchasePost(inlineObject1, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 3.2.4 (2) The number of cans held of a brand shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 20).
-         * @summary Modify Drink(s)
-         * @param {Array<Drink>} [drink] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        drinksPut(drink?: Array<Drink>, options?: any): AxiosPromise<object> {
-            return DefaultApiFp(configuration).drinksPut(drink, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Fetch Machine
-         * @param {Machine} [machine] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        machineGet(machine?: Machine, options?: any): AxiosPromise<Machine> {
-            return DefaultApiFp(configuration).machineGet(machine, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 3.2.4 (1) The number of coins held of a denomination shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 40).
-         * @summary Add Machine(s)
-         * @param {Array<Machine>} [machine] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        machinesPost(machine?: Array<Machine>, options?: any): AxiosPromise<object> {
-            return DefaultApiFp(configuration).machinesPost(machine, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 3.2.4 (3) When the maintainer successfully logs-in this checkbox shall be automatically unchecked by the system to indicate that the door status is unlocked. The door status shall be able to be changed to locked by checking the checkbox.
-         * @summary Modify Machine
-         * @param {InlineObject2} [inlineObject2] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        machinesPut(inlineObject2?: InlineObject2, options?: any): AxiosPromise<object> {
-            return DefaultApiFp(configuration).machinesPut(inlineObject2, options).then((request) => request(axios, basePath));
+        usersGet(options?: any): AxiosPromise<Array<User>> {
+            return UserApiFp(configuration).usersGet(options).then((request) => request(axios, basePath));
         },
         /**
          * 3.2.4 (1) The number of coins held of a denomination shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 40).
@@ -1222,28 +1669,28 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
          * @throws {RequiredError}
          */
         usersPost(user?: Array<User>, options?: any): AxiosPromise<object> {
-            return DefaultApiFp(configuration).usersPost(user, options).then((request) => request(axios, basePath));
+            return UserApiFp(configuration).usersPost(user, options).then((request) => request(axios, basePath));
         },
     };
 };
 
 /**
- * DefaultApi - object-oriented interface
+ * UserApi - object-oriented interface
  * @export
- * @class DefaultApi
+ * @class UserApi
  * @extends {BaseAPI}
  */
-export class DefaultApi extends BaseAPI {
+export class UserApi extends BaseAPI {
     /**
      * 3.2.4 (3) When the maintainer successfully logs-in this checkbox shall be automatically unchecked by the system to indicate that the door status is unlocked. The door status shall be able to be changed to locked by checking the checkbox.
      * @summary Login
      * @param {InlineObject} [inlineObject] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof DefaultApi
+     * @memberof UserApi
      */
     public authLoginPost(inlineObject?: InlineObject, options?: any) {
-        return DefaultApiFp(this.configuration).authLoginPost(inlineObject, options).then((request) => request(this.axios, this.basePath));
+        return UserApiFp(this.configuration).authLoginPost(inlineObject, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1252,164 +1699,33 @@ export class DefaultApi extends BaseAPI {
      * @param {object} [body] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof DefaultApi
+     * @memberof UserApi
      */
     public authLogoutPost(body?: object, options?: any) {
-        return DefaultApiFp(this.configuration).authLogoutPost(body, options).then((request) => request(this.axios, this.basePath));
+        return UserApiFp(this.configuration).authLogoutPost(body, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
-     * 3.2.4 (1) The number of coins held of a denomination shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 40).
-     * @summary Check Coin
-     * @param {Coin} [coin] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof DefaultApi
-     */
-    public coinsCheckCoinPost(coin?: Coin, options?: any) {
-        return DefaultApiFp(this.configuration).coinsCheckCoinPost(coin, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 3.2.4 (1) The number of coins held of a denomination shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 40).
-     * @summary Delete Coin(s)
+     * 
+     * @summary Delete User(s)
      * @param {Array<number>} [requestBody] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof DefaultApi
+     * @memberof UserApi
      */
-    public coinsDelete(requestBody?: Array<number>, options?: any) {
-        return DefaultApiFp(this.configuration).coinsDelete(requestBody, options).then((request) => request(this.axios, this.basePath));
+    public usersDelete(requestBody?: Array<number>, options?: any) {
+        return UserApiFp(this.configuration).usersDelete(requestBody, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
-     * @summary Fetch Coins
+     * @summary Fetch Users
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof DefaultApi
+     * @memberof UserApi
      */
-    public coinsGet(options?: any) {
-        return DefaultApiFp(this.configuration).coinsGet(options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 3.2.4 (1) The number of coins held of a denomination shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 40).
-     * @summary Add Coin(s)
-     * @param {Array<Coin>} [coin] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof DefaultApi
-     */
-    public coinsPost(coin?: Array<Coin>, options?: any) {
-        return DefaultApiFp(this.configuration).coinsPost(coin, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 3.2.4 (1) The number of coins held of a denomination shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 40).
-     * @summary Modify Coin(s)
-     * @param {InlineObject3} [inlineObject3] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof DefaultApi
-     */
-    public coinsPut(inlineObject3?: InlineObject3, options?: any) {
-        return DefaultApiFp(this.configuration).coinsPut(inlineObject3, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 3.2.4 (2) The number of cans held of a brand shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 20).
-     * @summary Delete Drink(s)
-     * @param {Array<number>} [requestBody] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof DefaultApi
-     */
-    public drinksDelete(requestBody?: Array<number>, options?: any) {
-        return DefaultApiFp(this.configuration).drinksDelete(requestBody, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Fetch Drinks
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof DefaultApi
-     */
-    public drinksGet(options?: any) {
-        return DefaultApiFp(this.configuration).drinksGet(options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 3.2.4 (2) The number of cans held of a brand shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 20).
-     * @summary Add Drink(s)
-     * @param {Array<Drink>} [drink] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof DefaultApi
-     */
-    public drinksPost(drink?: Array<Drink>, options?: any) {
-        return DefaultApiFp(this.configuration).drinksPost(drink, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Purchase
-     * @param {InlineObject1} [inlineObject1] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof DefaultApi
-     */
-    public drinksPurchasePost(inlineObject1?: InlineObject1, options?: any) {
-        return DefaultApiFp(this.configuration).drinksPurchasePost(inlineObject1, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 3.2.4 (2) The number of cans held of a brand shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 20).
-     * @summary Modify Drink(s)
-     * @param {Array<Drink>} [drink] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof DefaultApi
-     */
-    public drinksPut(drink?: Array<Drink>, options?: any) {
-        return DefaultApiFp(this.configuration).drinksPut(drink, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Fetch Machine
-     * @param {Machine} [machine] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof DefaultApi
-     */
-    public machineGet(machine?: Machine, options?: any) {
-        return DefaultApiFp(this.configuration).machineGet(machine, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 3.2.4 (1) The number of coins held of a denomination shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 40).
-     * @summary Add Machine(s)
-     * @param {Array<Machine>} [machine] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof DefaultApi
-     */
-    public machinesPost(machine?: Array<Machine>, options?: any) {
-        return DefaultApiFp(this.configuration).machinesPost(machine, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 3.2.4 (3) When the maintainer successfully logs-in this checkbox shall be automatically unchecked by the system to indicate that the door status is unlocked. The door status shall be able to be changed to locked by checking the checkbox.
-     * @summary Modify Machine
-     * @param {InlineObject2} [inlineObject2] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof DefaultApi
-     */
-    public machinesPut(inlineObject2?: InlineObject2, options?: any) {
-        return DefaultApiFp(this.configuration).machinesPut(inlineObject2, options).then((request) => request(this.axios, this.basePath));
+    public usersGet(options?: any) {
+        return UserApiFp(this.configuration).usersGet(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1418,10 +1734,10 @@ export class DefaultApi extends BaseAPI {
      * @param {Array<User>} [user] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof DefaultApi
+     * @memberof UserApi
      */
     public usersPost(user?: Array<User>, options?: any) {
-        return DefaultApiFp(this.configuration).usersPost(user, options).then((request) => request(this.axios, this.basePath));
+        return UserApiFp(this.configuration).usersPost(user, options).then((request) => request(this.axios, this.basePath));
     }
 
 }
