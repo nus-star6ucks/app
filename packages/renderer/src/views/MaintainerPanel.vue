@@ -2,8 +2,9 @@
 import Vue from 'vue'
 import { CoffeeMachine, Cola, Finance } from '@icon-park/vue'
 import Component from 'vue-class-component'
-import type { Coin, Drink } from '../openapi'
+import type { Coin, Drink, Machine } from '../openapi'
 import { useStore } from '../stores/machine'
+import { coinApi, drinkApi, userApi } from '../utils'
 
 @Component({
   components: {
@@ -16,8 +17,9 @@ export default class CustomerPanel extends Vue {
   password = ''
   valid = false
   selectedCoin: Coin | null = null
-  selectedBrand: Drink | null = null
-  totalCashHeld = 0
+  selectedDrink: Drink | null = null
+  displayTotalCashHeld = false
+  cashCollected = -1
 
   get coins(): Coin[] {
     const store = useStore()
@@ -29,16 +31,91 @@ export default class CustomerPanel extends Vue {
     return store.$state.drinks
   }
 
+  get machine(): Machine {
+    const store = useStore()
+    return store.$state.machines[0]
+  }
+
   get allowToUse(): boolean {
     return this.password.length === 6 && this.valid === true
   }
 
-  validate(e: any) {
+  get totalCashHeld(): number {
+    return this.computeTotalCashHeld()
+  }
+
+  showTotalCashHeld() {
+    this.displayTotalCashHeld = true
+  }
+
+  computeTotalCashHeld() {
+    return this.coins.reduce((acc, prev) => acc += prev.value * prev.quantity, 0)
+  }
+
+  async collectAllCash() {
+    const store = useStore()
+
+    this.cashCollected = this.computeTotalCashHeld()
+
+    const updatedCoins = this.coins.map((c) => {
+      c.quantity = 0
+      return c
+    })
+    await coinApi.coinsPut(updatedCoins)
+
+    // for mock use
+    store.$patch({
+      coins: updatedCoins,
+    })
+  }
+
+  async updateDrinkPrice(drink: Drink, price: number) {
+    const store = useStore()
+
+    drink.price = price
+    await drinkApi.drinksPut([drink])
+
+    // mock use
+    store.$patch({
+      drinks: store.$state.drinks.map(d => d.id === drink.id ? d : d),
+    })
+  }
+
+  async pressHereWhenFinished() {
+    await userApi.authLogoutPost()
+
+    // for mock use
+    const store = useStore()
+    const [machine] = store.$state.machines
+    if (machine.doorLocked) {
+      // panel become inactive
+      this.password = ''
+    }
+  }
+
+  async validate(e: any) {
     const store = useStore()
     this.password = e.target.value
-    // ...
-    if (this.password.length === 6)
+
+    if (this.password.length === 6) {
+      try {
+        await userApi.authLoginPost({ password: this.password })
+        // should update machine status
+        this.valid = true
+      }
+      catch (e) {
+        this.valid = false
+      }
+      // for mock use
       this.valid = store.$state.users[0].password === this.password
+      if (this.valid) {
+        const [machine] = store.$state.machines
+        machine.doorLocked = false
+        store.$patch({
+          machines: [machine],
+        })
+      }
+    }
   }
 
   mounted() {
@@ -63,14 +140,16 @@ export default class CustomerPanel extends Vue {
             <button
               v-for="coin in coins"
               :key="coin.id"
-              class="btn-solid with-click w-full flex items-center justify-between space-x-2 px-4 py-2"
+              :class="{ 'with-click': allowToUse }"
+              class="btn-solid w-full flex items-center justify-between space-x-2 px-4 py-2"
+              :disabled="!allowToUse"
               @click="selectedCoin = coin"
             >
               <div class="flex items-center space-x-2">
                 <finance :size="36" :stroke-width="2" />
                 <h2 class="text-2xl tracking-tighter" v-text="coin.name" />
               </div>
-              <span v-if="selectedCoin === coin" class="led-small" v-text="coin.quantity" />
+              <span v-if="selectedCoin.id === coin.id" class="led-small" v-text="coin.quantity" />
             </button>
           </div>
         </section>
@@ -81,9 +160,11 @@ export default class CustomerPanel extends Vue {
           <div class="space-y-3">
             <button
               v-for="drink in drinks"
-              :key="drink.name"
-              class="w-full btn-solid with-click flex items-center justify-between space-x-2 px-4 py-2"
-              @click="selectedBrand = drink"
+              :key="drink.id"
+              :disabled="!allowToUse"
+              :class="{ 'with-click': allowToUse }"
+              class="w-full btn-solid flex items-center justify-between space-x-2 px-4 py-2"
+              @click="selectedDrink = drink"
             >
               <div class="flex items-center space-x-2">
                 <Cola size="36" stroke-width="2" />
@@ -91,7 +172,7 @@ export default class CustomerPanel extends Vue {
                   <h2 class="text-2xl tracking-tighter" v-text="drink.name" />
                 </div>
               </div>
-              <span v-if="selectedBrand === drink" class="led-small" v-text="drink.quantity" />
+              <span v-if="selectedDrink.id === drink.id" class="led-small" v-text="drink.quantity" />
             </button>
           </div>
         </section>
@@ -108,27 +189,32 @@ export default class CustomerPanel extends Vue {
               <p class="font-bold tracking-tighter">
                 Brand Price
               </p>
-              <input
-                type="text"
-                class="px-1 text-sm w-full font-bold border-2 border-black rounded-md transition-all"
-                width="100%"
-                :value="selectedBrand?.price"
-              >
-            </div>
-            <div class="border-2 border-black rounded-md p-4 uppercase">
-              <span class="led-small">No Can</span>
-              <p class="font-bold tracking-tighter">
-                Collect Can Here
-              </p>
+              <span class="flex font-bold space-x-2 w-24">
+                <input
+                  type="number"
+                  class="px-1 text-sm w-full font-bold border-2 border-black rounded-md transition-all"
+                  width="100%"
+                  min="0"
+                  :value="selectedDrink?.price"
+                  :readonly="!allowToUse"
+                  @input="(e) => updateDrinkPrice(selectedDrink, +e.target.value)"
+                >
+                <span>c</span>
+              </span>
             </div>
             <div class="border-2 border-black rounded-md p-4 uppercase">
               <span class="font-bold">
                 <span class="tracking-tighter">Collect Cash</span>
-                <span class="ml-2 led-small">2730c</span>
+                <span v-if="cashCollected > -1" class="ml-2 led-small" v-text="`${cashCollected}c`" />
               </span>
 
               <p class="font-bold mt-1">
-                <button class="w-full btn-solid-small text-xs p-1">
+                <button
+                  class="w-full btn-solid-small text-xs p-1"
+                  :class="{ 'with-click': allowToUse }"
+                  :disabled="!allowToUse"
+                  @click="collectAllCash"
+                >
                   Press to Collect All Cash
                 </button>
               </p>
@@ -137,21 +223,31 @@ export default class CustomerPanel extends Vue {
               <span class="font-bold">
                 <span class="tracking-tighter">Total Cash</span>
                 <span
-                  v-if="totalCashHeld !== null"
+                  v-if="displayTotalCashHeld"
                   class="ml-2 led-small"
-                  v-text="totalCashHeld"
+                  v-text="`${totalCashHeld}c`"
                 />
               </span>
               <p class="font-bold mt-1">
-                <button class="w-full btn-solid-small text-xs p-1 with-click" @click="totalCashHeld = 123">
+                <button
+                  :disabled="!allowToUse"
+                  :class="{ 'with-click': allowToUse }"
+                  class="w-full btn-solid-small text-xs p-1"
+                  @click="showTotalCashHeld"
+                >
                   Show Total Cash Held
                 </button>
               </p>
             </div>
+            <button
+              :disabled="!allowToUse"
+              :class="{ 'with-click': allowToUse }"
+              class="btn-solid bg-purple-100 py-4 rounded-md font-bold w-full"
+              @click="pressHereWhenFinished"
+            >
+              Press Here When Finished
+            </button>
           </section>
-          <button class="btn-solid bg-purple-100 py-4 rounded-md font-bold w-full">
-            Press Here When Finished
-          </button>
         </section>
         <section class="space-y-2">
           <div class="flex justify-between items-center">
