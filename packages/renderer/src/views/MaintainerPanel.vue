@@ -2,7 +2,6 @@
 import Vue from 'vue'
 import { CoffeeMachine, Cola, Finance } from '@icon-park/vue'
 import Component from 'vue-class-component'
-import { formatCentsText } from '../utils'
 import type { Coin, Drink } from '../openapi'
 import { useStore } from '../stores/machine'
 
@@ -19,10 +18,6 @@ export default class CustomerPanel extends Vue {
   selectedCoin: Coin | null = null
   selectedBrand: Drink | null = null
   totalCashHeld = 0
-
-  get formatCentsText() {
-    return formatCentsText
-  }
 
   get coins(): Coin[] {
     const store = useStore()
@@ -144,7 +139,7 @@ export default class CustomerPanel extends Vue {
                 <span
                   v-if="totalCashHeld !== null"
                   class="ml-2 led-small"
-                  v-text="formatCentsText(totalCashHeld)"
+                  v-text="totalCashHeld"
                 />
               </span>
               <p class="font-bold mt-1">

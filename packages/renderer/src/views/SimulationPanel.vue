@@ -4,9 +4,10 @@ import type { BrowserWindowConstructorOptions } from 'electron'
 import { ipcRenderer } from 'electron'
 import Vue from 'vue'
 import Component from 'vue-class-component'
+import ElectronStore from 'electron-store'
 import type { Coin, Drink, Machine, User } from '../openapi'
 import { useStore } from '../stores/machine'
-import { baseApi } from '../utils'
+import { coinApi, drinkApi, machineApi, userApi } from '../utils'
 
 interface IInitialDataFileDto {
   coins: Coin[]
@@ -14,6 +15,8 @@ interface IInitialDataFileDto {
   users: User[]
   machines: Machine[]
 }
+
+const electronStore = new ElectronStore()
 
 @Component({})
 export default class CustomerPanel extends Vue {
@@ -28,6 +31,26 @@ export default class CustomerPanel extends Vue {
     return Object.values(store.$state).every(data => data.length > 0)
   }
 
+  get machines(): Machine[] {
+    const store = useStore()
+    return store.$state.machines
+  }
+
+  get users(): User[] {
+    const store = useStore()
+    return store.$state.users
+  }
+
+  get drinks(): Drink[] {
+    const store = useStore()
+    return store.$state.drinks
+  }
+
+  get coins(): Coin[] {
+    const store = useStore()
+    return store.$state.coins
+  }
+
   newWindow(path: string, options?: BrowserWindowConstructorOptions) {
     ipcRenderer.invoke('open-win', path, options)
   }
@@ -38,19 +61,31 @@ export default class CustomerPanel extends Vue {
     this.filePath = `${path}`
     const data: IInitialDataFileDto = JSON.parse(readFileSync(path) as any)
 
-    await baseApi.coinsPost(data.coins)
-    await baseApi.drinksPost(data.drinks)
-    await baseApi.usersPost(data.users)
-    await baseApi.machinesPost(data.machines)
+    await coinApi.coinsPost(data.coins)
+    await drinkApi.drinksPost(data.drinks)
+    await userApi.usersPost(data.users)
+    await machineApi.machinesPost(data.machines)
 
     store.$patch(data)
   }
 
   async handleEndSimulation() {
     const store = useStore()
+
+    ipcRenderer.invoke('close-other-wins')
     writeFileSync(this.filePath, JSON.stringify(store.$state), {
       flag: 'w',
     })
+
+    await coinApi.coinsDelete(this.coins.map(c => c.id))
+    await userApi.usersDelete(this.users.map(u => u.id))
+    await machineApi.machinesDelete(this.machines.map(m => m.id))
+    await drinkApi.drinksDelete(this.machines.map(m => m.id))
+
+    electronStore.set('coins', [])
+    electronStore.set('users', [])
+    electronStore.set('machines', [])
+    electronStore.set('drinks', [])
 
     store.$reset()
   }
@@ -59,7 +94,7 @@ export default class CustomerPanel extends Vue {
 
 <template>
   <div class="mx-auto max-w-md">
-    <header class="text-black py-6 mb-2">
+    <header class="text-black py-4 mb-2">
       <p class="text-center font-bold text-3xl tracking-tighter">
         Simulator Control Panel
       </p>
@@ -109,7 +144,7 @@ export default class CustomerPanel extends Vue {
         </button>
       </div>
     </div>
-    <footer class="fixed bottom-0 left-0 px-4 pb-2 space-y-2 max-w-md w-full mx-auto">
+    <footer class="fixed bottom-0 left-0 px-4 pb-4 space-y-2 max-w-md w-full mx-auto">
       <button
         :class="{
           'btn-solid bg-purple-100 py-4 rounded-md font-bold w-full with-click': !fileLoaded,

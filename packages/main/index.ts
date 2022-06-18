@@ -151,6 +151,14 @@ app.on('activate', () => {
   }
 });
 
+ipcMain.handle('close-other-wins', () => {
+  BrowserWindow.getAllWindows().forEach(win => {
+    if (win.id > 1) {
+      win.close()
+    }
+  })
+})
+
 // new window example arg: new windows url
 ipcMain.handle('open-win', (event, path, options?: BrowserWindowConstructorOptions) => {
   const childWindow = new BrowserWindow({

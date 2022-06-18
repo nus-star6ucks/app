@@ -3,8 +3,7 @@ import Vue from 'vue'
 import { CoffeeMachine, Cola } from '@icon-park/vue'
 import Component from 'vue-class-component'
 import KeyboardSection from '../components/KeyboardSection.vue'
-import { AVAILABLE_NOMIALS, formatCentsText } from '../utils'
-import type { Drink, Machine } from '../openapi'
+import type { Coin, Drink, Machine } from '../openapi'
 import { useStore } from '../stores/machine'
 
 @Component({
@@ -25,13 +24,14 @@ export default class CustomerPanel extends Vue {
     return store.$state.drinks
   }
 
+  get coins(): Coin[] {
+    const store = useStore()
+    return store.$state.coins
+  }
+
   get machine(): Machine {
     const store = useStore()
     return store.$state.machines[0]
-  }
-
-  get formatCentsText() {
-    return formatCentsText
   }
 
   get collectCanHereText(): string {
@@ -51,13 +51,13 @@ export default class CustomerPanel extends Vue {
     this.selectedBrand = brand
   }
 
-  insertCoin(nomial: number) {
-    if (!AVAILABLE_NOMIALS.includes(nomial)) {
-      this.invalidCoin = true
-      return
-    }
+  insertCoin(coin: Coin) {
+    // if (!AVAILABLE_NOMIALS.includes(nomial)) {
+    //   this.invalidCoin = true
+    //   return
+    // }
     this.invalidCoin = false
-    this.totalMoneyInserted += nomial
+    this.totalMoneyInserted += coin.value
   }
 
   terminateAndReturnCash() {
@@ -95,7 +95,7 @@ export default class CustomerPanel extends Vue {
                 <cola size="36" stroke-width="2" />
                 <div class="flex items-center space-x-2">
                   <h2 class="text-2xl tracking-tighter" v-text="drink.name" />
-                  <span class="led-small" v-text="formatCentsText(drink.price)" />
+                  <span class="led-small" v-text="drink.price" />
                 </div>
               </div>
               <span
@@ -125,12 +125,12 @@ export default class CustomerPanel extends Vue {
           </div>
           <div class="flex space-x-2 justify-between">
             <button
-              v-for="coin in [5, 10, 20, 50, 100, 999999]"
-              :key="coin"
+              v-for="coin in coins"
+              :key="coin.id"
               class="btn-solid-small px-2 h-10" :class="{ 'with-click': !!selectedBrand }"
               :disabled="!selectedBrand"
               @click="insertCoin(coin)"
-              v-text="formatCentsText(coin)"
+              v-text="coin.name"
             />
           </div>
         </section>
@@ -156,7 +156,7 @@ export default class CustomerPanel extends Vue {
             </p>
           </div>
           <div class="border-2 border-black rounded-md p-4 uppercase">
-            <span class="led-small" v-text="formatCentsText(totalMoneyInserted)" />
+            <span class="led-small" v-text="totalMoneyInserted" />
             <p class="font-bold">
               Total Money Inserted
             </p>

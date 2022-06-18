@@ -3,12 +3,19 @@ import { CheckCorrect, Checkbox, CoffeeMachine, Cola, Finance } from '@icon-park
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import KeyboardSection from '../components/KeyboardSection.vue'
+import type { Coin, Drink } from '../openapi'
 import { useStore } from '../stores/machine'
+import { coinApi, drinkApi, machineApi } from '../utils'
 
 @Component({
   components: { CoffeeMachine, Cola, Finance, KeyboardSection, Checkbox, CheckCorrect },
 })
 export default class CustomerPanel extends Vue {
+  get machine() {
+    const store = useStore()
+    return store.$state.machines[0]
+  }
+
   get drinks() {
     const store = useStore()
     return store.$state.drinks
@@ -17,6 +24,43 @@ export default class CustomerPanel extends Vue {
   get coins() {
     const store = useStore()
     return store.$state.coins
+  }
+
+  async switchDoorLocked() {
+    const store = useStore()
+    const machine = store.$state.machines[0]
+    machine.doorLocked = !machine.doorLocked
+
+    await machineApi.machinesPut([machine])
+
+    // mock use
+    store.$patch({
+      machines: [machine],
+    })
+  }
+
+  async updateCoinQuantity(coin: Coin, quantity: number) {
+    const store = useStore()
+
+    coin.quantity = quantity
+    await coinApi.coinsPut([coin])
+
+    // mock use
+    store.$patch({
+      coins: store.$state.coins.map(c => c.id === coin.id ? coin : c),
+    })
+  }
+
+  async updateDrinkQuantity(drink: Drink, quantity: number) {
+    const store = useStore()
+
+    drink.quantity = quantity
+    await drinkApi.drinksPut([drink])
+
+    // mock use
+    store.$patch({
+      drinks: store.$state.drinks.map(d => d.id === drink.id ? drink : d),
+    })
   }
 
   mounted() {
@@ -49,7 +93,7 @@ export default class CustomerPanel extends Vue {
                   <h2 class="text-2xl tracking-tighter" v-text="coin.name" />
                 </div>
               </div>
-              <span class="led-small" v-text="coin.quantity" />
+              <input type="number" min="0" max="40" class="led-small" :value="coin.quantity" @input="(e) => updateCoinQuantity(coin, +e.target.value)">
             </div>
           </div>
         </section>
@@ -71,7 +115,7 @@ export default class CustomerPanel extends Vue {
                   <h2 class="text-xl tracking-tighter" v-text="drink.name" />
                 </div>
               </div>
-              <span class="led-small" v-text="drink.quantity" />
+              <input type="number" min="0" max="20" class="led-small" :value="drink.quantity" @input="(e) => updateDrinkQuantity(drink, +e.target.value)">
             </div>
           </div>
         </section>
@@ -82,9 +126,9 @@ export default class CustomerPanel extends Vue {
             </h2>
           </div>
           <div>
-            <button class="font-semibold text-lg flex items-center">
-              <checkbox theme="outline" size="36" :stroke-width="2" stroke-linejoin="bevel" stroke-linecap="butt" />
-              <check-correct theme="outline" size="36" :stroke-width="2" stroke-linejoin="bevel" stroke-linecap="butt" />
+            <button class="font-semibold text-lg flex items-center" @click="switchDoorLocked">
+              <checkbox v-if="machine.doorLocked" theme="outline" size="36" :stroke-width="2" stroke-linejoin="bevel" stroke-linecap="butt" />
+              <check-correct v-else theme="outline" size="36" :stroke-width="2" stroke-linejoin="bevel" stroke-linecap="butt" />
               <span class="ml-2">Door Locked?</span>
             </button>
           </div>
