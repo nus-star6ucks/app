@@ -1,3 +1,5 @@
+import { DefaultApi } from './openapi';
+
 export const AVAILABLE_NOMIALS = [5, 10, 20, 50, 100];
 
 export const formatCentsText = (cents: number | string, convertToDollar = true) => {
@@ -5,3 +7,5 @@ export const formatCentsText = (cents: number | string, convertToDollar = true) 
   if (cents >= 100 && convertToDollar) return `$${(+cents / 100).toFixed(2)}`;
   return `${cents}C`;
 };
+
+export const baseApi = new DefaultApi({}, 'https://mock.apifox.cn/m1/1108102-0-default');

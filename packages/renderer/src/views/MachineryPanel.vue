@@ -1,3 +1,60 @@
+<script lang="ts">
+import { CoffeeMachine, Cola, Finance } from '@icon-park/vue'
+import Vue from 'vue'
+import Component from 'vue-class-component'
+import KeyboardSection from '../components/KeyboardSection.vue'
+
+const quantitiesData = [
+  {
+    title: '5c',
+    quantity: 22,
+  },
+  {
+    title: '10c',
+    quantity: 37,
+  },
+  {
+    title: '20c',
+    quantity: 9,
+  },
+  {
+    title: '$1',
+    quantity: 10,
+  },
+]
+
+const brandsData = [
+  {
+    title: 'Coca-Cola',
+    quantity: 5,
+  },
+  {
+    title: 'Sarsi',
+    quantity: 7,
+  },
+  {
+    title: 'Soya Bean',
+    quantity: 12,
+  },
+  {
+    title: 'Sevenup',
+    quantity: 1,
+  },
+]
+
+@Component({
+  components: { CoffeeMachine, Cola, Finance, KeyboardSection },
+})
+export default class CustomerPanel extends Vue {
+  brands = brandsData
+  quantities = quantitiesData
+
+  mounted() {
+    document.title = 'VMCS - Machinery Panel'
+  }
+}
+</script>
+
 <template>
   <div>
     <div class="px-6 mb-4 flex items-center space-x-2 -ml-1">
@@ -7,7 +64,9 @@
     <section class="px-6 grid gap-12 grid-cols-2">
       <div class="space-y-6">
         <section>
-          <h2 class="font-bold text-lg tracking-tighter mb-2 uppercase">Quantity of Coins</h2>
+          <h2 class="font-bold text-lg tracking-tighter mb-2 uppercase">
+            Quantity of Coins
+          </h2>
           <div class="grid grid-cols-2 gap-2">
             <div
               v-for="q in quantities"
@@ -25,7 +84,9 @@
           </div>
         </section>
         <section>
-          <h2 class="font-bold text-lg tracking-tighter mb-2 uppercase">Quantity of Cans</h2>
+          <h2 class="font-bold text-lg tracking-tighter mb-2 uppercase">
+            Quantity of Cans
+          </h2>
           <div class="grid grid-cols-2 gap-2">
             <div
               v-for="brand in brands"
@@ -46,7 +107,9 @@
       <aside class="space-y-6">
         <section>
           <div class="flex justify-between items-center mb-2">
-            <h2 class="font-bold text-lg tracking-tighter uppercase">Misc</h2>
+            <h2 class="font-bold text-lg tracking-tighter uppercase">
+              Misc
+            </h2>
           </div>
           <div>
             <label class="font-semibold text-lg flex items-center">
@@ -56,7 +119,9 @@
         </section>
         <section>
           <div class="flex justify-between items-center mb-2">
-            <h2 class="font-bold text-lg tracking-tighter uppercase">State</h2>
+            <h2 class="font-bold text-lg tracking-tighter uppercase">
+              State
+            </h2>
           </div>
         </section>
         <keyboard-section disabled />
@@ -64,60 +129,3 @@
     </section>
   </div>
 </template>
-
-<script lang="ts">
-import { CoffeeMachine, Cola, Finance } from '@icon-park/vue';
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import KeyboardSection from '../components/KeyboardSection.vue';
-
-const quantitiesData = [
-  {
-    title: '5c',
-    quantity: 22,
-  },
-  {
-    title: '10c',
-    quantity: 37,
-  },
-  {
-    title: '20c',
-    quantity: 9,
-  },
-  {
-    title: '$1',
-    quantity: 10,
-  },
-];
-
-const brandsData = [
-  {
-    title: 'Coca-Cola',
-    quantity: 5,
-  },
-  {
-    title: 'Sarsi',
-    quantity: 7,
-  },
-  {
-    title: 'Soya Bean',
-    quantity: 12,
-  },
-  {
-    title: 'Sevenup',
-    quantity: 1,
-  },
-];
-
-@Component({
-  components: { CoffeeMachine, Cola, Finance, KeyboardSection },
-})
-export default class CustomerPanel extends Vue {
-  brands = brandsData;
-  quantities = quantitiesData;
-
-  mounted() {
-    document.title = 'VMCS - Machinery Panel';
-  }
-}
-</script>
