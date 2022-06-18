@@ -2,22 +2,23 @@
 import Vue from 'vue'
 import { CoffeeMachine, Cola } from '@icon-park/vue'
 import Component from 'vue-class-component'
-import KeyboardSection from '../components/KeyboardSection.vue'
 import type { Coin, Drink, Machine } from '../openapi'
 import { useStore } from '../stores/machine'
+import { coinApi, drinkApi } from '../utils'
 
 @Component({
   components: {
-    KeyboardSection,
     CoffeeMachine,
     Cola,
   },
 })
 export default class CustomerPanel extends Vue {
-  selectedBrand: Drink | null = null
+  selectedDrink: Drink | null = null
   invalidCoin = false
-  totalMoneyInserted = 0
-  collectCoins = 0
+  collectedCoins: Coin[] = []
+  collectCoinsDisplay = 0
+  collectCanHereDisplay = 'NO CAN'
+  noChangeAvailableDisplay = false
 
   get drinks(): Drink[] {
     const store = useStore()
@@ -34,37 +35,104 @@ export default class CustomerPanel extends Vue {
     return store.$state.machines[0]
   }
 
-  get collectCanHereText(): string {
-    if (this.selectedBrand && this.totalMoneyInserted >= this.selectedBrand?.price)
-      return this.selectedBrand.name
-
-    return 'NO CAN'
+  get totalMoneyInserted(): number {
+    return this.collectedCoins.reduce((acc, curr) => acc += curr.value * curr.quantity, 0)
   }
 
   mounted() {
     document.title = 'VMCS - Customer Panel'
   }
 
-  selectBrand(brand: Drink) {
-    if (brand.quantity === 0 || this.selectedBrand)
+  selectDrink(drink: Drink) {
+    if (drink.quantity === 0 || this.selectedDrink)
       return
-    this.selectedBrand = brand
+    this.selectedDrink = drink
   }
 
-  insertCoin(coin: Coin) {
-    // if (!AVAILABLE_NOMIALS.includes(nomial)) {
-    //   this.invalidCoin = true
-    //   return
-    // }
-    this.invalidCoin = false
-    this.totalMoneyInserted += coin.value
+  async insertCoin(coin: Coin) {
+    const store = useStore()
+    try {
+      await coinApi.coinsCheckCoinPost(coin)
+      const sameValueCoin = this.collectedCoins.find(c => c.value === coin.value)
+      if (sameValueCoin)
+        sameValueCoin.quantity += 1
+      else
+        this.collectedCoins.push({ ...coin, quantity: 1 })
+    }
+    catch {
+      // coin check failed
+      this.invalidCoin = true
+    }
+    finally {
+      if (this.totalMoneyInserted >= this.selectedDrink.price) {
+        await drinkApi.drinksPurchasePost({
+          drinkId: this.selectedDrink.id,
+          coins: this.collectedCoins,
+        })
+
+        // for mock use
+        // 1. update coin quantity
+        const availableCoins = this.coins.map((c) => {
+          const customerInsertedCoin = this.collectedCoins.find(coin => c.id === coin.id)
+          return Array(c.quantity + (customerInsertedCoin ? customerInsertedCoin.quantity : 0)).fill(c.value)
+        }).flat().sort((a, b) => b - a)
+
+        // 2. requestChangeSolution
+        const shouldReturnCashValue = this.totalMoneyInserted - this.selectedDrink.price
+        if (shouldReturnCashValue > 0) {
+          const changeSolution = this.requestChange(shouldReturnCashValue, availableCoins)
+          if (changeSolution.length === 0) {
+            this.noChangeAvailableDisplay = true
+            return
+          }
+
+          // update coin stock
+          store.$patch({
+            coins: this.coins.map((coin) => {
+              const customerInsertedCoin = this.collectedCoins.find(c => c.id === coin.id)
+              if (customerInsertedCoin)
+                coin.quantity += customerInsertedCoin.quantity
+              return coin
+            }),
+          })
+          changeSolution.forEach((value) => {
+            const coin = this.coins.find(c => c.value === value)
+            coin.quantity -= 1
+            store.$patch({
+              coins: this.coins.map(c => c.id === coin.id ? coin : c),
+            })
+          })
+
+          this.collectCoinsDisplay = changeSolution.reduce((acc, curr) => acc += curr, 0)
+        }
+        this.collectCanHereDisplay = this.selectedDrink.name
+      }
+    }
+  }
+
+  // for mock use
+  requestChange(amount: number, availableCoins: number[]): number[] {
+    const result: number[][] = []
+    const helper = (path: number[], remain: number, startIdx: number) => {
+      if (remain === 0)
+        return result.push([...path])
+      if (remain < 0 || result.length > 0)
+        return
+      for (let i = startIdx; i < availableCoins.length; i += 1) {
+        if (remain - availableCoins[i] >= 0)
+          helper([...path, availableCoins[i]], remain - availableCoins[i], startIdx + 1)
+      }
+    }
+    helper([], amount, 0)
+    return result[0]
   }
 
   terminateAndReturnCash() {
-    this.totalMoneyInserted = 0
+    this.collectCoinsDisplay = this.collectedCoins.reduce((acc, curr) => acc += curr.value * curr.quantity, 0)
+    this.collectedCoins = []
     this.invalidCoin = false
-    this.collectCoins = 0
-    this.selectedBrand = null
+    this.noChangeAvailableDisplay = false
+    this.selectedDrink = null
   }
 }
 </script>
@@ -84,18 +152,19 @@ export default class CustomerPanel extends Vue {
           <div class="space-y-3">
             <button
               v-for="drink in drinks"
-              :key="drink.name"
-              :disabled="drink.quantity > 0"
-              class="w-full cursor-pointer btn-solid flex items-center justify-between space-x-2 p-4" :class="{
-                active: selectedBrand && drink.name === selectedBrand.name,
+              :key="drink.id"
+              :disabled="drink.quantity === 0"
+              class="w-full cursor-pointer btn-solid flex items-center justify-between space-x-2 p-4"
+              :class="{
+                active: selectedDrink && drink.id === selectedDrink.id,
               }"
-              @click="() => selectBrand(drink)"
+              @click="selectDrink(drink)"
             >
               <div class="flex items-center space-x-2">
                 <cola size="36" stroke-width="2" />
                 <div class="flex items-center space-x-2">
                   <h2 class="text-2xl tracking-tighter" v-text="drink.name" />
-                  <span class="led-small" v-text="drink.price" />
+                  <span class="led-small" v-text="`${drink.price}c`" />
                 </div>
               </div>
               <span
@@ -127,8 +196,8 @@ export default class CustomerPanel extends Vue {
             <button
               v-for="coin in coins"
               :key="coin.id"
-              class="btn-solid-small px-2 h-10" :class="{ 'with-click': !!selectedBrand }"
-              :disabled="!selectedBrand"
+              class="btn-solid-small px-2 h-10" :class="{ 'with-click': !!selectedDrink }"
+              :disabled="!selectedDrink"
               @click="insertCoin(coin)"
               v-text="coin.name"
             />
@@ -136,27 +205,31 @@ export default class CustomerPanel extends Vue {
         </section>
         <section class="grid grid-cols-2 gap-2">
           <div class="border-2 border-black rounded-md p-4 uppercase">
-            <span class="led bg-red-600 opacity-30">No Change Available</span>
+            <span class="led bg-red-600" :class="{ 'opacity-30': !noChangeAvailableDisplay }">No Change Available</span>
             <p class="font-bold mt-1">
-              <button class="btn-solid-small text-xs p-1">
+              <button
+                class="btn-solid-small text-xs p-1"
+                :class="{ 'with-click': collectCanHereDisplay === 'NO CAN' }"
+                :disabled="collectCanHereDisplay !== 'NO CAN'" @click="terminateAndReturnCash"
+              >
                 Terminate and Return Cash
               </button>
             </p>
           </div>
           <div class="border-2 border-black rounded-md p-4 uppercase">
-            <span class="led-small" v-text="collectCanHereText" />
+            <span class="led-small" v-text="collectCanHereDisplay" />
             <p class="font-bold">
               Collect Can Here
             </p>
           </div>
           <div class="border-2 border-black rounded-md p-4 uppercase">
-            <span class="led-small">0c</span>
+            <span class="led-small" v-text="`${collectCoinsDisplay}c`" />
             <p class="font-bold">
               Collect Coins
             </p>
           </div>
           <div class="border-2 border-black rounded-md p-4 uppercase">
-            <span class="led-small" v-text="totalMoneyInserted" />
+            <span class="led-small" v-text="`${totalMoneyInserted}c`" />
             <p class="font-bold">
               Total Money Inserted
             </p>
