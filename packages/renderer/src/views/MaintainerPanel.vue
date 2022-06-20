@@ -149,7 +149,7 @@ export default class CustomerPanel extends Vue {
                 <finance :size="36" :stroke-width="2" />
                 <h2 class="text-2xl tracking-tighter" v-text="coin.name" />
               </div>
-              <span v-if="selectedCoin.id === coin.id" class="led-small" v-text="coin.quantity" />
+              <span v-if="selectedCoin && selectedCoin.id === coin.id" class="led-small" v-text="coin.quantity" />
             </button>
           </div>
         </section>
@@ -172,7 +172,7 @@ export default class CustomerPanel extends Vue {
                   <h2 class="text-2xl tracking-tighter" v-text="drink.name" />
                 </div>
               </div>
-              <span v-if="selectedDrink.id === drink.id" class="led-small" v-text="drink.quantity" />
+              <span v-if="selectedDrink && selectedDrink.id === drink.id" class="led-small" v-text="drink.quantity" />
             </button>
           </div>
         </section>
