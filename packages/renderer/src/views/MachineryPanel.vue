@@ -46,9 +46,9 @@ export default class CustomerPanel extends Vue {
     await coinApi.coinsPut([coin])
 
     // mock use
-    // store.$patch({
-    //   coins: store.$state.coins.map(c => c.id === coin.id ? coin : c),
-    // })
+    store.$patch({
+      coins: store.$state.coins.map(c => c.id === coin.id ? coin : c),
+    })
   }
 
   async updateDrinkQuantity(drink: Drink, quantity: number) {
