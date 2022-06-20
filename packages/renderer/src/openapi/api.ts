@@ -101,10 +101,16 @@ export interface Drink {
 export interface InlineObject {
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof InlineObject
      */
-    password: string;
+    drinkId: number;
+    /**
+     * 合并 object 的 quantity
+     * @type {Array<Coin>}
+     * @memberof InlineObject
+     */
+    coins: Array<Coin>;
 }
 /**
  * 
@@ -117,13 +123,25 @@ export interface InlineObject1 {
      * @type {number}
      * @memberof InlineObject1
      */
-    drinkId: number;
+    id: number;
     /**
-     * 合并 object 的 quantity
-     * @type {Array<Coin>}
+     * ex. Maintainer
+     * @type {string}
      * @memberof InlineObject1
      */
-    coins: Array<Coin>;
+    role: string;
+    /**
+     * 6 alphanumeric chars
+     * @type {string}
+     * @memberof InlineObject1
+     */
+    password: string;
+    /**
+     * [\'login\', \'logout\']
+     * @type {string}
+     * @memberof InlineObject1
+     */
+    status: string;
 }
 /**
  * 
@@ -136,37 +154,13 @@ export interface InlineResponse200 {
      * @type {number}
      * @memberof InlineResponse200
      */
-    id: number;
-    /**
-     * ex. $1, 50 c
-     * @type {string}
-     * @memberof InlineResponse200
-     */
-    name: string;
-    /**
-     * face value ($1 for 100)
-     * @type {number}
-     * @memberof InlineResponse200
-     */
-    value: number;
-    /**
-     * stock
-     * @type {number}
-     * @memberof InlineResponse200
-     */
-    quantity: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof InlineResponse200
-     */
-    weight: number;
+    collectCoins: number;
     /**
      * 
      * @type {boolean}
      * @memberof InlineResponse200
      */
-    isValid: boolean;
+    noChangeAvailable: boolean;
 }
 /**
  * 
@@ -179,13 +173,37 @@ export interface InlineResponse2001 {
      * @type {number}
      * @memberof InlineResponse2001
      */
-    collectCoins: number;
+    id: number;
+    /**
+     * ex. $1, 50 c
+     * @type {string}
+     * @memberof InlineResponse2001
+     */
+    name: string;
+    /**
+     * face value ($1 for 100)
+     * @type {number}
+     * @memberof InlineResponse2001
+     */
+    value: number;
+    /**
+     * stock
+     * @type {number}
+     * @memberof InlineResponse2001
+     */
+    quantity: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof InlineResponse2001
+     */
+    weight: number;
     /**
      * 
      * @type {boolean}
      * @memberof InlineResponse2001
      */
-    noChangeAvailable: boolean;
+    isValid: boolean;
 }
 /**
  * 
@@ -436,7 +454,7 @@ export const CoinApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async coinsCheckCoinPost(coin?: Coin, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse200>> {
+        async coinsCheckCoinPost(coin?: Coin, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2001>> {
             const localVarAxiosArgs = await CoinApiAxiosParamCreator(configuration).coinsCheckCoinPost(coin, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
@@ -514,7 +532,7 @@ export const CoinApiFactory = function (configuration?: Configuration, basePath?
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        coinsCheckCoinPost(coin?: Coin, options?: any): AxiosPromise<InlineResponse200> {
+        coinsCheckCoinPost(coin?: Coin, options?: any): AxiosPromise<InlineResponse2001> {
             return CoinApiFp(configuration).coinsCheckCoinPost(coin, options).then((request) => request(axios, basePath));
         },
         /**
@@ -737,11 +755,11 @@ export const DrinkApiAxiosParamCreator = function (configuration?: Configuration
         /**
          * 
          * @summary Purchase
-         * @param {InlineObject1} [inlineObject1] 
+         * @param {InlineObject} [inlineObject] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        drinksPurchasePost: async (inlineObject1?: InlineObject1, options: any = {}): Promise<RequestArgs> => {
+        drinksPurchasePost: async (inlineObject?: InlineObject, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/drinks/purchase`;
             const localVarUrlObj = globalImportUrl.parse(localVarPath, true);
             let baseOptions;
@@ -761,8 +779,8 @@ export const DrinkApiAxiosParamCreator = function (configuration?: Configuration
             delete localVarUrlObj.search;
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const needsSerialization = (typeof inlineObject1 !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(inlineObject1 !== undefined ? inlineObject1 : {}) : (inlineObject1 || "");
+            const needsSerialization = (typeof inlineObject !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(inlineObject !== undefined ? inlineObject : {}) : (inlineObject || "");
 
             return {
                 url: globalImportUrl.format(localVarUrlObj),
@@ -857,12 +875,12 @@ export const DrinkApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Purchase
-         * @param {InlineObject1} [inlineObject1] 
+         * @param {InlineObject} [inlineObject] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async drinksPurchasePost(inlineObject1?: InlineObject1, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2001>> {
-            const localVarAxiosArgs = await DrinkApiAxiosParamCreator(configuration).drinksPurchasePost(inlineObject1, options);
+        async drinksPurchasePost(inlineObject?: InlineObject, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse200>> {
+            const localVarAxiosArgs = await DrinkApiAxiosParamCreator(configuration).drinksPurchasePost(inlineObject, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -923,12 +941,12 @@ export const DrinkApiFactory = function (configuration?: Configuration, basePath
         /**
          * 
          * @summary Purchase
-         * @param {InlineObject1} [inlineObject1] 
+         * @param {InlineObject} [inlineObject] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        drinksPurchasePost(inlineObject1?: InlineObject1, options?: any): AxiosPromise<InlineResponse2001> {
-            return DrinkApiFp(configuration).drinksPurchasePost(inlineObject1, options).then((request) => request(axios, basePath));
+        drinksPurchasePost(inlineObject?: InlineObject, options?: any): AxiosPromise<InlineResponse200> {
+            return DrinkApiFp(configuration).drinksPurchasePost(inlineObject, options).then((request) => request(axios, basePath));
         },
         /**
          * 3.2.4 (2) The number of cans held of a brand shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 20).
@@ -988,13 +1006,13 @@ export class DrinkApi extends BaseAPI {
     /**
      * 
      * @summary Purchase
-     * @param {InlineObject1} [inlineObject1] 
+     * @param {InlineObject} [inlineObject] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof DrinkApi
      */
-    public drinksPurchasePost(inlineObject1?: InlineObject1, options?: any) {
-        return DrinkApiFp(this.configuration).drinksPurchasePost(inlineObject1, options).then((request) => request(this.axios, this.basePath));
+    public drinksPurchasePost(inlineObject?: InlineObject, options?: any) {
+        return DrinkApiFp(this.configuration).drinksPurchasePost(inlineObject, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1018,41 +1036,6 @@ export class DrinkApi extends BaseAPI {
  */
 export const MachineApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
-        /**
-         * 
-         * @summary Fetch Machine
-         * @param {Machine} [machine] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        machineGet: async (machine?: Machine, options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/machine/`;
-            const localVarUrlObj = globalImportUrl.parse(localVarPath, true);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            delete localVarUrlObj.search;
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const needsSerialization = (typeof machine !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(machine !== undefined ? machine : {}) : (machine || "");
-
-            return {
-                url: globalImportUrl.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
         /**
          * 
          * @summary Delete Machine(s)
@@ -1082,6 +1065,41 @@ export const MachineApiAxiosParamCreator = function (configuration?: Configurati
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             const needsSerialization = (typeof requestBody !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
             localVarRequestOptions.data =  needsSerialization ? JSON.stringify(requestBody !== undefined ? requestBody : {}) : (requestBody || "");
+
+            return {
+                url: globalImportUrl.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Fetch Machine
+         * @param {Machine} [machine] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        machinesGet: async (machine?: Machine, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/machines/`;
+            const localVarUrlObj = globalImportUrl.parse(localVarPath, true);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete localVarUrlObj.search;
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            const needsSerialization = (typeof machine !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(machine !== undefined ? machine : {}) : (machine || "");
 
             return {
                 url: globalImportUrl.format(localVarUrlObj),
@@ -1169,20 +1187,6 @@ export const MachineApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
-         * @summary Fetch Machine
-         * @param {Machine} [machine] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async machineGet(machine?: Machine, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Machine>> {
-            const localVarAxiosArgs = await MachineApiAxiosParamCreator(configuration).machineGet(machine, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
          * @summary Delete Machine(s)
          * @param {Array<number>} [requestBody] 
          * @param {*} [options] Override http request option.
@@ -1190,6 +1194,20 @@ export const MachineApiFp = function(configuration?: Configuration) {
          */
         async machinesDelete(requestBody?: Array<number>, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
             const localVarAxiosArgs = await MachineApiAxiosParamCreator(configuration).machinesDelete(requestBody, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
+         * @summary Fetch Machine
+         * @param {Machine} [machine] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async machinesGet(machine?: Machine, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Machine>>> {
+            const localVarAxiosArgs = await MachineApiAxiosParamCreator(configuration).machinesGet(machine, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -1234,16 +1252,6 @@ export const MachineApiFactory = function (configuration?: Configuration, basePa
     return {
         /**
          * 
-         * @summary Fetch Machine
-         * @param {Machine} [machine] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        machineGet(machine?: Machine, options?: any): AxiosPromise<Machine> {
-            return MachineApiFp(configuration).machineGet(machine, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
          * @summary Delete Machine(s)
          * @param {Array<number>} [requestBody] 
          * @param {*} [options] Override http request option.
@@ -1251,6 +1259,16 @@ export const MachineApiFactory = function (configuration?: Configuration, basePa
          */
         machinesDelete(requestBody?: Array<number>, options?: any): AxiosPromise<object> {
             return MachineApiFp(configuration).machinesDelete(requestBody, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Fetch Machine
+         * @param {Machine} [machine] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        machinesGet(machine?: Machine, options?: any): AxiosPromise<Array<Machine>> {
+            return MachineApiFp(configuration).machinesGet(machine, options).then((request) => request(axios, basePath));
         },
         /**
          * 3.2.4 (1) The number of coins held of a denomination shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 40).
@@ -1284,18 +1302,6 @@ export const MachineApiFactory = function (configuration?: Configuration, basePa
 export class MachineApi extends BaseAPI {
     /**
      * 
-     * @summary Fetch Machine
-     * @param {Machine} [machine] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof MachineApi
-     */
-    public machineGet(machine?: Machine, options?: any) {
-        return MachineApiFp(this.configuration).machineGet(machine, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
      * @summary Delete Machine(s)
      * @param {Array<number>} [requestBody] 
      * @param {*} [options] Override http request option.
@@ -1304,6 +1310,18 @@ export class MachineApi extends BaseAPI {
      */
     public machinesDelete(requestBody?: Array<number>, options?: any) {
         return MachineApiFp(this.configuration).machinesDelete(requestBody, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Fetch Machine
+     * @param {Machine} [machine] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MachineApi
+     */
+    public machinesGet(machine?: Machine, options?: any) {
+        return MachineApiFp(this.configuration).machinesGet(machine, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1339,76 +1357,6 @@ export class MachineApi extends BaseAPI {
  */
 export const UserApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
-        /**
-         * 3.2.4 (3) When the maintainer successfully logs-in this checkbox shall be automatically unchecked by the system to indicate that the door status is unlocked. The door status shall be able to be changed to locked by checking the checkbox.
-         * @summary Login
-         * @param {InlineObject} [inlineObject] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        authLoginPost: async (inlineObject?: InlineObject, options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/auth/login`;
-            const localVarUrlObj = globalImportUrl.parse(localVarPath, true);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            delete localVarUrlObj.search;
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const needsSerialization = (typeof inlineObject !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(inlineObject !== undefined ? inlineObject : {}) : (inlineObject || "");
-
-            return {
-                url: globalImportUrl.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * The user (ie: the maintainer) shall terminate use of the maintenance panel (ie: log-out) by pressing a button with the caption “Press Here when Finished”. If the state of the vending machine door is locked, then the log-out request shall be successful and the maintenance panel shall become inactive (ie: the functions can not be used) except for the “Password” text field. However, if the state of the vending machine door is unlocked, then the log-out request shall be ignored.
-         * @summary Logout
-         * @param {object} [body] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        authLogoutPost: async (body?: object, options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/auth/logout`;
-            const localVarUrlObj = globalImportUrl.parse(localVarPath, true);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            delete localVarUrlObj.search;
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const needsSerialization = (typeof body !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(body !== undefined ? body : {}) : (body || "");
-
-            return {
-                url: globalImportUrl.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
         /**
          * 
          * @summary Delete User(s)
@@ -1475,6 +1423,76 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
             };
         },
         /**
+         * 3.2.4 (3) When the maintainer successfully logs-in this checkbox shall be automatically unchecked by the system to indicate that the door status is unlocked. The door status shall be able to be changed to locked by checking the checkbox.
+         * @summary Login
+         * @param {InlineObject1} [inlineObject1] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        usersLoginPost: async (inlineObject1?: InlineObject1, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/users/login`;
+            const localVarUrlObj = globalImportUrl.parse(localVarPath, true);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete localVarUrlObj.search;
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            const needsSerialization = (typeof inlineObject1 !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(inlineObject1 !== undefined ? inlineObject1 : {}) : (inlineObject1 || "");
+
+            return {
+                url: globalImportUrl.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * The user (ie: the maintainer) shall terminate use of the maintenance panel (ie: log-out) by pressing a button with the caption “Press Here when Finished”. If the state of the vending machine door is locked, then the log-out request shall be successful and the maintenance panel shall become inactive (ie: the functions can not be used) except for the “Password” text field. However, if the state of the vending machine door is unlocked, then the log-out request shall be ignored.
+         * @summary Logout
+         * @param {User} [user] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        usersLogoutPost: async (user?: User, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/users/logout`;
+            const localVarUrlObj = globalImportUrl.parse(localVarPath, true);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            localVarUrlObj.query = {...localVarUrlObj.query, ...localVarQueryParameter, ...options.query};
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete localVarUrlObj.search;
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            const needsSerialization = (typeof user !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(user !== undefined ? user : {}) : (user || "");
+
+            return {
+                url: globalImportUrl.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * 3.2.4 (1) The number of coins held of a denomination shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 40).
          * @summary Add User(s)
          * @param {Array<User>} [user] 
@@ -1519,34 +1537,6 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
 export const UserApiFp = function(configuration?: Configuration) {
     return {
         /**
-         * 3.2.4 (3) When the maintainer successfully logs-in this checkbox shall be automatically unchecked by the system to indicate that the door status is unlocked. The door status shall be able to be changed to locked by checking the checkbox.
-         * @summary Login
-         * @param {InlineObject} [inlineObject] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async authLoginPost(inlineObject?: InlineObject, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
-            const localVarAxiosArgs = await UserApiAxiosParamCreator(configuration).authLoginPost(inlineObject, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * The user (ie: the maintainer) shall terminate use of the maintenance panel (ie: log-out) by pressing a button with the caption “Press Here when Finished”. If the state of the vending machine door is locked, then the log-out request shall be successful and the maintenance panel shall become inactive (ie: the functions can not be used) except for the “Password” text field. However, if the state of the vending machine door is unlocked, then the log-out request shall be ignored.
-         * @summary Logout
-         * @param {object} [body] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async authLogoutPost(body?: object, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
-            const localVarAxiosArgs = await UserApiAxiosParamCreator(configuration).authLogoutPost(body, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
          * 
          * @summary Delete User(s)
          * @param {Array<number>} [requestBody] 
@@ -1568,6 +1558,34 @@ export const UserApiFp = function(configuration?: Configuration) {
          */
         async usersGet(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<User>>> {
             const localVarAxiosArgs = await UserApiAxiosParamCreator(configuration).usersGet(options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 3.2.4 (3) When the maintainer successfully logs-in this checkbox shall be automatically unchecked by the system to indicate that the door status is unlocked. The door status shall be able to be changed to locked by checking the checkbox.
+         * @summary Login
+         * @param {InlineObject1} [inlineObject1] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async usersLoginPost(inlineObject1?: InlineObject1, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
+            const localVarAxiosArgs = await UserApiAxiosParamCreator(configuration).usersLoginPost(inlineObject1, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * The user (ie: the maintainer) shall terminate use of the maintenance panel (ie: log-out) by pressing a button with the caption “Press Here when Finished”. If the state of the vending machine door is locked, then the log-out request shall be successful and the maintenance panel shall become inactive (ie: the functions can not be used) except for the “Password” text field. However, if the state of the vending machine door is unlocked, then the log-out request shall be ignored.
+         * @summary Logout
+         * @param {User} [user] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async usersLogoutPost(user?: User, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
+            const localVarAxiosArgs = await UserApiAxiosParamCreator(configuration).usersLogoutPost(user, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -1597,26 +1615,6 @@ export const UserApiFp = function(configuration?: Configuration) {
 export const UserApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     return {
         /**
-         * 3.2.4 (3) When the maintainer successfully logs-in this checkbox shall be automatically unchecked by the system to indicate that the door status is unlocked. The door status shall be able to be changed to locked by checking the checkbox.
-         * @summary Login
-         * @param {InlineObject} [inlineObject] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        authLoginPost(inlineObject?: InlineObject, options?: any): AxiosPromise<object> {
-            return UserApiFp(configuration).authLoginPost(inlineObject, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * The user (ie: the maintainer) shall terminate use of the maintenance panel (ie: log-out) by pressing a button with the caption “Press Here when Finished”. If the state of the vending machine door is locked, then the log-out request shall be successful and the maintenance panel shall become inactive (ie: the functions can not be used) except for the “Password” text field. However, if the state of the vending machine door is unlocked, then the log-out request shall be ignored.
-         * @summary Logout
-         * @param {object} [body] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        authLogoutPost(body?: object, options?: any): AxiosPromise<object> {
-            return UserApiFp(configuration).authLogoutPost(body, options).then((request) => request(axios, basePath));
-        },
-        /**
          * 
          * @summary Delete User(s)
          * @param {Array<number>} [requestBody] 
@@ -1634,6 +1632,26 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
          */
         usersGet(options?: any): AxiosPromise<Array<User>> {
             return UserApiFp(configuration).usersGet(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 3.2.4 (3) When the maintainer successfully logs-in this checkbox shall be automatically unchecked by the system to indicate that the door status is unlocked. The door status shall be able to be changed to locked by checking the checkbox.
+         * @summary Login
+         * @param {InlineObject1} [inlineObject1] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        usersLoginPost(inlineObject1?: InlineObject1, options?: any): AxiosPromise<object> {
+            return UserApiFp(configuration).usersLoginPost(inlineObject1, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * The user (ie: the maintainer) shall terminate use of the maintenance panel (ie: log-out) by pressing a button with the caption “Press Here when Finished”. If the state of the vending machine door is locked, then the log-out request shall be successful and the maintenance panel shall become inactive (ie: the functions can not be used) except for the “Password” text field. However, if the state of the vending machine door is unlocked, then the log-out request shall be ignored.
+         * @summary Logout
+         * @param {User} [user] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        usersLogoutPost(user?: User, options?: any): AxiosPromise<object> {
+            return UserApiFp(configuration).usersLogoutPost(user, options).then((request) => request(axios, basePath));
         },
         /**
          * 3.2.4 (1) The number of coins held of a denomination shall be able to be changed by entering a new value into the text field to overwrite the current value (note that the value must be an integer, ≥ 0 & ≤ 40).
@@ -1656,30 +1674,6 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
  */
 export class UserApi extends BaseAPI {
     /**
-     * 3.2.4 (3) When the maintainer successfully logs-in this checkbox shall be automatically unchecked by the system to indicate that the door status is unlocked. The door status shall be able to be changed to locked by checking the checkbox.
-     * @summary Login
-     * @param {InlineObject} [inlineObject] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof UserApi
-     */
-    public authLoginPost(inlineObject?: InlineObject, options?: any) {
-        return UserApiFp(this.configuration).authLoginPost(inlineObject, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * The user (ie: the maintainer) shall terminate use of the maintenance panel (ie: log-out) by pressing a button with the caption “Press Here when Finished”. If the state of the vending machine door is locked, then the log-out request shall be successful and the maintenance panel shall become inactive (ie: the functions can not be used) except for the “Password” text field. However, if the state of the vending machine door is unlocked, then the log-out request shall be ignored.
-     * @summary Logout
-     * @param {object} [body] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof UserApi
-     */
-    public authLogoutPost(body?: object, options?: any) {
-        return UserApiFp(this.configuration).authLogoutPost(body, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
      * 
      * @summary Delete User(s)
      * @param {Array<number>} [requestBody] 
@@ -1700,6 +1694,30 @@ export class UserApi extends BaseAPI {
      */
     public usersGet(options?: any) {
         return UserApiFp(this.configuration).usersGet(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 3.2.4 (3) When the maintainer successfully logs-in this checkbox shall be automatically unchecked by the system to indicate that the door status is unlocked. The door status shall be able to be changed to locked by checking the checkbox.
+     * @summary Login
+     * @param {InlineObject1} [inlineObject1] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UserApi
+     */
+    public usersLoginPost(inlineObject1?: InlineObject1, options?: any) {
+        return UserApiFp(this.configuration).usersLoginPost(inlineObject1, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * The user (ie: the maintainer) shall terminate use of the maintenance panel (ie: log-out) by pressing a button with the caption “Press Here when Finished”. If the state of the vending machine door is locked, then the log-out request shall be successful and the maintenance panel shall become inactive (ie: the functions can not be used) except for the “Password” text field. However, if the state of the vending machine door is unlocked, then the log-out request shall be ignored.
+     * @summary Logout
+     * @param {User} [user] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UserApi
+     */
+    public usersLogoutPost(user?: User, options?: any) {
+        return UserApiFp(this.configuration).usersLogoutPost(user, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
