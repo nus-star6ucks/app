@@ -11,3 +11,9 @@
 ## Config
 
 示例导入文件（先解压）：[input.json.zip](https://github.com/nus-star6ucks/app/files/8928922/input.json.zip)
+
+## Note
+
+1. 前端的核心代码在 `packages/renderer/src` 下（其余部分不需要关注），`openapi` 为 Apifox 生成代码，也不必关注。
+2. 后端核心代码在 `api/` 下
+
