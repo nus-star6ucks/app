@@ -71,7 +71,7 @@ export default class CustomerPanel extends Vue {
         })
 
         // for mock use
-        // 1. update coin quantity
+        // 1. flat current coins
         const availableCoins = this.coins.map((c) => {
           const customerInsertedCoin = this.collectedCoins.find(coin => c.id === coin.id)
           return Array(c.quantity + (customerInsertedCoin ? customerInsertedCoin.quantity : 0)).fill(c.value)

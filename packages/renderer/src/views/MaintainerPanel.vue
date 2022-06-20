@@ -63,9 +63,9 @@ export default class CustomerPanel extends Vue {
     })
     await coinApi.coinsPut(updatedCoins)
 
-    // for mock use
+    const { data: coins } = await coinApi.coinsGet()
     store.$patch({
-      coins: updatedCoins,
+      coins,
     })
   }
 
@@ -75,14 +75,14 @@ export default class CustomerPanel extends Vue {
     drink.price = price
     await drinkApi.drinksPut([drink])
 
-    // mock use
+    const { data: drinks } = await drinkApi.drinksGet()
     store.$patch({
-      drinks: store.$state.drinks.map(d => d.id === drink.id ? d : d),
+      drinks,
     })
   }
 
   async pressHereWhenFinished() {
-    await userApi.authLogoutPost()
+    await userApi.usersLogoutPost()
 
     // for mock use
     const store = useStore()
@@ -99,7 +99,7 @@ export default class CustomerPanel extends Vue {
 
     if (this.password.length === 6) {
       try {
-        await userApi.authLoginPost({ password: this.password })
+        await userApi.usersLoginPost({ password: this.password } as any)
         // should update machine status
         this.valid = true
       }

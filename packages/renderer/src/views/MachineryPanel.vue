@@ -33,9 +33,9 @@ export default class CustomerPanel extends Vue {
 
     await machineApi.machinesPut([machine])
 
-    // mock use
+    const { data: machines } = await machineApi.machinesGet()
     store.$patch({
-      machines: [machine],
+      machines,
     })
   }
 
@@ -45,9 +45,9 @@ export default class CustomerPanel extends Vue {
     coin.quantity = quantity
     await coinApi.coinsPut([coin])
 
-    // mock use
+    const { data: coins } = await coinApi.coinsGet()
     store.$patch({
-      coins: store.$state.coins.map(c => c.id === coin.id ? coin : c),
+      coins,
     })
   }
 
@@ -57,9 +57,9 @@ export default class CustomerPanel extends Vue {
     drink.quantity = quantity
     await drinkApi.drinksPut([drink])
 
-    // mock use
+    const { data: drinks } = await drinkApi.drinksGet()
     store.$patch({
-      drinks: store.$state.drinks.map(d => d.id === drink.id ? drink : d),
+      drinks,
     })
   }
 
