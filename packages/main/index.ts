@@ -6,6 +6,7 @@ import installExtension, { REDUX_DEVTOOLS } from 'electron-devtools-installer';
 import Store from 'electron-store';
 import axios from 'axios';
 import 'v8-compile-cache';
+import { unlinkSync } from 'fs';
 
 // Disable GPU Acceleration for Windows 7
 if (release().startsWith('6.1')) app.disableHardwareAcceleration();
@@ -130,6 +131,7 @@ app
 
 app.on('window-all-closed', async () => {
   await stopSpringServer(SPRING_PORT);
+  unlinkSync(join(process.cwd(), 'api/db', 'vmcs.mv.db'))
   win = null;
   if (process.platform !== 'darwin') app.quit();
 });
@@ -167,6 +169,7 @@ ipcMain.handle('open-win', (event, path, options?: BrowserWindowConstructorOptio
       nodeIntegration: true,
       contextIsolation: false,
     },
+    frame: false,
     ...options,
   });
 

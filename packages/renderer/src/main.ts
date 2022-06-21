@@ -21,8 +21,16 @@ new Vue({
   render: h => h(App),
 }).$mount('#app')
 
-if (window.removeLoading)
-  window.removeLoading()
+let healthTimer = setInterval(async () => {
+  axios.get('/actuator/health').then(() => {
+    if (window.removeLoading)
+      window.removeLoading()
+    clearInterval(healthTimer)
+    healthTimer = null
+  }).catch(() => {
+    // do nothing
+  })
+}, 1000)
 
 if (window.ipcRenderer) {
   window.ipcRenderer.on('main-process-message', (_event, ...args) => {
