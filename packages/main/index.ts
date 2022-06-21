@@ -36,6 +36,7 @@ async function createWindow(path = '', options?: BrowserWindowConstructorOptions
     width: 450,
     height: 700,
     resizable: false,
+    maximizable: false,
     webPreferences: {
       webSecurity: false,
       nodeIntegration: true,
@@ -43,6 +44,22 @@ async function createWindow(path = '', options?: BrowserWindowConstructorOptions
       preload: join(__dirname, '../preload/index.cjs'),
     },
     ...options,
+  });
+
+
+  win.webContents.session.webRequest.onBeforeSendHeaders(
+    (details, callback) => {
+      callback({ requestHeaders: { Origin: '*', ...details.requestHeaders } });
+    },
+  );
+
+  win.webContents.session.webRequest.onHeadersReceived((details, callback) => {
+    callback({
+      responseHeaders: {
+        'Access-Control-Allow-Origin': ['*'],
+        ...details.responseHeaders,
+      },
+    });
   });
 
   if (app.isPackaged) {
@@ -169,7 +186,8 @@ ipcMain.handle('open-win', (event, path, options?: BrowserWindowConstructorOptio
       nodeIntegration: true,
       contextIsolation: false,
     },
-    frame: false,
+    maximizable: false,
+    resizable: false,
     ...options,
   });
 

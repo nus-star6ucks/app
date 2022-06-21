@@ -2,13 +2,12 @@
 import { CheckCorrect, Checkbox, CoffeeMachine, Cola, Finance } from '@icon-park/vue'
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import KeyboardSection from '../components/KeyboardSection.vue'
 import type { Coin, Drink } from '../openapi'
 import { useStore } from '../stores/machine'
 import { coinApi, drinkApi, machineApi } from '../utils'
 
 @Component({
-  components: { CoffeeMachine, Cola, Finance, KeyboardSection, Checkbox, CheckCorrect },
+  components: { CoffeeMachine, Cola, Finance, Checkbox, CheckCorrect },
 })
 export default class CustomerPanel extends Vue {
   get machine() {

@@ -1,17 +1,17 @@
 import 'vue-class-component/hooks'
 import Vue from 'vue'
 import VueCompositionAPI from '@vue/composition-api'
+import { PiniaVuePlugin, createPinia } from 'pinia'
 import axios from 'axios'
 import App from './App.vue'
 import router from './router'
 import './index.css'
-import { PiniaVuePlugin, createPinia } from 'pinia'
 
 Vue.use(VueCompositionAPI)
 Vue.use(PiniaVuePlugin)
 
 Vue.config.productionTip = false
-axios.defaults.baseURL = 'http://localhost:8081/api'
+axios.defaults.baseURL = 'http://localhost:8081/'
 
 const pinia = createPinia()
 
