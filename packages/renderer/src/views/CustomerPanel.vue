@@ -151,10 +151,6 @@ export default class CustomerPanel extends Vue {
     this.noChangeAvailableDisplay = false
     this.selectedDrink = null
   }
-
-  testUpdate() {
-    ipcRenderer.invoke('refresh-all-states')
-  }
 }
 </script>
 
@@ -257,9 +253,6 @@ export default class CustomerPanel extends Vue {
           </div>
         </section>
       </aside>
-      <button @click="testUpdate">
-        you should update urself!
-      </button>
     </section>
   </div>
 </template>
