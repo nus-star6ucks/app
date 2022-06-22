@@ -3,6 +3,7 @@ import Vue from 'vue'
 import { CoffeeMachine, Cola } from '@icon-park/vue'
 import Component from 'vue-class-component'
 import { MutationType } from 'pinia'
+import { ipcRenderer } from 'electron'
 import type { Coin, Drink, Machine } from '../openapi'
 import { useStore } from '../stores/machine'
 import { coinApi, drinkApi } from '../utils'
@@ -150,6 +151,10 @@ export default class CustomerPanel extends Vue {
     this.noChangeAvailableDisplay = false
     this.selectedDrink = null
   }
+
+  testUpdate() {
+    ipcRenderer.invoke('refresh-all-states')
+  }
 }
 </script>
 
@@ -252,6 +257,9 @@ export default class CustomerPanel extends Vue {
           </div>
         </section>
       </aside>
+      <button @click="testUpdate">
+        you should update urself!
+      </button>
     </section>
   </div>
 </template>

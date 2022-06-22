@@ -4,7 +4,6 @@ import type { BrowserWindowConstructorOptions } from 'electron'
 import { ipcRenderer } from 'electron'
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import ElectronStore from 'electron-store'
 import type { Coin, Drink, Machine, User } from '../openapi'
 import { useStore } from '../stores/machine'
 import { coinApi, drinkApi, machineApi, userApi } from '../utils'
@@ -15,8 +14,6 @@ interface IInitialDataFileDto {
   users: User[]
   machines: Machine[]
 }
-
-const electronStore = new ElectronStore()
 
 @Component({})
 export default class CustomerPanel extends Vue {
@@ -56,7 +53,6 @@ export default class CustomerPanel extends Vue {
   }
 
   async handleFileInput(e: any) {
-    const store = useStore()
     const [{ path }] = e.target.files
     this.filePath = `${path}`
     const data: IInitialDataFileDto = JSON.parse(readFileSync(path) as any)
@@ -66,7 +62,7 @@ export default class CustomerPanel extends Vue {
     await userApi.usersPost(data.users)
     await machineApi.machinesPost(data.machines)
 
-    store.$patch(data)
+    ipcRenderer.invoke('refresh-all-states')
   }
 
   async handleEndSimulation() {
@@ -81,11 +77,6 @@ export default class CustomerPanel extends Vue {
     await userApi.usersDelete(this.users.map(u => u.id))
     await machineApi.machinesDelete(this.machines.map(m => m.id))
     await drinkApi.drinksDelete(this.machines.map(m => m.id))
-
-    electronStore.set('coins', [])
-    electronStore.set('users', [])
-    electronStore.set('machines', [])
-    electronStore.set('drinks', [])
 
     store.$reset()
   }
