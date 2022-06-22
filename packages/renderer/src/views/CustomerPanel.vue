@@ -28,7 +28,13 @@ export default class CustomerPanel extends Vue {
 
   get coins(): Coin[] {
     const store = useStore()
-    return store.$state.coins
+    return [...store.$state.coins, {
+      id: -1,
+      name: 'Invalid',
+      value: 999,
+      weight: 999,
+      quantity: 999,
+    }]
   }
 
   get machine(): Machine {
