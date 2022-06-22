@@ -4,7 +4,7 @@ import { CoffeeMachine, Cola, Finance } from '@icon-park/vue'
 import Component from 'vue-class-component'
 import type { Coin, Drink, Machine } from '../openapi'
 import { useStore } from '../stores/machine'
-import { coinApi, drinkApi, userApi } from '../utils'
+import { coinApi, drinkApi, machineApi, userApi } from '../utils'
 
 @Component({
   components: {
@@ -82,15 +82,22 @@ export default class CustomerPanel extends Vue {
   }
 
   async pressHereWhenFinished() {
-    await userApi.usersLogoutPost()
-
-    // for mock use
     const store = useStore()
     const [machine] = store.$state.machines
-    if (machine.doorLocked) {
-      // panel become inactive
-      this.password = ''
-    }
+
+    // if the state of the vending machine door is unlocked, then the log-out request shall be ignored.
+    if (!machine.doorLocked)
+      return
+
+    await userApi.usersLogoutPost()
+    const { data: [updatedMachineData] } = await machineApi.machinesGet()
+    store.$patch({
+      machines: [updatedMachineData],
+    })
+    // for mock use
+    // panel becomes inactive
+    // If the state of the vending machine door is locked, then the log-out request shall be successful and the maintenance panel shall become inactive
+    this.password = ''
   }
 
   async validate(e: any) {

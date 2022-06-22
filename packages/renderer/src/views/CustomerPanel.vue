@@ -2,6 +2,7 @@
 import Vue from 'vue'
 import { CoffeeMachine, Cola } from '@icon-park/vue'
 import Component from 'vue-class-component'
+import { MutationType } from 'pinia'
 import type { Coin, Drink, Machine } from '../openapi'
 import { useStore } from '../stores/machine'
 import { coinApi, drinkApi } from '../utils'
@@ -41,6 +42,15 @@ export default class CustomerPanel extends Vue {
 
   mounted() {
     document.title = 'VMCS - Customer Panel'
+    const store = useStore()
+    store.$subscribe((mutation, state) => {
+      if (mutation.type === MutationType.patchObject && mutation.payload.machines) {
+        const [machine] = mutation.payload.machines
+        // When the maintainer successfully logs-in to the system, the system is required to terminate any customer transactions that are in-progress, and refund any money that has been entered during the transaction
+        if (!machine.doorLocked)
+          this.terminateAndReturnCash()
+      }
+    })
   }
 
   selectDrink(drink: Drink) {
@@ -153,7 +163,7 @@ export default class CustomerPanel extends Vue {
             <button
               v-for="drink in drinks"
               :key="drink.id"
-              :disabled="drink.quantity === 0"
+              :disabled="drink.quantity === 0 || !machine.doorLocked"
               class="w-full cursor-pointer btn-solid flex items-center justify-between space-x-2 p-4"
               :class="{
                 active: selectedDrink && drink.id === selectedDrink.id,
@@ -197,7 +207,7 @@ export default class CustomerPanel extends Vue {
               v-for="coin in coins"
               :key="coin.id"
               class="btn-solid-small px-2 h-10" :class="{ 'with-click': !!selectedDrink }"
-              :disabled="!selectedDrink"
+              :disabled="!selectedDrink || !machine.doorLocked"
               @click="insertCoin(coin)"
               v-text="coin.name"
             />
@@ -210,7 +220,7 @@ export default class CustomerPanel extends Vue {
               <button
                 class="btn-solid-small text-xs p-1"
                 :class="{ 'with-click': collectCanHereDisplay === 'NO CAN' }"
-                :disabled="collectCanHereDisplay !== 'NO CAN'" @click="terminateAndReturnCash"
+                :disabled="collectCanHereDisplay !== 'NO CAN' || !machine.doorLocked" @click="terminateAndReturnCash"
               >
                 Terminate and Return Cash
               </button>
