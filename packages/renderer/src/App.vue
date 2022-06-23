@@ -1,45 +1,33 @@
 <script lang="ts">
 import Vue from 'vue'
-import Store from 'electron-store'
-import { MutationType } from 'pinia'
-import { useStore } from './stores/machine'
-
-const electronStore = new Store({ watch: true })
+import { ipcRenderer } from 'electron'
+import { refreshCoinStates, refreshDrinkStates, refreshMachineStates, refreshUserStates } from './utils'
 
 export default Vue.extend({
-  setup() {
-    const store = useStore()
-    Object.keys(store.$state).forEach((key) => {
-      store.$patch({
-        [key]: electronStore.get(key) || [],
-      })
-    })
-  },
-  mounted() {
-    const store = useStore()
-    // sync electron-store <-> pinia
-    Object.keys(store.$state).forEach((key) => {
-      electronStore.onDidChange(key, (value) => {
-        store.$patch({
-          [key]: value,
-        })
-      })
-    })
+  async mounted() {
+    await refreshCoinStates()
+    await refreshDrinkStates()
+    await refreshMachineStates()
+    await refreshUserStates()
 
-    // listen pinia change
-    store.$subscribe(
-      (mutation) => {
-        if (mutation.type === MutationType.patchObject) {
-          Object.entries(mutation.payload).forEach(([key, value]) => {
-            const prev = electronStore.get(key)
-            if (JSON.stringify(prev || []) === JSON.stringify(value || []))
-              return
-            electronStore.set(key, value)
-          })
-        }
-      },
-      { detached: true },
-    )
+    ipcRenderer.on('refresh-all-states', async () => {
+      await refreshCoinStates()
+      await refreshDrinkStates()
+      await refreshMachineStates()
+      await refreshUserStates()
+    })
+    ipcRenderer.on('refresh-user-states', async () => {
+      await refreshUserStates()
+    })
+    ipcRenderer.on('refresh-machine-states', async () => {
+      await refreshMachineStates()
+    })
+    ipcRenderer.on('refresh-drink-states', async () => {
+      await refreshDrinkStates()
+    })
+    ipcRenderer.on('refresh-coin-states', async () => {
+      await refreshCoinStates()
+    })
   },
 })
 </script>

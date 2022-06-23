@@ -27,7 +27,6 @@
         ]
     },
     "dependencies": {
-        "electron-store": "^8.0.1",
         "pinia": "^2.0.14",
         "vue-class-component": "^7.2.6",
         "vue-template-compiler": "^2.6.14"
@@ -63,7 +62,9 @@
         "VITE_DEV_SERVER_HOST": "127.0.0.1",
         "VITE_DEV_SERVER_PORT": 3344
     },
-    "eslintIgnore": ["**/openapi/*.ts"],
+    "eslintIgnore": [
+        "**/openapi/*.ts"
+    ],
     "keywords": [
         "electron",
         "rollup",

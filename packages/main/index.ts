@@ -3,7 +3,6 @@ import { app, BrowserWindow, shell, ipcMain, BrowserWindowConstructorOptions } f
 import { release } from 'os';
 import { join } from 'path';
 import installExtension, { REDUX_DEVTOOLS } from 'electron-devtools-installer';
-import Store from 'electron-store';
 import axios from 'axios';
 import 'v8-compile-cache';
 import { unlinkSync } from 'fs';
@@ -22,15 +21,7 @@ process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 
 let win: BrowserWindow | null = null;
 
-Store.initRenderer();
-
 async function createWindow(path = '', options?: BrowserWindowConstructorOptions) {
-  // clear storage when creates main window
-  if (!path) {
-    const store = new Store()
-    store.clear()
-  }
-
   win = new BrowserWindow({
     title: 'Star6ucks',
     width: 450,
@@ -153,14 +144,6 @@ app.on('window-all-closed', async () => {
   if (process.platform !== 'darwin') app.quit();
 });
 
-app.on('second-instance', () => {
-  if (win) {
-    // Focus on the main window if the user tried to open another
-    if (win.isMinimized()) win.restore();
-    win.focus();
-  }
-});
-
 app.on('activate', () => {
   const allWindows = BrowserWindow.getAllWindows();
   if (allWindows.length) {
@@ -175,6 +158,36 @@ ipcMain.handle('close-other-wins', () => {
     if (win.id > 1) {
       win.close()
     }
+  })
+})
+
+ipcMain.handle('refresh-all-states', () => {
+  BrowserWindow.getAllWindows().forEach(win => {
+    win.webContents.send('refresh-all-states');
+  })
+})
+
+ipcMain.handle('refresh-user-states', () => {
+  BrowserWindow.getAllWindows().forEach(win => {
+    win.webContents.send('refresh-user-states');
+  })
+})
+
+ipcMain.handle('refresh-coin-states', () => {
+  BrowserWindow.getAllWindows().forEach(win => {
+    win.webContents.send('refresh-coin-states');
+  })
+})
+
+ipcMain.handle('refresh-machine-states', () => {
+  BrowserWindow.getAllWindows().forEach(win => {
+    win.webContents.send('refresh-machine-states');
+  })
+})
+
+ipcMain.handle('refresh-drink-states', () => {
+  BrowserWindow.getAllWindows().forEach(win => {
+    win.webContents.send('refresh-drink-states');
   })
 })
 

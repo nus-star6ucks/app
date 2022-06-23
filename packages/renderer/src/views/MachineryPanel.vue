@@ -1,5 +1,6 @@
 <script lang="ts">
 import { CheckCorrect, Checkbox, CoffeeMachine, Cola, Finance } from '@icon-park/vue'
+import { ipcRenderer } from 'electron'
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import type { Coin, Drink } from '../openapi'
@@ -32,10 +33,7 @@ export default class CustomerPanel extends Vue {
 
     await machineApi.machinesPut([machine])
 
-    const { data: machines } = await machineApi.machinesGet()
-    store.$patch({
-      machines,
-    })
+    ipcRenderer.invoke('refresh-machine-states')
   }
 
   async updateCoinQuantity(coin: Coin, quantity: number) {
@@ -44,10 +42,7 @@ export default class CustomerPanel extends Vue {
     coin.quantity = quantity
     await coinApi.coinsPut([coin])
 
-    const { data: coins } = await coinApi.coinsGet()
-    store.$patch({
-      coins,
-    })
+    ipcRenderer.invoke('refresh-coin-states')
   }
 
   async updateDrinkQuantity(drink: Drink, quantity: number) {
@@ -56,10 +51,7 @@ export default class CustomerPanel extends Vue {
     drink.quantity = quantity
     await drinkApi.drinksPut([drink])
 
-    const { data: drinks } = await drinkApi.drinksGet()
-    store.$patch({
-      drinks,
-    })
+    ipcRenderer.invoke('refresh-drink-states')
   }
 
   mounted() {
