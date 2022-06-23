@@ -92,7 +92,7 @@ export default class CustomerPanel extends Vue {
                   <h2 class="text-2xl tracking-tighter" v-text="coin.name" />
                 </div>
               </div>
-              <input type="number" min="0" max="40" class="led-small" :value="coin.quantity" @input="(e) => updateCoinQuantity(coin, +e.target.value)">
+              <input type="number" :readonly="machine.doorLocked" min="0" max="40" class="led-small" :value="coin.quantity" @input="(e) => updateCoinQuantity(coin, +e.target.value)">
             </div>
           </div>
         </section>
@@ -114,7 +114,7 @@ export default class CustomerPanel extends Vue {
                   <h2 class="text-xl tracking-tighter" v-text="drink.name" />
                 </div>
               </div>
-              <input type="number" min="0" max="20" class="led-small" :value="drink.quantity" @input="(e) => updateDrinkQuantity(drink, +e.target.value)">
+              <input type="number" min="0" max="20" class="led-small" :readonly="machine.doorLocked" :value="drink.quantity" @input="(e) => updateDrinkQuantity(drink, +e.target.value)">
             </div>
           </div>
         </section>
