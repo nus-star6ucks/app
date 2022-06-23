@@ -16,5 +16,5 @@ public interface UserService {
 
   Boolean login(User user);
 
-  void logout(User user);
+  Boolean logout(User user);
 }

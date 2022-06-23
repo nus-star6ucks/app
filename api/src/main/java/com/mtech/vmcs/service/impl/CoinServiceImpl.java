@@ -35,4 +35,14 @@ public class CoinServiceImpl implements CoinService {
   public void deleteCoins(List<Long> coinIds) {
     coinRepository.deleteAllById(coinIds);
   }
+
+  @Override
+  public Boolean checkCoin(Coin coin){
+    for (Coin everyCoin:
+         getAllCoins()) {
+      if (everyCoin.getValue().equals(coin.getValue()))
+        return true;
+    }
+    return false;
+  }
 }

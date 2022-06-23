@@ -13,4 +13,6 @@ public interface CoinService {
   void updateCoins(List<Coin> coins);
 
   void deleteCoins(List<Long> coinIds);
+
+  Boolean checkCoin(Coin coin);
 }

@@ -8,7 +8,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin
 @Controller
@@ -28,10 +31,16 @@ public class CoinController {
     return new ResponseEntity<>(HttpStatus.CREATED);
   }
 
-  // TODO: Wait for later implementation
   @PostMapping("/checkCoin")
-  public ResponseEntity checkCoin(@RequestBody Coin coin) {
-    return null;
+  public ResponseEntity checkCoin(@RequestBody Coin coin) throws IllegalAccessException {
+    Field[] fields = coin.getClass().getDeclaredFields();
+    Map<String, Object> map = new HashMap<>();
+    for (Field field : fields) {
+      field.setAccessible(true);
+      map.put(field.getName(), field.get(coin));
+    }
+    map.put("isValid", coinService.checkCoin(coin));
+    return new ResponseEntity<>(map, HttpStatus.OK);
   }
 
   @PutMapping
