@@ -1,14 +1,14 @@
 <script lang="ts">
 import { CheckCorrect, Checkbox, CoffeeMachine, Cola, Finance } from '@icon-park/vue'
+import { ipcRenderer } from 'electron'
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import KeyboardSection from '../components/KeyboardSection.vue'
 import type { Coin, Drink } from '../openapi'
 import { useStore } from '../stores/machine'
 import { coinApi, drinkApi, machineApi } from '../utils'
 
 @Component({
-  components: { CoffeeMachine, Cola, Finance, KeyboardSection, Checkbox, CheckCorrect },
+  components: { CoffeeMachine, Cola, Finance, Checkbox, CheckCorrect },
 })
 export default class CustomerPanel extends Vue {
   get machine() {
@@ -33,10 +33,7 @@ export default class CustomerPanel extends Vue {
 
     await machineApi.machinesPut([machine])
 
-    const { data: machines } = await machineApi.machinesGet()
-    store.$patch({
-      machines,
-    })
+    ipcRenderer.invoke('refresh-machine-states')
   }
 
   async updateCoinQuantity(coin: Coin, quantity: number) {
@@ -45,10 +42,7 @@ export default class CustomerPanel extends Vue {
     coin.quantity = quantity
     await coinApi.coinsPut([coin])
 
-    const { data: coins } = await coinApi.coinsGet()
-    store.$patch({
-      coins,
-    })
+    ipcRenderer.invoke('refresh-coin-states')
   }
 
   async updateDrinkQuantity(drink: Drink, quantity: number) {
@@ -57,10 +51,7 @@ export default class CustomerPanel extends Vue {
     drink.quantity = quantity
     await drinkApi.drinksPut([drink])
 
-    const { data: drinks } = await drinkApi.drinksGet()
-    store.$patch({
-      drinks,
-    })
+    ipcRenderer.invoke('refresh-drink-states')
   }
 
   mounted() {
@@ -93,7 +84,7 @@ export default class CustomerPanel extends Vue {
                   <h2 class="text-2xl tracking-tighter" v-text="coin.name" />
                 </div>
               </div>
-              <input type="number" min="0" max="40" class="led-small" :value="coin.quantity" @input="(e) => updateCoinQuantity(coin, +e.target.value)">
+              <input type="number" :readonly="machine.doorLocked" min="0" max="40" class="led-small" :value="coin.quantity" @input="(e) => updateCoinQuantity(coin, +e.target.value)">
             </div>
           </div>
         </section>
@@ -115,7 +106,7 @@ export default class CustomerPanel extends Vue {
                   <h2 class="text-xl tracking-tighter" v-text="drink.name" />
                 </div>
               </div>
-              <input type="number" min="0" max="20" class="led-small" :value="drink.quantity" @input="(e) => updateDrinkQuantity(drink, +e.target.value)">
+              <input type="number" min="0" max="20" class="led-small" :readonly="machine.doorLocked" :value="drink.quantity" @input="(e) => updateDrinkQuantity(drink, +e.target.value)">
             </div>
           </div>
         </section>

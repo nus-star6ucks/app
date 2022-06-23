@@ -3,9 +3,9 @@ import { app, BrowserWindow, shell, ipcMain, BrowserWindowConstructorOptions } f
 import { release } from 'os';
 import { join } from 'path';
 import installExtension, { REDUX_DEVTOOLS } from 'electron-devtools-installer';
-import Store from 'electron-store';
 import axios from 'axios';
 import 'v8-compile-cache';
+import { unlinkSync } from 'fs';
 
 // Disable GPU Acceleration for Windows 7
 if (release().startsWith('6.1')) app.disableHardwareAcceleration();
@@ -21,20 +21,13 @@ process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 
 let win: BrowserWindow | null = null;
 
-Store.initRenderer();
-
 async function createWindow(path = '', options?: BrowserWindowConstructorOptions) {
-  // clear storage when creates main window
-  if (!path) {
-    const store = new Store()
-    store.clear()
-  }
-
   win = new BrowserWindow({
     title: 'Star6ucks',
     width: 450,
     height: 700,
     resizable: false,
+    maximizable: false,
     webPreferences: {
       webSecurity: false,
       nodeIntegration: true,
@@ -42,6 +35,22 @@ async function createWindow(path = '', options?: BrowserWindowConstructorOptions
       preload: join(__dirname, '../preload/index.cjs'),
     },
     ...options,
+  });
+
+
+  win.webContents.session.webRequest.onBeforeSendHeaders(
+    (details, callback) => {
+      callback({ requestHeaders: { Origin: '*', ...details.requestHeaders } });
+    },
+  );
+
+  win.webContents.session.webRequest.onHeadersReceived((details, callback) => {
+    callback({
+      responseHeaders: {
+        'Access-Control-Allow-Origin': ['*'],
+        ...details.responseHeaders,
+      },
+    });
   });
 
   if (app.isPackaged) {
@@ -130,16 +139,9 @@ app
 
 app.on('window-all-closed', async () => {
   await stopSpringServer(SPRING_PORT);
+  unlinkSync(join(process.cwd(), 'api/db', 'vmcs.mv.db'))
   win = null;
   if (process.platform !== 'darwin') app.quit();
-});
-
-app.on('second-instance', () => {
-  if (win) {
-    // Focus on the main window if the user tried to open another
-    if (win.isMinimized()) win.restore();
-    win.focus();
-  }
 });
 
 app.on('activate', () => {
@@ -159,6 +161,36 @@ ipcMain.handle('close-other-wins', () => {
   })
 })
 
+ipcMain.handle('refresh-all-states', () => {
+  BrowserWindow.getAllWindows().forEach(win => {
+    win.webContents.send('refresh-all-states');
+  })
+})
+
+ipcMain.handle('refresh-user-states', () => {
+  BrowserWindow.getAllWindows().forEach(win => {
+    win.webContents.send('refresh-user-states');
+  })
+})
+
+ipcMain.handle('refresh-coin-states', () => {
+  BrowserWindow.getAllWindows().forEach(win => {
+    win.webContents.send('refresh-coin-states');
+  })
+})
+
+ipcMain.handle('refresh-machine-states', () => {
+  BrowserWindow.getAllWindows().forEach(win => {
+    win.webContents.send('refresh-machine-states');
+  })
+})
+
+ipcMain.handle('refresh-drink-states', () => {
+  BrowserWindow.getAllWindows().forEach(win => {
+    win.webContents.send('refresh-drink-states');
+  })
+})
+
 // new window example arg: new windows url
 ipcMain.handle('open-win', (event, path, options?: BrowserWindowConstructorOptions) => {
   const childWindow = new BrowserWindow({
@@ -167,6 +199,8 @@ ipcMain.handle('open-win', (event, path, options?: BrowserWindowConstructorOptio
       nodeIntegration: true,
       contextIsolation: false,
     },
+    maximizable: false,
+    resizable: false,
     ...options,
   });
 

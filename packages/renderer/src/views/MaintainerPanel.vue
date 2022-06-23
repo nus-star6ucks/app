@@ -2,9 +2,10 @@
 import Vue from 'vue'
 import { CoffeeMachine, Cola, Finance } from '@icon-park/vue'
 import Component from 'vue-class-component'
+import { ipcRenderer } from 'electron'
 import type { Coin, Drink, Machine } from '../openapi'
 import { useStore } from '../stores/machine'
-import { coinApi, drinkApi, userApi } from '../utils'
+import { coinApi, drinkApi, machineApi, userApi } from '../utils'
 
 @Component({
   components: {
@@ -53,8 +54,6 @@ export default class CustomerPanel extends Vue {
   }
 
   async collectAllCash() {
-    const store = useStore()
-
     this.cashCollected = this.computeTotalCashHeld()
 
     const updatedCoins = this.coins.map((c) => {
@@ -63,34 +62,33 @@ export default class CustomerPanel extends Vue {
     })
     await coinApi.coinsPut(updatedCoins)
 
-    const { data: coins } = await coinApi.coinsGet()
-    store.$patch({
-      coins,
-    })
+    ipcRenderer.invoke('refresh-coin-states')
   }
 
   async updateDrinkPrice(drink: Drink, price: number) {
-    const store = useStore()
-
     drink.price = price
     await drinkApi.drinksPut([drink])
 
-    const { data: drinks } = await drinkApi.drinksGet()
-    store.$patch({
-      drinks,
-    })
+    ipcRenderer.invoke('refresh-drink-states')
   }
 
   async pressHereWhenFinished() {
-    await userApi.usersLogoutPost()
-
-    // for mock use
     const store = useStore()
     const [machine] = store.$state.machines
-    if (machine.doorLocked) {
-      // panel become inactive
-      this.password = ''
-    }
+
+    // if the state of the vending machine door is unlocked, then the log-out request shall be ignored.
+    if (!machine.doorLocked)
+      return
+
+    await userApi.usersLogoutPost()
+
+    ipcRenderer.invoke('refresh-machine-states')
+    ipcRenderer.invoke('refresh-user-states')
+
+    // for mock use
+    // panel becomes inactive
+    // If the state of the vending machine door is locked, then the log-out request shall be successful and the maintenance panel shall become inactive
+    this.password = ''
   }
 
   async validate(e: any) {

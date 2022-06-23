@@ -10,7 +10,101 @@
 
 ## Config
 
-示例导入文件（先解压）：[input.json.zip](https://github.com/nus-star6ucks/app/files/8928922/input.json.zip)
+示例导入文件（保存以下内容为任意 `.json` 文件）：
+
+```json
+{
+    "users": [
+        {
+            "id": 1,
+            "role": "Maintainer",
+            "password": "123891",
+            "status": "logout"
+        }
+    ],
+    "machines": [
+        {
+            "id": 1,
+            "name": "Star6ucks",
+            "doorLocked": true
+        }
+    ],
+    "coins": [
+        {
+            "id": 1,
+            "name": "5c",
+            "value": 5,
+            "quantity": 22,
+            "weight": 1
+        },
+        {
+            "id": 2,
+            "name": "10c",
+            "value": 10,
+            "quantity": 37,
+            "weight": 1
+        },
+        {
+            "id": 3,
+            "name": "20c",
+            "value": 20,
+            "quantity": 9,
+            "weight": 1
+        },
+        {
+            "id": 4,
+            "name": "50c",
+            "value": 50,
+            "quantity": 12,
+            "weight": 1
+        },
+        {
+            "id": 5,
+            "name": "$1",
+            "value": 100,
+            "quantity": 10,
+            "weight": 1
+        }
+    ],
+    "drinks": [
+        {
+            "id": 1,
+            "name": "Coca-Cola",
+            "quantity": 4,
+            "price": 75,
+            "slotNum": 1
+        },
+        {
+            "id": 2,
+            "name": "Fanta",
+            "quantity": 7,
+            "price": 85,
+            "slotNum": 2
+        },
+        {
+            "id": 3,
+            "name": "Sarsi",
+            "quantity": 12,
+            "price": 70,
+            "slotNum": 3
+        },
+        {
+            "id": 4,
+            "name": "Soya Bean",
+            "quantity": 0,
+            "price": 60,
+            "slotNum": 4
+        },
+        {
+            "id": 5,
+            "name": "Coca-Cola",
+            "quantity": 1,
+            "price": 75,
+            "slotNum": 5
+        }
+    ]
+}
+```
 
 ## Note
 
