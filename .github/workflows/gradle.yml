@@ -23,3 +23,6 @@ jobs:
       - name: Execute Gradle build
         working-directory: ./api
         run: ./gradlew build
+      - name: Run Tests
+        working-directory: ./api
+        run: ./gradlew test
