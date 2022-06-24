@@ -26,7 +26,7 @@ export class SimulatorComponent implements OnInit {
   ngOnInit(): void {}
 
   filePath = '';
-  fileLoaded = false;
+  fileLoaded = true;
 
   blockButtonActiveClass = [
     'btn-solid',
