@@ -50,6 +50,13 @@ public class UserServiceImpl implements UserService {
                 u.setStatus(UserStatus.LOGIN.toString());
                 userRepository.save(u);
               });
+      // unlock door
+      List<Machine> machines = machineService.getAllMachines();
+      for (Machine machine:
+              machines){
+        machine.setDoorLocked(false);
+      }
+      machineService.updateMachines(machines);
       return true;
     } else {
       return false;

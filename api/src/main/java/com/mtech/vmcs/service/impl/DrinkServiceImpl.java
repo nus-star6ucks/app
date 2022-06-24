@@ -52,10 +52,10 @@ public class DrinkServiceImpl implements DrinkService {
   public Map<String, Object> purchase(PurchaseOrder purchaseOrder){
     List<Drink> drinks = getAllDrinks();
     Long drinkId = purchaseOrder.getDrinkId();
-    Integer drinkPrice = 0; // 购买饮料的价格
-    Integer totalCoins = 0; // 投入的硬币总金额
+    Integer drinkPrice = 0;
+    Integer totalCoins = 0;
 
-    //更新drink
+    //update drink
     for (Drink drink: drinks) {
       if (drink.getId().equals(drinkId)) {
         drink.setQuantity(drink.getQuantity() - 1);
@@ -65,7 +65,7 @@ public class DrinkServiceImpl implements DrinkService {
     }
     updateDrinks(drinks);
 
-    //第一次更新coin
+    //update coin (1)
     List<Coin> coins = purchaseOrder.getCoins();
     List<Coin> storedCoins = coinService.getAllCoins();
     for(Coin coin: coins){
@@ -80,29 +80,60 @@ public class DrinkServiceImpl implements DrinkService {
 
     ArrayList<Integer> quantity = new ArrayList<>(); //coin的quantity列表
     ArrayList<Integer> value = new ArrayList<>(); //coin的value列表
+    quantity.add(0);
+    value.add(0);
     Integer returnCoins = totalCoins - drinkPrice; //应找回的金额
     for(Coin storedCoin: storedCoins){
       quantity.add(storedCoin.getQuantity());
       value.add(storedCoin.getValue());
     }
 
-    // todo:找出最优解
-    int[] dp = new int[returnCoins + 1];
-    for (int i = 0; i < storedCoins.size(); i++){
-      for(int j = returnCoins; j >= 1; j--){
-        for(int k = 0; k <= quantity.get(i) && j >= k; k++){
-          dp[j] = Math.max(dp[j], dp[j - k] + k * value.get(i));
+    Integer returnRealCoins = 0;
+    ArrayList<Integer> coinIndexList = coinStrategy(returnCoins, quantity, value);
+
+    //update coin (2)
+    for(Integer coinIndex: coinIndexList){
+      Integer coinValue = value.get(coinIndex);
+      for(Coin storedCoin: storedCoins){
+        if (storedCoin.getValue().equals(coinValue)){
+          storedCoin.setQuantity(storedCoin.getQuantity()-1);
         }
       }
+      returnRealCoins += coinValue;
     }
-
-    //todo:设置storedCoins
-
-    //第二次更新coin
     coinService.updateCoins(storedCoins);
     Map<String, Object> map = new HashMap<>();
-    map.put("collectCoins", dp[returnCoins]);
-    map.put("noChangeAvailable", (dp[returnCoins] != 0));
+    map.put("collectCoins", returnRealCoins);
+    map.put("noChangeAvailable", (returnCoins != returnRealCoins));
     return map;
+  }
+
+  protected ArrayList<Integer> coinStrategy(int returnCoins, ArrayList<Integer> quantity, ArrayList<Integer> value){
+    int coinSize = quantity.size();
+    int[] dp = new int[returnCoins + 1];
+    int[][] path = new int[coinSize][returnCoins+1];
+    ArrayList<Integer> coinIndexList = new ArrayList<>();
+    for (int i = 1; i <= coinSize-1; i++)
+      for (int k = 1; k <= quantity.get(i); k++)
+        for (int j = returnCoins; j >= value.get(i); j--)
+          if (dp[j] < dp[j - value.get(i)] + value.get(i))
+          {
+            dp[j] = dp[j - value.get(i)] + value.get(i);
+            path[i][j] = 1;
+          }
+
+    int i = coinSize-1, j = returnCoins;
+    while (i > 0 && j > 0)
+    {
+      if (path[i][j] == 1 && quantity.get(i) != 0)
+      {
+        coinIndexList.add(i);
+        j -= value.get(i);
+        quantity.set(i, quantity.get(i)-1);
+      }
+      else
+        i--;
+    }
+    return coinIndexList;
   }
 }

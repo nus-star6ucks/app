@@ -1,5 +1,7 @@
 package com.mtech.vmcs.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.mtech.vmcs.model.entity.Coin;
 import com.mtech.vmcs.service.CoinService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,7 @@ import java.util.Map;
 public class CoinController {
 
   @Autowired private CoinService coinService;
+  @Autowired private ObjectMapper objectMapper;
 
   @GetMapping
   public ResponseEntity<List<Coin>> getAllCoins() {
@@ -33,14 +36,9 @@ public class CoinController {
 
   @PostMapping("/checkCoin")
   public ResponseEntity checkCoin(@RequestBody Coin coin) throws IllegalAccessException {
-    Field[] fields = coin.getClass().getDeclaredFields();
-    Map<String, Object> map = new HashMap<>();
-    for (Field field : fields) {
-      field.setAccessible(true);
-      map.put(field.getName(), field.get(coin));
-    }
-    map.put("isValid", coinService.checkCoin(coin));
-    return new ResponseEntity<>(map, HttpStatus.OK);
+    ObjectNode objectNode = objectMapper.valueToTree(coin);
+    objectNode.put("isValid", coinService.checkCoin(coin));
+    return new ResponseEntity<>(objectNode, HttpStatus.OK);
   }
 
   @PutMapping
