@@ -5,12 +5,28 @@ module.exports = {
   appId: 'Star6ucks',
   productName: 'Star6ucks',
   copyright: 'Copyright © 2022 ${author}',
-  asar: true,
+  asar: false,
   directories: {
     output: 'release/${version}',
     buildResources: 'resources',
   },
+  files: [
+    "**/*",
+    "!**/*.ts",
+    "!*.map",
+    "!package.json",
+    "!package-lock.json"
+  ],
   extraFiles: ['libraries'],
+  extraResources: [
+    {
+      "from": "dist",
+      "to": "app",
+      "filter": [
+        "**/*"
+      ]
+    }
+  ],
   files: ['dist'],
   win: {
     target: [
