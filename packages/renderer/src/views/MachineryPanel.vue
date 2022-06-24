@@ -37,8 +37,6 @@ export default class CustomerPanel extends Vue {
   }
 
   async updateCoinQuantity(coin: Coin, quantity: number) {
-    const store = useStore()
-
     coin.quantity = quantity
     await coinApi.coinsPut([coin])
 
@@ -46,8 +44,6 @@ export default class CustomerPanel extends Vue {
   }
 
   async updateDrinkQuantity(drink: Drink, quantity: number) {
-    const store = useStore()
-
     drink.quantity = quantity
     await drinkApi.drinksPut([drink])
 
