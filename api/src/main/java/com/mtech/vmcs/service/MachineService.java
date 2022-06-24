@@ -13,4 +13,8 @@ public interface MachineService {
   void updateMachines(List<Machine> machines);
 
   void deleteMachines(List<Long> MachineIds);
+
+  void startSimulation(String filePath);
+
+  void stopSimulation(String filePath);
 }
