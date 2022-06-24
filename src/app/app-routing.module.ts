@@ -1,13 +1,14 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CustomerComponent } from './customer/customer.component';
+import { ApiModule } from './http';
 import { MachineryComponent } from './machinery/machinery.component';
 import { MaintainerComponent } from './maintainer/maintainer.component';
 import { SimulatorComponent } from './simulator/simulator.component';
 
 const routes: Routes = [
   {
-    path: 'simulator',
+    path: '',
     component: SimulatorComponent,
   },
   {
@@ -25,7 +26,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, { useHash: true }), ApiModule],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}

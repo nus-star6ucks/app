@@ -32,23 +32,23 @@
   <footer
     class="fixed bottom-0 left-0 px-4 pb-4 space-y-2 max-w-md w-full mx-auto">
     <button
+      type="button"
       [class]="!fileLoaded ? blockButtonActiveClass : blockButtonInactiveClass"
-      [disabled]="!fileLoaded"
+      [disabled]="fileLoaded"
       (click)="fileUpload.click()">
       Begin Simulation
     </button>
     <button
-      [class]="fileLoaded ? blockButtonActiveClass : blockButtonInactiveClass"
       [disabled]="!fileLoaded"
+      [class]="fileLoaded ? blockButtonActiveClass : blockButtonInactiveClass"
       (click)="handleEndSimulation()">
       End Simulation
     </button>
   </footer>
   <input
-    ref="input"
     accept="application/JSON"
-    class="hidden"
     type="file"
+    class="hidden"
     (change)="onFileSelected($event)"
     #fileUpload />
 </div>

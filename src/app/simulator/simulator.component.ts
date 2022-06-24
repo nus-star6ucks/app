@@ -1,18 +1,33 @@
-import { Component, OnInit } from '@angular/core';
-// import { writeFileSync } from 'fs';
-
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { BrowserWindowConstructorOptions } from 'electron/renderer';
+import { lastValueFrom } from 'rxjs';
+import { ElectronService } from '../core/services';
+import {
+  CoinService,
+  DrinkService,
+  MachineService,
+  UserService,
+} from '../http';
 @Component({
   selector: 'app-simulator',
   templateUrl: './simulator.component.html',
   styleUrls: ['./simulator.component.css'],
+  providers: [ElectronService],
 })
 export class SimulatorComponent implements OnInit {
-  constructor() {}
+  constructor(
+    private electronService: ElectronService,
+    private coinService: CoinService,
+    private machineService: MachineService,
+    private drinkService: DrinkService,
+    private userService: UserService
+  ) {}
 
   ngOnInit(): void {}
 
   filePath = '';
-  fileLoaded: boolean = false;
+  fileLoaded = false;
+
   blockButtonActiveClass = [
     'btn-solid',
     'bg-purple-100',
@@ -24,76 +39,57 @@ export class SimulatorComponent implements OnInit {
   ];
   blockButtonInactiveClass = ['w-full', 'uppercase', 'font-semibold', 'py-4'];
 
-  // get fileLoaded(): boolean {
-  //   const store = useStore();
-  //   return Object.values(store.$state).every(data => data.length > 0);
-  // }
-
-  // get machines(): Machine[] {
-  //   const store = useStore();
-  //   return store.$state.machines;
-  // }
-
-  // get users(): User[] {
-  //   const store = useStore();
-  //   return store.$state.users;
-  // }
-
-  // get drinks(): Drink[] {
-  //   const store = useStore();
-  //   return store.$state.drinks;
-  // }
-
-  // get coins(): Coin[] {
-  //   const store = useStore();
-  //   return store.$state.coins;
-  // }
-
-  newWindow(path: string, options?: any) {
-    // BrowserWindowConstructorOptions
-    // ipcRenderer.invoke('open-win', path, options);
+  private newWindow(path: string, options?: BrowserWindowConstructorOptions) {
+    this.electronService.ipcRenderer.invoke('open-win', path, options);
   }
 
-  async onFileSelected(event: Event) {
-    // const [{ path }] = e.target.files;
-    // this.filePath = `${path}`;
-    // const data: IInitialDataFileDto = JSON.parse(readFileSync(path) as any);
-    // await coinApi.coinsPost(data.coins);
-    // await drinkApi.drinksPost(data.drinks);
-    // await userApi.usersPost(data.users);
-    // await machineApi.machinesPost(data.machines);
-    // ipcRenderer.invoke('refresh-all-states');
+  async onFileSelected(event: any) {
+    const { path } = event.target.files[0];
+    this.filePath = `${path}`;
+    const data: any = JSON.parse(
+      this.electronService.fs.readFileSync(path) as any
+    );
+    await lastValueFrom(this.coinService.coinsPost(data.coins));
+    await lastValueFrom(this.drinkService.drinksPost(data.drinks));
+    await lastValueFrom(this.userService.usersPost(data.users));
+    await lastValueFrom(this.machineService.machinesPost(data.machines));
+    this.fileLoaded = true;
+    this.electronService.ipcRenderer.invoke('refresh-all-states');
   }
 
   async handleEndSimulation() {
-    // const store = useStore();
-    // ipcRenderer.invoke('close-other-wins');
-    // writeFileSync(this.filePath, JSON.stringify(store.$state), {
-    //   flag: 'w',
-    // });
-    // await coinApi.coinsDelete(this.coins.map(c => c.id));
-    // await userApi.usersDelete(this.users.map(u => u.id));
-    // await machineApi.machinesDelete(this.machines.map(m => m.id));
-    // await drinkApi.drinksDelete(this.machines.map(m => m.id));
-    // store.$reset();
+    // waits for further impl
+    this.electronService.ipcRenderer.invoke('close-other-wins');
+    // this.electronService.fs.writeFileSync(
+    //   this.filePath,
+    //   JSON.stringify(store.$state),
+    //   {
+    //     flag: 'w',
+    //   }
+    // );
+
+    // await this.coinService.coinsDelete(this.coins.map(c => c.id));
+    // await this.userService.usersDelete(this.users.map(u => u.id));
+    // await this.machineService.machinesDelete(this.machines.map(m => m.id));
+    // await this.drinkService.drinksDelete(this.machines.map(m => m.id));
   }
 
   activateMaintainerPanel() {
-    // newWindow('/maintainer', {
-    //   width: 1035,
-    //   height: 660,
-    // });
+    this.newWindow('/maintainer', {
+      width: 1035,
+      height: 660,
+    });
   }
   activateMachineryPanel() {
-    // newWindow('/machinery', {
-    //   width: 1035,
-    //   height: 660,
-    // });
+    this.newWindow('/machinery', {
+      width: 1035,
+      height: 660,
+    });
   }
   activateCustomerPanel() {
-    // newWindow('/customer', {
-    //   width: 1035,
-    //   height: 660,
-    // });
+    this.newWindow('/customer', {
+      width: 1035,
+      height: 660,
+    });
   }
 }
