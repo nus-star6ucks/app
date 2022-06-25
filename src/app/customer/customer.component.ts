@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { lastValueFrom } from 'rxjs';
+import { lastValueFrom, map, Observable } from 'rxjs';
 import { ElectronService } from '../core/services';
+import { DataService } from '../data.service';
 import {
   Coin,
   CoinService,
   Drink,
   DrinkService,
+  Machine,
   MachineService,
 } from '../http';
 
@@ -19,14 +21,29 @@ export class CustomerComponent implements OnInit {
   constructor(
     private readonly coinService: CoinService,
     private readonly drinkService: DrinkService,
-    private readonly machineService: MachineService,
-    private readonly electronService: ElectronService,
+    private readonly dataService: DataService,
     private readonly titleService: Title
   ) {
     titleService.setTitle('VMCS - Customer Panel');
   }
 
   ngOnInit(): void {}
+
+  machine = this.dataService.machines$.pipe(map(machines => machines?.[0]));
+  drinks = this.dataService.drinks$;
+  coins = this.dataService.coins$.pipe(
+    map(coins => [
+      ...coins,
+      {
+        id: -1,
+        name: 'Invalid',
+        value: 999,
+        weight: 999,
+        quantity: 999,
+      },
+    ])
+  );
+  users = this.dataService.users$;
 
   selectedDrink: Drink | null = null;
   invalidCoin = false;
@@ -35,20 +52,10 @@ export class CustomerComponent implements OnInit {
   collectCanHereDisplay = 'NO CAN';
   noChangeAvailableDisplay = false;
 
-  drinks$ = this.drinkService.drinksGet();
-  coins$ = this.coinService.coinsGet();
-  machines$ = this.machineService.machinesGet();
-
   // get coins(): Coin[] {
   //   return [
   //     ...store.$state.coins,
-  //     {
-  //       id: -1,
-  //       name: 'Invalid',
-  //       value: 999,
-  //       weight: 999,
-  //       quantity: 999,
-  //     },
+
   //   ];
   // }
 
@@ -60,7 +67,6 @@ export class CustomerComponent implements OnInit {
   }
 
   // mounted() {
-  //   document.title = 'VMCS - Customer Panel';
   //   const store = useStore();
   //   store.$subscribe((mutation, state) => {
   //     if (
@@ -75,104 +81,39 @@ export class CustomerComponent implements OnInit {
   // }
 
   selectDrink(drink: Drink) {
-    // if (drink.quantity === 0 || this.selectedDrink) return;
+    if (drink.quantity === 0 || this.selectedDrink) return;
     this.selectedDrink = drink;
   }
 
   async insertCoin(coin: Coin) {
-    try {
-      await lastValueFrom(this.coinService.coinsCheckCoinPost(coin));
+    this.coinService.coinsCheckCoinPost(coin).subscribe(async ({ isValid }) => {
+      if (!isValid) {
+        this.invalidCoin = true;
+        return;
+      }
       const sameValueCoin = this.collectedCoins.find(
         c => c.value === coin.value
       );
-      if (sameValueCoin) sameValueCoin.quantity += 1;
-      else this.collectedCoins.push({ ...coin, quantity: 1 });
-    } catch {
-      // coin check failed
-      this.invalidCoin = true;
-    } finally {
+      if (sameValueCoin) {
+        sameValueCoin.quantity += 1;
+      } else {
+        this.collectedCoins.push({ ...coin, quantity: 1 });
+      }
       if (this.totalMoneyInserted >= this.selectedDrink.price) {
-        await lastValueFrom(
-          this.drinkService.drinksPurchasePost({
+        this.drinkService
+          .drinksPurchasePost({
             drinkId: this.selectedDrink.id,
             coins: this.collectedCoins,
           })
-        );
-
-        // for mock use
-        // 1. flat current coins
-        // const availableCoins = this.coins
-        //   .map(c => {
-        //     const customerInsertedCoin = this.collectedCoins.find(
-        //       coin => c.id === coin.id
-        //     );
-        //     return Array(
-        //       c.quantity +
-        //         (customerInsertedCoin ? customerInsertedCoin.quantity : 0)
-        //     ).fill(c.value);
-        //   })
-        //   .flat()
-        //   .sort((a, b) => b - a);
-
-        // // 2. requestChangeSolution
-        // const shouldReturnCashValue =
-        //   this.totalMoneyInserted - this.selectedDrink.price;
-        // if (shouldReturnCashValue > 0) {
-        //   const changeSolution = this.requestChange(
-        //     shouldReturnCashValue,
-        //     availableCoins
-        //   );
-        //   if (changeSolution.length === 0) {
-        //     this.noChangeAvailableDisplay = true;
-        //     return;
-        //   }
-
-        //   // update coin stock
-        //   // store.$patch({
-        //   //   coins: this.coins.map(coin => {
-        //   //     const customerInsertedCoin = this.collectedCoins.find(
-        //   //       c => c.id === coin.id
-        //   //     );
-        //   //     if (customerInsertedCoin)
-        //   //       coin.quantity += customerInsertedCoin.quantity;
-        //   //     return coin;
-        //   //   }),
-        //   // });
-        //   // changeSolution.forEach(value => {
-        //   //   const coin = this.coins.find(c => c.value === value);
-        //   //   coin.quantity -= 1;
-        //   //   store.$patch({
-        //   //     coins: this.coins.map(c => (c.id === coin.id ? coin : c)),
-        //   //   });
-        //   // });
-
-        //   // this.collectCoinsDisplay = changeSolution.reduce(
-        //   //   (acc, curr) => (acc += curr),
-        //   //   0
-        //   // );
-        // }
-        // this.collectCanHereDisplay = this.selectedDrink.name;
+          .subscribe(({ noChangeAvailable, collectCoins }) => {
+            this.noChangeAvailableDisplay = noChangeAvailable;
+            this.collectCoinsDisplay = collectCoins;
+            if (!noChangeAvailable) {
+              this.collectCanHereDisplay = this.selectedDrink.name;
+            }
+          });
       }
-    }
-  }
-
-  // for mock use
-  requestChange(amount: number, availableCoins: number[]): number[] {
-    const result: number[][] = [];
-    const helper = (path: number[], remain: number, startIdx: number) => {
-      if (remain === 0) return result.push([...path]);
-      if (remain < 0 || result.length > 0) return;
-      for (let i = startIdx; i < availableCoins.length; i += 1) {
-        if (remain - availableCoins[i] >= 0)
-          helper(
-            [...path, availableCoins[i]],
-            remain - availableCoins[i],
-            startIdx + 1
-          );
-      }
-    };
-    helper([], amount, 0);
-    return result[0];
+    });
   }
 
   terminateAndReturnCash() {

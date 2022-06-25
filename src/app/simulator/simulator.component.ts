@@ -1,8 +1,9 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { BrowserWindowConstructorOptions } from 'electron/renderer';
-import { lastValueFrom } from 'rxjs';
+import { firstValueFrom, map } from 'rxjs';
 import { ElectronService } from '../core/services';
+import { DataService } from '../data.service';
 import {
   CoinService,
   DrinkService,
@@ -18,19 +19,33 @@ import {
 export class SimulatorComponent implements OnInit {
   constructor(
     private electronService: ElectronService,
-    private coinService: CoinService,
     private machineService: MachineService,
+    private coinService: CoinService,
     private drinkService: DrinkService,
     private userService: UserService,
+    private dataService: DataService,
     private titleService: Title
   ) {
     titleService.setTitle('VMCS - Simulator Control Panel');
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.dataService.coins$.subscribe(coins => {
+      this.dataService.drinks$.subscribe(drinks => {
+        this.dataService.machines$.subscribe(machines => {
+          this.dataService.users$.subscribe(users => {
+            this.fileLoaded =
+              coins.length > 0 &&
+              drinks.length > 0 &&
+              machines.length > 0 &&
+              users.length > 0;
+          });
+        });
+      });
+    });
+  }
 
-  filePath = '';
-  fileLoaded = true;
+  fileLoaded = false;
 
   blockButtonActiveClass = [
     'btn-solid',
@@ -49,32 +64,29 @@ export class SimulatorComponent implements OnInit {
 
   async onFileSelected(event: any) {
     const { path } = event.target.files[0];
-    this.filePath = `${path}`;
-    const data: any = JSON.parse(
-      this.electronService.fs.readFileSync(path) as any
-    );
-    await lastValueFrom(this.coinService.coinsPost(data.coins));
-    await lastValueFrom(this.drinkService.drinksPost(data.drinks));
-    await lastValueFrom(this.userService.usersPost(data.users));
-    await lastValueFrom(this.machineService.machinesPost(data.machines));
-    this.fileLoaded = true;
-    this.electronService.ipcRenderer.invoke('refresh-all-states');
+    this.machineService.machinesStartPost(path).subscribe(data => {
+      this.fileLoaded = true;
+      this.electronService.ipcRenderer.invoke('refresh-all-states');
+    });
   }
 
   async handleEndSimulation() {
-    // waits for further impl
-    // this.electronService.ipcRenderer.invoke('close-other-wins');
-    // this.electronService.fs.writeFileSync(
-    //   this.filePath,
-    //   JSON.stringify(store.$state),
-    //   {
-    //     flag: 'w',
-    //   }
-    // );
-    // await this.coinService.coinsDelete(this.coins.map(c => c.id));
-    // await this.userService.usersDelete(this.users.map(u => u.id));
-    // await this.machineService.machinesDelete(this.machines.map(m => m.id));
-    // await this.drinkService.drinksDelete(this.machines.map(m => m.id));
+    this.electronService.ipcRenderer.invoke('close-other-wins');
+    this.machineService.machinesStopPost().subscribe(async () => {
+      this.dataService.coins$.subscribe(coins => {
+        this.coinService.coinsDelete(coins.map(c => c.id)).subscribe();
+      });
+      this.dataService.machines$.subscribe(machines => {
+        this.machineService.machinesDelete(machines.map(c => c.id)).subscribe();
+      });
+      this.dataService.drinks$.subscribe(drinks => {
+        this.drinkService.drinksDelete(drinks.map(c => c.id)).subscribe();
+      });
+      this.dataService.users$.subscribe(users => {
+        this.userService.usersDelete(users.map(c => c.id)).subscribe();
+      });
+    });
+    this.electronService.ipcRenderer.invoke('refresh-all-states');
   }
 
   activateMaintainerPanel() {

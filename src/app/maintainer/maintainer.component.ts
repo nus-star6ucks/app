@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { lastValueFrom, map, Observable } from 'rxjs';
+import { firstValueFrom, lastValueFrom, map, Observable } from 'rxjs';
 import { ElectronService } from '../core/services';
 import { DataService } from '../data.service';
 import {
@@ -32,21 +32,12 @@ export class MaintainerComponent implements OnInit {
     titleService.setTitle('VMCS - Maintainer Panel');
   }
 
-  machine: Observable<Machine>;
-  drinks: Observable<Drink[]>;
-  coins: Observable<Coin[]>;
-  users: Observable<User[]>;
+  machine = this.dataService.machines$.pipe(map(machines => machines?.[0]));
+  drinks = this.dataService.drinks$;
+  coins = this.dataService.coins$;
+  users = this.dataService.users$;
 
-  ngOnInit(): void {
-    this.drinks = this.dataService.drinks;
-    this.coins = this.dataService.coins;
-    this.users = this.dataService.users;
-    this.machine = this.dataService.machines.pipe(
-      map(machines => machines?.[0])
-    );
-
-    this.dataService.loadAll();
-  }
+  ngOnInit(): void {}
 
   password = '';
   valid = false;
@@ -130,37 +121,33 @@ export class MaintainerComponent implements OnInit {
       .unsubscribe();
   }
 
-  async validate(e: any) {
-    this.password = e.target.value;
+  async validate($event: Event) {
+    this.password = ($event.target as HTMLInputElement).value;
 
     if (this.password.length === 6) {
-      try {
-        await lastValueFrom(
-          this.userService.usersLoginPost({ password: this.password } as any)
-        );
-        // should update machine status
-        this.valid = true;
-      } catch (e) {
-        this.valid = false;
-      }
-      // for mock use
-      const [currentUser] = await lastValueFrom(this.userService.usersGet());
-      this.valid = currentUser.password === this.password;
-      if (this.valid) {
-        this.machine
-          .subscribe(machine => {
-            machine.doorLocked = false;
-            this.machineService
-              .machinesPut([machine])
-              .subscribe(() => {
-                this.electronService.ipcRenderer.invoke(
-                  'refresh-machine-states'
-                );
-              })
-              .unsubscribe();
-          })
-          .unsubscribe();
-      }
+      const currentUser = await firstValueFrom(
+        this.dataService.users$.pipe(map(users => users?.[0]))
+      );
+      currentUser.password = this.password;
+      this.userService.usersLoginPost(currentUser).subscribe({
+        complete: () => {
+          this.valid = true;
+          this.machine
+            .subscribe(machine => {
+              machine.doorLocked = false;
+              this.machineService
+                .machinesPut([machine])
+                .subscribe(() => {
+                  this.electronService.ipcRenderer.invoke(
+                    'refresh-machine-states'
+                  );
+                })
+                .unsubscribe();
+            })
+            .unsubscribe();
+        },
+        error: () => (this.valid = false),
+      });
     }
   }
 }

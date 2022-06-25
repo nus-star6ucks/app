@@ -20,24 +20,19 @@ export class DataService {
   private _users = new BehaviorSubject<User[]>([]);
   private _drinks = new BehaviorSubject<Drink[]>([]);
 
-  private dataStore: {
-    coins: Coin[];
-    machines: Machine[];
-    users: User[];
-    drinks: Drink[];
-  } = { coins: [], machines: [], users: [], drinks: [] };
-
-  readonly coins = this._coins.asObservable();
-  readonly machines = this._machines.asObservable();
-  readonly users = this._users.asObservable();
-  readonly drinks = this._drinks.asObservable();
+  readonly coins$ = this._coins.asObservable();
+  readonly machines$ = this._machines.asObservable();
+  readonly users$ = this._users.asObservable();
+  readonly drinks$ = this._drinks.asObservable();
 
   constructor(
     private readonly coinService: CoinService,
     private readonly drinkService: DrinkService,
     private readonly machineService: MachineService,
     private readonly userService: UserService
-  ) {}
+  ) {
+    this.loadAll();
+  }
 
   loadAll() {
     this.loadCoins();
@@ -48,29 +43,25 @@ export class DataService {
 
   async loadCoins() {
     this.coinService.coinsGet().subscribe(data => {
-      this.dataStore.coins = data;
-      this._coins.next(Object.assign({}, this.dataStore).coins);
+      this._coins.next(data);
     });
   }
 
   async loadDrinks() {
     this.drinkService.drinksGet().subscribe(data => {
-      this.dataStore.drinks = data;
-      this._drinks.next(Object.assign({}, this.dataStore).drinks);
+      this._drinks.next(data);
     });
   }
 
   async loadMachines() {
     this.machineService.machinesGet().subscribe(data => {
-      this.dataStore.machines = data;
-      this._machines.next(Object.assign({}, this.dataStore).machines);
+      this._machines.next(data);
     });
   }
 
   async loadUsers() {
     this.userService.usersGet().subscribe(data => {
-      this.dataStore.users = data;
-      this._users.next(Object.assign({}, this.dataStore).users);
+      this._users.next(data);
     });
   }
 }

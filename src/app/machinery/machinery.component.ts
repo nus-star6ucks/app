@@ -30,21 +30,12 @@ export class MachineryComponent implements OnInit {
     titleService.setTitle('VMCS - Machinery Panel');
   }
 
-  machine: Observable<Machine>;
-  drinks: Observable<Drink[]>;
-  coins: Observable<Coin[]>;
-  users: Observable<User[]>;
+  machine = this.dataService.machines$.pipe(map(machines => machines?.[0]));
+  drinks = this.dataService.drinks$;
+  coins = this.dataService.coins$;
+  users = this.dataService.users$;
 
-  ngOnInit(): void {
-    this.drinks = this.dataService.drinks;
-    this.coins = this.dataService.coins;
-    this.users = this.dataService.users;
-    this.machine = this.dataService.machines.pipe(
-      map(machines => machines?.[0])
-    );
-
-    this.dataService.loadAll();
-  }
+  ngOnInit(): void {}
 
   switchDoorLocked() {
     this.machine
