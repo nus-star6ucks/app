@@ -2,6 +2,7 @@ package com.mtech.vmcs.service.impl;
 
 import com.mtech.vmcs.model.entity.User;
 import com.mtech.vmcs.repository.UserRepository;
+import com.mtech.vmcs.service.MachineService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,6 +22,9 @@ class UserServiceImplTest {
 
     @Mock
     UserRepository userRepository;
+
+    @Mock
+    MachineService machineService;
 
     @InjectMocks
     UserServiceImpl userService;
