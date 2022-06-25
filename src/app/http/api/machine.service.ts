@@ -191,6 +191,7 @@ export class MachineService {
         headers: headers,
         observe: observe,
         reportProgress: reportProgress,
+        body: requestBody,
       }
     );
   }

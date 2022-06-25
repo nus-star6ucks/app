@@ -254,6 +254,7 @@ export class CoinService {
         headers: headers,
         observe: observe,
         reportProgress: reportProgress,
+        body: requestBody,
       }
     );
   }

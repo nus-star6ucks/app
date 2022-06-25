@@ -178,6 +178,7 @@ export class UserService {
         headers: headers,
         observe: observe,
         reportProgress: reportProgress,
+        body: requestBody,
       }
     );
   }

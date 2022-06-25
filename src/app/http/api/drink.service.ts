@@ -180,6 +180,7 @@ export class DrinkService {
         headers: headers,
         observe: observe,
         reportProgress: reportProgress,
+        body: requestBody,
       }
     );
   }
