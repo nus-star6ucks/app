@@ -18,6 +18,8 @@ public class MachineController {
 
   @Autowired private MachineService machineService;
 
+  private String filePath;
+
   @GetMapping
   public ResponseEntity<List<Machine>> getAllMachines() {
     return new ResponseEntity<>(machineService.getAllMachines(), HttpStatus.OK);
@@ -38,6 +40,19 @@ public class MachineController {
   @DeleteMapping
   public ResponseEntity<List<Long>> deleteMachines(@RequestBody List<Long> machineIds) {
     machineService.deleteMachines(machineIds);
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  @PostMapping("/start")
+  public ResponseEntity<Object> startSimulation(@RequestParam("filePath") String filePath) {
+    this.filePath = filePath;
+    machineService.startSimulation(filePath);
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  @PostMapping("/stop")
+  public ResponseEntity<Object> stopSimulation() {
+    machineService.stopSimulation(filePath);
     return new ResponseEntity<>(HttpStatus.OK);
   }
 }
