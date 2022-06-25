@@ -22,8 +22,6 @@ export class AppComponent {
       console.log('Run in browser');
     }
 
-    dataService.loadAll();
-
     this.electronService.ipcRenderer.on('refresh-all-states', () => {
       dataService.loadAll();
     });

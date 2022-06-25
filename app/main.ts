@@ -45,7 +45,7 @@ function createWindow(
       webSecurity: false,
       nodeIntegration: true,
       contextIsolation: false,
-      allowRunningInsecureContent: serve ? true : false,
+      allowRunningInsecureContent: true,
     },
     ...options,
   });

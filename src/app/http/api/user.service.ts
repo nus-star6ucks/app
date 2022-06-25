@@ -23,7 +23,7 @@ import {
 import { CustomHttpParameterCodec } from '../encoder';
 import { Observable } from 'rxjs';
 
-import { InlineObject } from '../model/models';
+import { InlineObject2 } from '../model/models';
 import { User } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS } from '../variables';
@@ -244,30 +244,30 @@ export class UserService {
   /**
    * Login
    * 3.2.4 (3) When the maintainer successfully logs-in this checkbox shall be automatically unchecked by the system to indicate that the door status is unlocked. The door status shall be able to be changed to locked by checking the checkbox.
-   * @param inlineObject
+   * @param inlineObject2
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public usersLoginPost(
-    inlineObject?: InlineObject,
+    inlineObject2?: InlineObject2,
     observe?: 'body',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' }
   ): Observable<object>;
   public usersLoginPost(
-    inlineObject?: InlineObject,
+    inlineObject2?: InlineObject2,
     observe?: 'response',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' }
   ): Observable<HttpResponse<object>>;
   public usersLoginPost(
-    inlineObject?: InlineObject,
+    inlineObject2?: InlineObject2,
     observe?: 'events',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' }
   ): Observable<HttpEvent<object>>;
   public usersLoginPost(
-    inlineObject?: InlineObject,
+    inlineObject2?: InlineObject2,
     observe: any = 'body',
     reportProgress: boolean = false,
     options?: { httpHeaderAccept?: 'application/json' }
@@ -304,7 +304,7 @@ export class UserService {
 
     return this.httpClient.post<object>(
       `${this.configuration.basePath}/users/login`,
-      inlineObject,
+      inlineObject2,
       {
         responseType: <any>responseType,
         withCredentials: this.configuration.withCredentials,

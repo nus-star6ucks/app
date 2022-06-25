@@ -11,19 +11,6 @@
  */
 
 export interface InlineResponse200 {
-  id: number;
-  /**
-   * ex. $1, 50 c
-   */
-  name: string;
-  /**
-   * face value ($1 for 100)
-   */
-  value: number;
-  /**
-   * stock
-   */
-  quantity: number;
-  weight: number;
-  isValid: boolean;
+  collectCoins: number;
+  noChangeAvailable: boolean;
 }

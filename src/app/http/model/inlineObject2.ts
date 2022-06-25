@@ -9,12 +9,19 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { Coin } from './coin';
 
 export interface InlineObject2 {
-  drinkId: number;
+  id: number;
   /**
-   * 合并 object 的 quantity
+   * ex. Maintainer
    */
-  coins: Array<Coin>;
+  role: string;
+  /**
+   * 6 alphanumeric chars
+   */
+  password: string;
+  /**
+   * [\'login\', \'logout\']
+   */
+  status: string;
 }

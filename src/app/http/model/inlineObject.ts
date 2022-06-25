@@ -11,17 +11,8 @@
  */
 
 export interface InlineObject {
-  id: number;
   /**
-   * ex. Maintainer
+   * the file path of JSON file
    */
-  role: string;
-  /**
-   * 6 alphanumeric chars
-   */
-  password: string;
-  /**
-   * [\'login\', \'logout\']
-   */
-  status: string;
+  filePath?: string;
 }
