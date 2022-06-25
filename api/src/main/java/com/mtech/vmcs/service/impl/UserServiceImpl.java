@@ -1,8 +1,10 @@
 package com.mtech.vmcs.service.impl;
 
+import com.mtech.vmcs.model.entity.Machine;
 import com.mtech.vmcs.model.entity.User;
 import com.mtech.vmcs.model.enums.UserStatus;
 import com.mtech.vmcs.repository.UserRepository;
+import com.mtech.vmcs.service.MachineService;
 import com.mtech.vmcs.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,7 @@ import java.util.stream.StreamSupport;
 public class UserServiceImpl implements UserService {
 
   @Autowired private UserRepository userRepository;
+  @Autowired private MachineService machineService;
 
   @Override
   public List<User> getAllUsers() {
@@ -47,6 +50,13 @@ public class UserServiceImpl implements UserService {
                 u.setStatus(UserStatus.LOGIN.toString());
                 userRepository.save(u);
               });
+      // unlock door
+      List<Machine> machines = machineService.getAllMachines();
+      for (Machine machine:
+              machines){
+        machine.setDoorLocked(false);
+      }
+      machineService.updateMachines(machines);
       return true;
     } else {
       return false;
@@ -54,7 +64,12 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public void logout(User user) {
+  public Boolean logout(User user) {
+    for (Machine machine:
+            machineService.getAllMachines()) {
+      if (!machine.getDoorLocked())
+        return false;
+    }
     userRepository
         .findById(user.getId())
         .ifPresent(
@@ -62,6 +77,7 @@ public class UserServiceImpl implements UserService {
               u.setStatus(UserStatus.LOGOUT.toString());
               userRepository.save(u);
             });
+    return true;
   }
 
   private Boolean validateUser(User user) {
