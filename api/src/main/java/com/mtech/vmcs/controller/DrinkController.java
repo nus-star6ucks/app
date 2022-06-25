@@ -1,6 +1,7 @@
 package com.mtech.vmcs.controller;
 
 import com.mtech.vmcs.model.entity.Drink;
+import com.mtech.vmcs.model.entity.PurchaseOrder;
 import com.mtech.vmcs.service.DrinkService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -44,9 +45,8 @@ public class DrinkController {
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
-  // TODO: Wait for later implementation
   @PostMapping("/purchase")
-  public ResponseEntity purchase() {
-    return null;
+  public ResponseEntity purchase(@RequestBody PurchaseOrder purchaseOrder) {
+    return new ResponseEntity<>(drinkService.purchase(purchaseOrder), HttpStatus.OK);
   }
 }
