@@ -63,7 +63,7 @@ export class SimulatorComponent implements OnInit {
 
   async handleEndSimulation() {
     // waits for further impl
-    this.electronService.ipcRenderer.invoke('close-other-wins');
+    // this.electronService.ipcRenderer.invoke('close-other-wins');
     // this.electronService.fs.writeFileSync(
     //   this.filePath,
     //   JSON.stringify(store.$state),
@@ -71,7 +71,6 @@ export class SimulatorComponent implements OnInit {
     //     flag: 'w',
     //   }
     // );
-
     // await this.coinService.coinsDelete(this.coins.map(c => c.id));
     // await this.userService.usersDelete(this.users.map(u => u.id));
     // await this.machineService.machinesDelete(this.machines.map(m => m.id));

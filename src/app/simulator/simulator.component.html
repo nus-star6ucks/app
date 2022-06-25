@@ -39,7 +39,6 @@
       Begin Simulation
     </button>
     <button
-      [disabled]="!fileLoaded"
       [class]="fileLoaded ? blockButtonActiveClass : blockButtonInactiveClass"
       (click)="handleEndSimulation()">
       End Simulation

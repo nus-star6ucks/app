@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ElectronService } from './core/services';
+import { DataService } from './data.service';
 import { MachineService } from './http';
 
 @Component({
@@ -10,7 +11,7 @@ import { MachineService } from './http';
 export class AppComponent {
   constructor(
     private readonly electronService: ElectronService,
-    private readonly machineService: MachineService
+    private readonly dataService: DataService
   ) {
     if (electronService.isElectron) {
       console.log(process.env);
@@ -20,7 +21,23 @@ export class AppComponent {
     } else {
       console.log('Run in browser');
     }
-  }
 
-  machines$ = this.machineService.machinesGet();
+    dataService.loadAll();
+
+    this.electronService.ipcRenderer.on('refresh-all-states', () => {
+      dataService.loadAll();
+    });
+    this.electronService.ipcRenderer.on('refresh-user-states', () => {
+      dataService.loadUsers();
+    });
+    this.electronService.ipcRenderer.on('refresh-machine-states', () => {
+      dataService.loadMachines();
+    });
+    this.electronService.ipcRenderer.on('refresh-drink-states', () => {
+      dataService.loadDrinks();
+    });
+    this.electronService.ipcRenderer.on('refresh-coin-states', () => {
+      dataService.loadCoins();
+    });
+  }
 }
