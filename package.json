@@ -28,7 +28,7 @@
     "lint": "ng lint",
     "fix": "yarn run lint"
   },
-  "main": "dist/main.js",
+  "main": "app/main.js",
   "engines": {
     "node": ">=14.17.0"
   },
