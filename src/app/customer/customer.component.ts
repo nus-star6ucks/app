@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { lastValueFrom } from 'rxjs';
 import { ElectronService } from '../core/services';
 import {
@@ -19,8 +20,11 @@ export class CustomerComponent implements OnInit {
     private readonly coinService: CoinService,
     private readonly drinkService: DrinkService,
     private readonly machineService: MachineService,
-    private readonly electronService: ElectronService
-  ) {}
+    private readonly electronService: ElectronService,
+    private readonly titleService: Title
+  ) {
+    titleService.setTitle('VMCS - Customer Panel');
+  }
 
   ngOnInit(): void {}
 
@@ -71,7 +75,7 @@ export class CustomerComponent implements OnInit {
   // }
 
   selectDrink(drink: Drink) {
-    if (drink.quantity === 0 || this.selectedDrink) return;
+    // if (drink.quantity === 0 || this.selectedDrink) return;
     this.selectedDrink = drink;
   }
 

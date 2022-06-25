@@ -8,6 +8,7 @@ import { Configuration } from './configuration';
 import { HttpClient } from '@angular/common/http';
 
 import { CoinService } from './api/coin.service';
+import { DefaultService } from './api/default.service';
 import { DrinkService } from './api/drink.service';
 import { MachineService } from './api/machine.service';
 import { UserService } from './api/user.service';

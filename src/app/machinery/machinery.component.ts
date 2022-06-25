@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { lastValueFrom } from 'rxjs';
 import { ElectronService } from '../core/services';
 import {
@@ -19,8 +20,11 @@ export class MachineryComponent implements OnInit {
     private readonly coinService: CoinService,
     private readonly drinkService: DrinkService,
     private readonly machineService: MachineService,
-    private readonly electronService: ElectronService
-  ) {}
+    private readonly electronService: ElectronService,
+    private titleService: Title
+  ) {
+    titleService.setTitle('VMCS - Machinery Panel');
+  }
 
   coins$ = this.coinService.coinsGet();
   drinks$ = this.drinkService.drinksGet();

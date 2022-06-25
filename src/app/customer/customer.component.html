@@ -20,7 +20,8 @@
             [disabled]="drink.quantity === 0 || !(machines$ | async)?.[0].doorLocked"
             class="w-full cursor-pointer btn-solid flex items-center justify-between space-x-2 p-4"
             [class.active]="selectedDrink && drink.id === selectedDrink.id"
-            (click)="selectDrink(drink)">
+            (click)="selectDrink(drink)"
+            type="button">
             <div class="flex items-center space-x-2">
               <svg-icon
                 src="../../assets/images/cola.svg"

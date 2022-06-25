@@ -208,6 +208,7 @@ export class UserService {
     options?: { httpHeaderAccept?: 'application/json' }
   ): Observable<any> {
     let headers = this.defaultHeaders;
+
     let httpHeaderAcceptSelected: string | undefined =
       options && options.httpHeaderAccept;
     if (httpHeaderAcceptSelected === undefined) {

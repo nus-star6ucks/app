@@ -23,6 +23,4 @@ export class AppComponent {
   }
 
   machines$ = this.machineService.machinesGet();
-
-  title = 'vmcs-ng';
 }

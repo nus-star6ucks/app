@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { lastValueFrom } from 'rxjs';
 import { ElectronService } from '../core/services';
 import {
@@ -21,8 +22,11 @@ export class MaintainerComponent implements OnInit {
     private coinService: CoinService,
     private machineService: MachineService,
     private drinkService: DrinkService,
-    private userService: UserService
-  ) {}
+    private userService: UserService,
+    private titleService: Title
+  ) {
+    titleService.setTitle('VMCS - Maintainer Panel');
+  }
 
   ngOnInit(): void {}
 

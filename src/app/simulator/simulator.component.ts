@@ -1,4 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { BrowserWindowConstructorOptions } from 'electron/renderer';
 import { lastValueFrom } from 'rxjs';
 import { ElectronService } from '../core/services';
@@ -20,8 +21,11 @@ export class SimulatorComponent implements OnInit {
     private coinService: CoinService,
     private machineService: MachineService,
     private drinkService: DrinkService,
-    private userService: UserService
-  ) {}
+    private userService: UserService,
+    private titleService: Title
+  ) {
+    titleService.setTitle('VMCS - Simulator Control Panel');
+  }
 
   ngOnInit(): void {}
 
