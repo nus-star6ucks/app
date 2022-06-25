@@ -4,18 +4,19 @@ import com.mtech.vmcs.model.entity.User;
 import com.mtech.vmcs.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Collections;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 class UserServiceImplTest {
 
     @Mock
@@ -30,11 +31,12 @@ class UserServiceImplTest {
     void setUp() {
         maintainer = new User(76L, "Maintainer", "123891", "logout");
         when(userRepository.findAllByRole("Maintainer")).thenReturn(Collections.singletonList(maintainer));
-        when(userRepository.findById(76L)).thenReturn(Optional.of(maintainer));
+
     }
 
     @Test
     void testLoginSuccess() {
+        when(userRepository.findById(76L)).thenReturn(Optional.of(maintainer));
         assertTrue(userService.login(maintainer));
     }
 
