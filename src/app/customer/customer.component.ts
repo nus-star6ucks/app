@@ -91,6 +91,7 @@ export class CustomerComponent implements OnInit {
         this.invalidCoin = true;
         return;
       }
+      this.invalidCoin = false;
       const sameValueCoin = this.collectedCoins.find(
         c => c.value === coin.value
       );

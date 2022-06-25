@@ -1,7 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { BrowserWindowConstructorOptions } from 'electron/renderer';
-import { firstValueFrom, map } from 'rxjs';
 import { ElectronService } from '../core/services';
 import { DataService } from '../data.service';
 import {
@@ -31,14 +30,16 @@ export class SimulatorComponent implements OnInit {
 
   ngOnInit(): void {
     this.dataService.coins$.subscribe(coins => {
+      const coinsLoaded = coins.length > 0;
       this.dataService.drinks$.subscribe(drinks => {
+        const drinksLoaded = drinks.length > 0;
         this.dataService.machines$.subscribe(machines => {
+          const machinesLoaded = machines.length > 0;
           this.dataService.users$.subscribe(users => {
+            const usersLoaded = users.length > 0;
+
             this.fileLoaded =
-              coins.length > 0 &&
-              drinks.length > 0 &&
-              machines.length > 0 &&
-              users.length > 0;
+              coinsLoaded && drinksLoaded && machinesLoaded && usersLoaded;
           });
         });
       });
@@ -56,14 +57,16 @@ export class SimulatorComponent implements OnInit {
     'w-full',
     'with-click',
   ];
+
   blockButtonInactiveClass = ['w-full', 'uppercase', 'font-semibold', 'py-4'];
 
-  private newWindow(path: string, options?: BrowserWindowConstructorOptions) {
+  private _newWindow(path: string, options?: BrowserWindowConstructorOptions) {
     this.electronService.ipcRenderer.invoke('open-win', path, options);
   }
 
   async onFileSelected(event: any) {
     const { path } = event.target.files[0];
+
     this.machineService.machinesStartPost(path).subscribe(data => {
       this.fileLoaded = true;
       this.electronService.ipcRenderer.invoke('refresh-all-states');
@@ -72,37 +75,54 @@ export class SimulatorComponent implements OnInit {
 
   async handleEndSimulation() {
     this.electronService.ipcRenderer.invoke('close-other-wins');
-    this.machineService.machinesStopPost().subscribe(async () => {
-      this.dataService.coins$.subscribe(coins => {
-        this.coinService.coinsDelete(coins.map(c => c.id)).subscribe();
-      });
-      this.dataService.machines$.subscribe(machines => {
-        this.machineService.machinesDelete(machines.map(c => c.id)).subscribe();
-      });
-      this.dataService.drinks$.subscribe(drinks => {
-        this.drinkService.drinksDelete(drinks.map(c => c.id)).subscribe();
-      });
-      this.dataService.users$.subscribe(users => {
-        this.userService.usersDelete(users.map(c => c.id)).subscribe();
-      });
-    });
-    this.electronService.ipcRenderer.invoke('refresh-all-states');
+    await this.machineService.machinesStopPost().toPromise();
+    this.fileLoaded = false;
+    this.dataService.coins$
+      .subscribe(coins => {
+        this.coinService.coinsDelete(coins.map(c => c.id)).subscribe(() => {
+          this.electronService.ipcRenderer.invoke('refresh-coin-states');
+        });
+      })
+      .unsubscribe();
+    this.dataService.machines$
+      .subscribe(machines => {
+        this.machineService
+          .machinesDelete(machines.map(c => c.id))
+          .subscribe(() => {
+            this.electronService.ipcRenderer.invoke('refresh-machine-states');
+          });
+      })
+      .unsubscribe();
+    this.dataService.drinks$
+      .subscribe(drinks => {
+        this.drinkService.drinksDelete(drinks.map(c => c.id)).subscribe(() => {
+          this.electronService.ipcRenderer.invoke('refresh-drink-states');
+        });
+      })
+      .unsubscribe();
+    this.dataService.users$
+      .subscribe(users => {
+        this.userService.usersDelete(users.map(c => c.id)).subscribe(() => {
+          this.electronService.ipcRenderer.invoke('refresh-user-states');
+        });
+      })
+      .unsubscribe();
   }
 
   activateMaintainerPanel() {
-    this.newWindow('/maintainer', {
+    this._newWindow('/maintainer', {
       width: 1035,
       height: 660,
     });
   }
   activateMachineryPanel() {
-    this.newWindow('/machinery', {
+    this._newWindow('/machinery', {
       width: 1035,
       height: 660,
     });
   }
   activateCustomerPanel() {
-    this.newWindow('/customer', {
+    this._newWindow('/customer', {
       width: 1035,
       height: 660,
     });
