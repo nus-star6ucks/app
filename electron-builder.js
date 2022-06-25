@@ -10,24 +10,7 @@ module.exports = {
     output: 'release/${version}',
     buildResources: 'resources',
   },
-  files: [
-    "**/*",
-    "!**/*.ts",
-    "!*.map",
-    "!package.json",
-    "!package-lock.json"
-  ],
   extraFiles: ['libraries'],
-  extraResources: [
-    {
-      "from": "dist",
-      "to": "app",
-      "filter": [
-        "**/*"
-      ]
-    }
-  ],
-  files: ['dist'],
   win: {
     target: [
       {
@@ -51,4 +34,13 @@ module.exports = {
     target: ['AppImage'],
     artifactName: '${productName}-${version}-Installer.${ext}',
   },
-}
+  files: ['**/*', '!**/*.ts', '!*.map', '!package.json', '!package-lock.json'],
+  extraFiles: ['libraries'],
+  extraResources: [
+    {
+      from: 'dist',
+      to: 'app',
+      filter: ['**/*'],
+    },
+  ],
+};
