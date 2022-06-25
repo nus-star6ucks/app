@@ -13,7 +13,7 @@
         </h2>
         <div class="space-y-3">
           <button
-            *ngFor="let coin of coins$ | async"
+            *ngFor="let coin of coins | async"
             [class.with-click]="allowToUse"
             class="btn-solid w-full flex items-center justify-between space-x-2 px-4 py-2"
             [disabled]="!allowToUse"
@@ -38,9 +38,9 @@
         </h2>
         <div class="space-y-3">
           <button
-            *ngFor="let drink of drinks$ | async"
+            *ngFor="let drink of drinks | async"
             [disabled]="!allowToUse"
-            :class="{ 'with-click': allowToUse }"
+            [class.with-click]="allowToUse"
             class="w-full btn-solid flex items-center justify-between space-x-2 px-4 py-2"
             (click)="selectedDrink = drink">
             <div class="flex items-center space-x-2">
@@ -52,7 +52,7 @@
               </div>
             </div>
             <span
-              v-if="selectedDrink && selectedDrink.id === drink.id"
+              *ngIf="selectedDrink && selectedDrink.id === drink.id"
               class="led-small"
               >{{ drink.quantity }}</span
             >

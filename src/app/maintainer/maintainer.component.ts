@@ -1,13 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { lastValueFrom } from 'rxjs';
+import { lastValueFrom, map, Observable } from 'rxjs';
 import { ElectronService } from '../core/services';
+import { DataService } from '../data.service';
 import {
   Coin,
   CoinService,
   Drink,
   DrinkService,
+  Machine,
   MachineService,
+  User,
   UserService,
 } from '../http';
 
@@ -23,12 +26,27 @@ export class MaintainerComponent implements OnInit {
     private machineService: MachineService,
     private drinkService: DrinkService,
     private userService: UserService,
+    private readonly dataService: DataService,
     private titleService: Title
   ) {
     titleService.setTitle('VMCS - Maintainer Panel');
   }
 
-  ngOnInit(): void {}
+  machine: Observable<Machine>;
+  drinks: Observable<Drink[]>;
+  coins: Observable<Coin[]>;
+  users: Observable<User[]>;
+
+  ngOnInit(): void {
+    this.drinks = this.dataService.drinks;
+    this.coins = this.dataService.coins;
+    this.users = this.dataService.users;
+    this.machine = this.dataService.machines.pipe(
+      map(machines => machines?.[0])
+    );
+
+    this.dataService.loadAll();
+  }
 
   password = '';
   valid = false;
@@ -36,10 +54,6 @@ export class MaintainerComponent implements OnInit {
   selectedDrink: Drink | null = null;
   displayTotalCashHeld = false;
   cashCollected = -1;
-
-  coins$ = this.coinService.coinsGet();
-  drinks$ = this.drinkService.drinksGet();
-  machines$ = this.machineService.machinesGet();
 
   get allowToUse(): boolean {
     return this.password.length === 6 && this.valid === true;
@@ -50,44 +64,70 @@ export class MaintainerComponent implements OnInit {
   }
 
   async computeTotalCashHeld() {
-    const coins = await lastValueFrom(this.coins$);
-    return coins.reduce((acc, prev) => (acc += prev.value * prev.quantity), 0);
+    this.coins
+      .subscribe(coins => {
+        const total = coins.reduce(
+          (acc, prev) => (acc += prev.value * prev.quantity),
+          0
+        );
+        this.cashCollected = total;
+      })
+      .unsubscribe();
   }
 
   async collectAllCash() {
-    this.cashCollected = await this.computeTotalCashHeld();
-    const coins = await lastValueFrom(this.coins$);
-
-    const updatedCoins = coins.map(c => {
-      c.quantity = 0;
-      return c;
-    });
-    await lastValueFrom(this.coinService.coinsPut(updatedCoins));
-
-    this.electronService.ipcRenderer.invoke('refresh-coin-states');
+    this.computeTotalCashHeld();
+    this.coins
+      .subscribe(coins => {
+        const updatedCoins = coins.map(c => {
+          c.quantity = 0;
+          return c;
+        });
+        this.coinService
+          .coinsPut(updatedCoins)
+          .subscribe(() => {
+            this.electronService.ipcRenderer.invoke('refresh-coin-states');
+          })
+          .unsubscribe();
+      })
+      .unsubscribe();
   }
 
   async updateDrinkPrice(drink: Drink, $event: Event) {
-    drink.price = +($event.target as HTMLInputElement).value;
-    await lastValueFrom(this.drinkService.drinksPut([drink]));
-
-    this.electronService.ipcRenderer.invoke('refresh-drink-states');
+    this.drinks
+      .pipe(map(drinks => drinks.find(d => d.id === drink.id)))
+      .subscribe(data => {
+        drink.price = +($event.target as HTMLInputElement).value;
+        this.drinkService
+          .drinksPut([data])
+          .subscribe(() => {
+            this.electronService.ipcRenderer.invoke('refresh-drink-states');
+          })
+          .unsubscribe();
+      })
+      .unsubscribe();
   }
 
   async pressHereWhenFinished() {
-    const [machine] = await lastValueFrom(this.machines$);
+    this.machine
+      .subscribe(machine => {
+        // if the state of the vending machine door is unlocked, then the log-out request shall be ignored.
+        if (!machine.doorLocked) return;
 
-    // if the state of the vending machine door is unlocked, then the log-out request shall be ignored.
-    if (!machine.doorLocked) return;
+        this.userService
+          .usersLogoutPost()
+          .subscribe(() => {
+            this.electronService.ipcRenderer.invoke('refresh-machine-states');
+            this.electronService.ipcRenderer.invoke('refresh-user-states');
+          })
+          .unsubscribe();
 
-    await lastValueFrom(this.userService.usersLogoutPost());
-    this.electronService.ipcRenderer.invoke('refresh-machine-states');
-    this.electronService.ipcRenderer.invoke('refresh-user-states');
-
-    // for mock use
-    // panel becomes inactive
-    // If the state of the vending machine door is locked, then the log-out request shall be successful and the maintenance panel shall become inactive
-    this.password = '';
+        // for mock use
+        // panel becomes inactive
+        // If the state of the vending machine door is locked, then the log-out request shall be successful and the maintenance panel shall become inactive
+        this.password = '';
+      })
+      .unsubscribe();
   }
 
   async validate(e: any) {
@@ -107,9 +147,19 @@ export class MaintainerComponent implements OnInit {
       const [currentUser] = await lastValueFrom(this.userService.usersGet());
       this.valid = currentUser.password === this.password;
       if (this.valid) {
-        const [machine] = await lastValueFrom(this.machines$);
-        machine.doorLocked = false;
-        await lastValueFrom(this.machineService.machinesPut([machine]));
+        this.machine
+          .subscribe(machine => {
+            machine.doorLocked = false;
+            this.machineService
+              .machinesPut([machine])
+              .subscribe(() => {
+                this.electronService.ipcRenderer.invoke(
+                  'refresh-machine-states'
+                );
+              })
+              .unsubscribe();
+          })
+          .unsubscribe();
       }
     }
   }
