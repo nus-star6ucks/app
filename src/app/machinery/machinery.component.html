@@ -1,6 +1,8 @@
 <div>
   <div class="px-6 mb-4 flex items-center space-x-2 -ml-1">
-    <!-- <coffee-machine theme="outline" :size="48" stroke-width="3" stroke-linejoin="bevel" stroke-linecap="butt" /> -->
+    <svg-icon
+      src="../../assets/images/coffee-machine.svg"
+      [svgStyle]="{ 'width.px': 48 }"></svg-icon>
     <span class="uppercase font-medium">Machinery Panel</span>
   </div>
   <section class="px-6 grid gap-12 grid-cols-2">
@@ -14,7 +16,9 @@
             *ngFor="let coin of coins$ | async"
             class="border-2 border-black rounded-md p-4 uppercase flex justify-between items-center">
             <div class="flex items-center space-x-2 font-semibold">
-              <!-- <finance :size="36" :stroke-width="2" /> -->
+              <svg-icon
+                src="../../assets/images/finance.svg"
+                [svgStyle]="{ 'width.px': 36 }"></svg-icon>
               <div class="flex items-center space-x-2">
                 <h2 class="text-2xl tracking-tighter">{{ coin.name }}</h2>
               </div>
@@ -41,7 +45,9 @@
             *ngFor="let drink of drinks$ | async"
             class="border-2 border-black rounded-md p-4 uppercase flex justify-between items-center">
             <div class="flex items-center space-x-2 font-semibold">
-              <!-- <cola :size="36" :stroke-width="2" /> -->
+              <svg-icon
+                src="../../assets/images/cola.svg"
+                [svgStyle]="{ 'width.px': 36 }"></svg-icon>
               <div class="flex items-center space-x-2">
                 <h2 class="text-xl tracking-tighter">{{ drink.name }}</h2>
               </div>
@@ -65,8 +71,14 @@
           <button
             class="font-semibold text-lg flex items-center"
             (click)="switchDoorLocked()">
-            <!-- <checkbox v-if="!machine.doorLocked" theme="outline" size="36" :stroke-width="2" stroke-linejoin="bevel" stroke-linecap="butt" />
-              <check-correct v-else theme="outline" size="36" :stroke-width="2" stroke-linejoin="bevel" stroke-linecap="butt" /> -->
+            <svg-icon
+              *ngIf="!(machines$ | async)?.[0].doorLocked"
+              src="../../assets/images/checkbox.svg"
+              [svgStyle]="{ 'width.px': 36 }"></svg-icon>
+            <svg-icon
+              *ngIf="(machines$ | async)?.[0].doorLocked"
+              src="../../assets/images/check-correct.svg"
+              [svgStyle]="{ 'width.px': 36 }"></svg-icon>
             <span class="ml-2">Door Locked?</span>
           </button>
         </div>

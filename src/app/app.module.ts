@@ -1,8 +1,7 @@
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { ImmutableJsDataStrategyModule } from '@ng-state/immutablejs-data-strategy';
-import { StoreModule } from '@ng-state/store';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -34,6 +33,7 @@ export function apiConfigFactory(): Configuration {
     CoreModule,
     ApiModule.forRoot(apiConfigFactory),
     HttpClientModule,
+    AngularSvgIconModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent],

@@ -1,6 +1,8 @@
 <div>
   <div class="px-6 mb-4 flex items-center space-x-2 -ml-1">
-    <!-- <coffee-machine theme="outline" size="48" stroke-width="3" stroke-linejoin="bevel" stroke-linecap="butt" /> -->
+    <svg-icon
+      src="../../assets/images/coffee-machine.svg"
+      [svgStyle]="{ 'width.px': 48 }"></svg-icon>
     <span class="uppercase font-medium">Maintainer Panel</span>
   </div>
   <section class="px-6 grid gap-12 grid-cols-2">
@@ -17,7 +19,9 @@
             [disabled]="!allowToUse"
             (click)="selectedCoin = coin">
             <div class="flex items-center space-x-2">
-              <!-- <finance :size="36" :stroke-width="2" /> -->
+              <svg-icon
+                src="../../assets/images/finance.svg"
+                [svgStyle]="{ 'width.px': 36 }"></svg-icon>
               <h2 class="text-2xl tracking-tighter">{{ coin.name }}</h2>
             </div>
             <span
@@ -40,7 +44,9 @@
             class="w-full btn-solid flex items-center justify-between space-x-2 px-4 py-2"
             (click)="selectedDrink = drink">
             <div class="flex items-center space-x-2">
-              <!-- <Cola size="36" stroke-width="2" /> -->
+              <svg-icon
+                src="../../assets/images/cola.svg"
+                [svgStyle]="{ 'width.px': 36 }"></svg-icon>
               <div class="flex items-center space-x-2">
                 <h2 class="text-2xl tracking-tighter">{{ drink.name }}</h2>
               </div>
