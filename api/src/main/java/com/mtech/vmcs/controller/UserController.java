@@ -39,8 +39,11 @@ public class UserController {
 
   @PostMapping("/logout")
   public ResponseEntity<User> logout(@RequestBody User user) {
-    userService.logout(user);
-    return new ResponseEntity<>(HttpStatus.OK);
+    if (userService.logout(user)){
+      return new ResponseEntity<>(HttpStatus.OK);
+    } else{
+      return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+    }
   }
 
   @PutMapping
