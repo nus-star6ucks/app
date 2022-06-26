@@ -29,7 +29,7 @@ export class MaintainerComponent implements OnInit {
     private readonly dataService: DataService,
     private titleService: Title
   ) {
-    titleService.setTitle('VMCS - Maintainer Panel');
+    titleService.setTitle('VMCS - Maintenance Panel');
   }
 
   machine = this.dataService.machines$.pipe(map(machines => machines?.[0]));
