@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { firstValueFrom, lastValueFrom, map, Observable } from 'rxjs';
+import { map } from 'rxjs';
 import { ElectronService } from '../core/services';
 import { DataService } from '../data.service';
 import {
@@ -8,9 +8,7 @@ import {
   CoinService,
   Drink,
   DrinkService,
-  Machine,
   MachineService,
-  User,
 } from '../http';
 
 @Component({
@@ -49,10 +47,13 @@ export class MachineryComponent implements OnInit {
   }
 
   async updateCoinQuantity(coin: Coin, $event: Event) {
+    const inputValue = +($event.target as HTMLInputElement).value;
+    if (inputValue > 40 || inputValue < 0) return;
+
     this.coins
       .pipe(map(coins => coins.find(c => c.id === coin.id)))
       .subscribe(data => {
-        data.quantity = +($event.target as HTMLInputElement).value;
+        data.quantity = inputValue;
         this.coinService.coinsPut([data]).subscribe(() => {
           this.electronService.ipcRenderer.invoke('refresh-coin-states');
         });
@@ -61,10 +62,13 @@ export class MachineryComponent implements OnInit {
   }
 
   async updateDrinkQuantity(drink: Drink, $event: Event) {
+    const inputValue = +($event.target as HTMLInputElement).value;
+    if (inputValue > 20 || inputValue < 0) return;
+
     this.drinks
       .pipe(map(drinks => drinks.find(d => d.id === drink.id)))
       .subscribe(data => {
-        data.quantity = +($event.target as HTMLInputElement).value;
+        data.quantity = inputValue;
         this.drinkService.drinksPut([data]).subscribe(() => {
           this.electronService.ipcRenderer.invoke('refresh-drink-states');
         });
