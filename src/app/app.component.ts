@@ -6,6 +6,7 @@ import {
   interval,
   map,
   Observable,
+  retry,
   Subject,
   Subscription,
   switchMap,
@@ -58,11 +59,16 @@ export class AppComponent implements OnInit {
   healthValidationSubject$ = new BehaviorSubject('');
 
   ngOnInit(): void {
+    this._healthValidate();
+  }
+
+  private _healthValidate() {
     this.healthValidationSubscription = this.healthValidationSubject$
       .pipe(
         switchMap(_ =>
           timer(0, 1000).pipe(
-            concatMap(_ => this.defaultService.actuatorHealthGet())
+            concatMap(_ => this.defaultService.actuatorHealthGet()),
+            retry()
           )
         )
       )
