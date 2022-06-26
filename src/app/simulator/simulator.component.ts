@@ -47,6 +47,7 @@ export class SimulatorComponent implements OnInit {
   }
 
   fileLoaded = false;
+  filePath = '';
 
   blockButtonActiveClass = [
     'btn-solid',
@@ -64,10 +65,17 @@ export class SimulatorComponent implements OnInit {
     this.electronService.ipcRenderer.invoke('open-win', path, options);
   }
 
-  async onFileSelected(event: any) {
-    const { path } = event.target.files[0];
+  async onFileSelected($event: Event) {
+    const target = $event.target as HTMLInputElement;
+    if (target.files.length < 1) return;
 
-    this.machineService.machinesStartPost(path).subscribe(data => {
+    const { path } = target.files[0];
+    this.filePath = path;
+    this.handleStartSimulation();
+  }
+
+  handleStartSimulation() {
+    this.machineService.machinesStartPost(this.filePath).subscribe(data => {
       this.fileLoaded = true;
       this.electronService.ipcRenderer.invoke('refresh-all-states');
     });
