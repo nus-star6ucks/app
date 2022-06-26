@@ -45,12 +45,14 @@ export class MaintainerComponent implements OnInit {
   selectedDrink: Drink | null = null;
   displayTotalCashHeld = false;
   cashCollected = -1;
+  totalCashHeld = -1;
 
   get allowToUse(): boolean {
     return this.password.length === 6 && this.valid === true;
   }
 
   showTotalCashHeld() {
+    this.computeTotalCashHeld();
     this.displayTotalCashHeld = true;
   }
 
@@ -61,13 +63,14 @@ export class MaintainerComponent implements OnInit {
           (acc, prev) => (acc += prev.value * prev.quantity),
           0
         );
-        this.cashCollected = total;
+        this.totalCashHeld = total;
       })
       .unsubscribe();
   }
 
   async collectAllCash() {
     this.computeTotalCashHeld();
+    this.cashCollected = this.totalCashHeld;
     this.coins
       .subscribe(coins => {
         const updatedCoins = coins.map(c => {
@@ -80,15 +83,19 @@ export class MaintainerComponent implements OnInit {
             this.electronService.ipcRenderer.invoke('refresh-coin-states');
           })
           .unsubscribe();
+        this.computeTotalCashHeld();
       })
       .unsubscribe();
   }
 
   async updateDrinkPrice(drink: Drink, $event: Event) {
+    const inputValue = +($event.target as HTMLInputElement).value;
+    if (inputValue < 1) return;
+
     this.drinks
       .pipe(map(drinks => drinks.find(d => d.id === drink.id)))
       .subscribe(data => {
-        drink.price = +($event.target as HTMLInputElement).value;
+        drink.price = inputValue;
         this.drinkService
           .drinksPut([data])
           .subscribe(() => {

@@ -101,8 +101,10 @@
           <div class="border-2 border-black rounded-md p-4 uppercase">
             <span class="font-bold">
               <span class="tracking-tighter">Total Cash</span>
-              <span *ngIf="displayTotalCashHeld" class="ml-2 led-small">
-                {{ computeTotalCashHeld() | async }}c
+              <span
+                *ngIf="displayTotalCashHeld && totalCashHeld > -1"
+                class="ml-2 led-small text-center"
+                >{{ totalCashHeld }}c
               </span>
             </span>
             <p class="font-bold mt-1">
