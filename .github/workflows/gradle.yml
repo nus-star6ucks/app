@@ -20,6 +20,9 @@ jobs:
           distribution: 'temurin'
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
+      - name: Execute Gradle test
+        working-directory: ./api
+        run: ./gradlew test
       - name: Execute Gradle build
         working-directory: ./api
-        run: ./gradlew build
+        run: ./gradlew build -x test
