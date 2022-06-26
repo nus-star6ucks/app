@@ -83,6 +83,12 @@
         </div>
         <div class="border-2 border-black rounded-md p-4 uppercase">
           <span class="led-small">{{ collectCanHereDisplay }}</span>
+          <button
+            class="btn-solid-small text-xs ml-2 p-1 with-click"
+            *ngIf="collectCanHereDisplay !== 'NO CAN'"
+            (click)="takeout()">
+            Take out
+          </button>
           <p class="font-bold">Collect Can Here</p>
         </div>
         <div class="border-2 border-black rounded-md p-4 uppercase">

@@ -102,4 +102,15 @@ export class CustomerComponent implements OnInit {
     this.noChangeAvailableDisplay = false;
     this.selectedDrink = null;
   }
+
+  takeout() {
+    if (this.collectCanHereDisplay === 'NO CAN') return;
+
+    this.collectCanHereDisplay = 'NO CAN';
+    this.collectCoinsDisplay = 0;
+    this.collectedCoins = [];
+    this.invalidCoin = false;
+    this.noChangeAvailableDisplay = false;
+    this.selectedDrink = null;
+  }
 }
