@@ -5,6 +5,7 @@
   "private": true,
   "dependencies": {
     "axios": "0.27.2",
-    "v8-compile-cache": "^2.3.0"
+    "v8-compile-cache": "^2.3.0",
+    "electron-log": "4.4.8"
   }
 }

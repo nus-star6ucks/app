@@ -1,16 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { lastValueFrom, map, Observable } from 'rxjs';
-import { ElectronService } from '../core/services';
+import { map } from 'rxjs';
 import { DataService } from '../data.service';
-import {
-  Coin,
-  CoinService,
-  Drink,
-  DrinkService,
-  Machine,
-  MachineService,
-} from '../http';
+import { Coin, CoinService, Drink, DrinkService } from '../http';
 
 @Component({
   selector: 'app-customer',
@@ -27,7 +19,11 @@ export class CustomerComponent implements OnInit {
     titleService.setTitle('VMCS - Customer Panel');
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.machine.subscribe(machine => {
+      if (!machine.doorLocked) this.terminateAndReturnCash();
+    });
+  }
 
   machine = this.dataService.machines$.pipe(map(machines => machines?.[0]));
   drinks = this.dataService.drinks$;
@@ -52,33 +48,12 @@ export class CustomerComponent implements OnInit {
   collectCanHereDisplay = 'NO CAN';
   noChangeAvailableDisplay = false;
 
-  // get coins(): Coin[] {
-  //   return [
-  //     ...store.$state.coins,
-
-  //   ];
-  // }
-
   get totalMoneyInserted(): number {
     return this.collectedCoins.reduce(
       (acc, curr) => (acc += curr.value * curr.quantity),
       0
     );
   }
-
-  // mounted() {
-  //   const store = useStore();
-  //   store.$subscribe((mutation, state) => {
-  //     if (
-  //       mutation.type === MutationType.patchObject &&
-  //       mutation.payload.machines
-  //     ) {
-  //       const [machine] = mutation.payload.machines;
-  //       // When the maintainer successfully logs-in to the system, the system is required to terminate any customer transactions that are in-progress, and refund any money that has been entered during the transaction
-  //       if (!machine.doorLocked) this.terminateAndReturnCash();
-  //     }
-  //   });
-  // }
 
   selectDrink(drink: Drink) {
     if (drink.quantity === 0 || this.selectedDrink) return;

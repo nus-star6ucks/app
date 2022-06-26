@@ -13,6 +13,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 import * as url from 'url';
 import axios from 'axios';
+import log from 'electron-log';
 import 'v8-compile-cache';
 
 // Disable GPU Acceleration for Windows 7
@@ -104,46 +105,54 @@ function createWindow(
 let serverProcess: any;
 const SPRING_PORT = 8081;
 
+const libCwd = (() => {
+  if (!app.isPackaged) {
+    return join(process.cwd(), 'libraries');
+  }
+  return join(process.resourcesPath, '..', 'libraries');
+})();
+
 function startSpringServer(port: number | string) {
   const JAR = 'api.jar';
-  console.info(`Starting server at port ${port}`);
-  const server = (() => {
-    if (!app.isPackaged) {
-      return join(process.cwd(), 'libraries', JAR);
-    }
-    return join(process.resourcesPath, '..', 'libraries', JAR);
-  })();
-  console.info(`Launching server with jar ${server} at port ${port}...`);
+  log.info(`Starting server at port ${port}`);
+  log.info(`Launching server with jar ${JAR} at port ${port}...`);
 
   serverProcess = require('child_process').spawn('java', [
     '-jar',
-    server,
+    JAR,
     `--server.port=${port}`,
-  ]);
+  ], {
+    cwd: libCwd
+  });
 
   if (serverProcess.pid) {
-    console.info('Server PID: ' + serverProcess.pid);
+    log.info('Server PID: ' + serverProcess.pid);
   } else {
-    console.error('Failed to launch server process.');
+    log.error('Failed to launch server process.');
   }
+
+  serverProcess.stdout.setEncoding('utf8');
+  serverProcess.stdout.on('data', data => {
+    log.info('stdout: ' + data);
+  });
 }
 
 function stopSpringServer(port: number | string) {
   const baseUrl = `http://localhost:${port}`;
-  console.info('Stopping server...');
+  log.info('Stopping server...');
   return axios
     .post(`${baseUrl}/actuator/shutdown`, null, {
       headers: { 'Content-Type': 'application/json' },
     })
-    .then(() => console.info('Server stopped'))
+    .then(() => log.info('Server stopped'))
     .catch(error => {
-      console.error('Failed to stop the server gracefully.', error);
+      log.error('Failed to stop the server gracefully.', error);
       if (serverProcess) {
-        console.info(`Killing server process ${serverProcess.pid}`);
+        log.info(`Killing server process ${serverProcess.pid}`);
 
         const kill = require('tree-kill');
         kill(serverProcess.pid, 'SIGTERM', function (err: any) {
-          console.info('Server process killed', err);
+          log.info('Server process killed', err);
           serverProcess = null;
           app.quit(); // quit again
         });
@@ -164,7 +173,7 @@ try {
   // Quit when all windows are closed.
   app.on('window-all-closed', async () => {
     await stopSpringServer(SPRING_PORT);
-    unlinkSync(join(process.cwd(), 'api/db', 'vmcs.mv.db'));
+    unlinkSync(join(libCwd, 'db/vmcs.mv.db'));
     win = null;
 
     // On OS X it is common for applications and their menu bar
