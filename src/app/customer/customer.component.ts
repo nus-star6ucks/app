@@ -55,6 +55,10 @@ export class CustomerComponent implements OnInit {
     );
   }
 
+  get txCompleted(): boolean {
+    return this.collectCanHereDisplay !== 'NO CAN';
+  }
+
   selectDrink(drink: Drink) {
     if (drink.quantity === 0 || this.selectedDrink) return;
     this.selectedDrink = drink;
@@ -104,7 +108,7 @@ export class CustomerComponent implements OnInit {
   }
 
   takeout() {
-    if (this.collectCanHereDisplay === 'NO CAN') return;
+    if (!this.txCompleted) return;
 
     this.collectCanHereDisplay = 'NO CAN';
     this.collectCoinsDisplay = 0;

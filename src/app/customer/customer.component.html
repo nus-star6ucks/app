@@ -51,8 +51,12 @@
           <button
             *ngFor="let coin of coins | async"
             class="btn-solid-small px-2 h-10"
-            [class.with-click]="!!selectedDrink"
-            [disabled]="!selectedDrink || !(machine | async)?.doorLocked"
+            [class.with-click]="
+              !(!selectedDrink || !(machine | async)?.doorLocked || txCompleted)
+            "
+            [disabled]="
+              !selectedDrink || !(machine | async)?.doorLocked || txCompleted
+            "
             (click)="insertCoin(coin)">
             {{ coin.name }}
           </button>
@@ -69,13 +73,9 @@
             <button
               class="btn-solid-small text-xs p-1"
               [class.with-click]="
-                collectCanHereDisplay !== 'NO CAN' ||
-                !(machine | async)?.doorLocked
+                !(txCompleted || !(machine | async)?.doorLocked)
               "
-              [disabled]="
-                collectCanHereDisplay !== 'NO CAN' ||
-                !(machine | async)?.doorLocked
-              "
+              [disabled]="txCompleted || !(machine | async)?.doorLocked"
               (click)="terminateAndReturnCash()">
               Terminate and Return Cash
             </button>
@@ -85,7 +85,7 @@
           <span class="led-small">{{ collectCanHereDisplay }}</span>
           <button
             class="btn-solid-small text-xs ml-2 p-1 with-click"
-            *ngIf="collectCanHereDisplay !== 'NO CAN'"
+            *ngIf="txCompleted"
             (click)="takeout()">
             Take out
           </button>
