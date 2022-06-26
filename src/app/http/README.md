@@ -5,7 +5,7 @@
 To install the required dependencies and to build the typescript sources run:
 ```
 npm install
-npm run build
+yarn run build
 ```
 
 ### publishing
