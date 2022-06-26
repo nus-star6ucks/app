@@ -21,7 +21,7 @@ export class CustomerComponent implements OnInit {
 
   ngOnInit(): void {
     this.machine.subscribe(machine => {
-      if (!machine.doorLocked) this.terminateAndReturnCash();
+      if (!machine?.doorLocked) this.terminateAndReturnCash();
     });
   }
 
