@@ -24,4 +24,6 @@ public class Machine {
   private String name;
 
   private Boolean doorLocked;
+
+  private String status;
 }
