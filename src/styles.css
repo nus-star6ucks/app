@@ -134,7 +134,7 @@ body {
 
 .btn-solid {
   @apply shadow-solid rounded-md border-black border-2 uppercase font-semibold transition-all;
-  @apply disabled:shadow-[3px_3px_black] disabled:translate-x-0 disabled:translate-y-0 disabled:border-2;
+  @apply disabled:shadow-[3px_3px_black] disabled:translate-x-0 disabled:translate-y-0 disabled:border-2 disabled:bg-gray-300;
 }
 
 .btn-solid.with-click {
@@ -142,13 +142,13 @@ body {
 }
 
 .btn-solid.active {
-@apply shadow-none border-2 translate-x-1 translate-y-1;
+@apply shadow-none border-2 translate-x-1 translate-y-1 bg-emerald-200;
 }
 
 
 .btn-solid-small {
   @apply shadow-solid-small rounded-md border-black border-2 uppercase font-semibold transition-all;
-  @apply disabled:shadow-[1px_1px_black] disabled:translate-x-0 disabled:translate-y-0 disabled:border-2;
+  @apply disabled:shadow-[1px_1px_black] disabled:translate-x-0 disabled:translate-y-0 disabled:border-2 disabled:bg-gray-300;
 }
 
 .btn-solid-small.active {
