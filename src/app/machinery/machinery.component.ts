@@ -37,7 +37,6 @@ export class MachineryComponent implements OnInit {
 
   ngOnInit(): void {
     this.coins$.subscribe(coins => {
-      console.log(coins);
       this.detectChanges = !this.detectChanges;
     });
   }
