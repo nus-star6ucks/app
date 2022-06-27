@@ -9,20 +9,20 @@
       <button
         [disabled]="!fileLoaded"
         [class.with-click]="fileLoaded"
-        class="btn-solid bg-white hover:bg-gray-200 py-4 aspect-square w-full"
+        class="btn-solid bg-white py-4 aspect-square w-full"
         (click)="activateCustomerPanel()">
         Activate Customer Panel
       </button>
       <button
         [disabled]="!fileLoaded"
-        class="btn-solid bg-teal-100 hover:bg-teal-200 py-4 aspect-square w-full"
+        class="btn-solid bg-teal-100 py-4 aspect-square w-full"
         [class.with-click]="fileLoaded"
         (click)="activateMaintainerPanel()">
         Activate Maintenance Panel
       </button>
       <button
         [disabled]="!fileLoaded"
-        class="btn-solid bg-red-50 hover:bg-red-200 py-4 aspect-square w-full"
+        class="btn-solid bg-red-50 py-4 aspect-square w-full"
         [class.with-click]="fileLoaded"
         (click)="activateMachineryPanel()">
         Activate Machinery Panel
