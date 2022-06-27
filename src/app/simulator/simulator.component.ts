@@ -122,7 +122,7 @@ export class SimulatorComponent implements OnInit {
       .unsubscribe();
   }
 
-  activateMaintainerPanel() {
+  activateMaintainancePanel() {
     this._newWindow('/maintainer', {
       width: 1035,
       height: 660,

@@ -64,7 +64,7 @@ export class CustomerComponent implements OnInit {
     this.selectedDrink = drink;
   }
 
-  async insertCoin(coin: Coin) {
+  insertCoin(coin: Coin) {
     this.coinService.coinsCheckCoinPost(coin).subscribe(async ({ isValid }) => {
       if (!isValid) {
         this.invalidCoin = true;

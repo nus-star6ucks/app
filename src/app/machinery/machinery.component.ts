@@ -33,13 +33,7 @@ export class MachineryComponent implements OnInit {
   coins$ = this.dataService.coins$;
   users$ = this.dataService.users$;
 
-  detectChanges = false;
-
-  ngOnInit(): void {
-    this.coins$.subscribe(coins => {
-      this.detectChanges = !this.detectChanges;
-    });
-  }
+  ngOnInit(): void {}
 
   switchDoorLocked() {
     this.machine$
@@ -52,30 +46,30 @@ export class MachineryComponent implements OnInit {
       .unsubscribe();
   }
 
-  async updateCoinQuantity(coin: Coin, $event: Event) {
+  updateCoinQuantity(coin: Coin, $event: Event) {
     const inputValue = +($event.target as HTMLInputElement).value;
     if (inputValue > 40 || inputValue < 0) return;
 
     this.coins$
       .pipe(map(coins => coins.find(c => c.id === coin.id)))
-      .subscribe(data => {
-        data.quantity = inputValue;
-        this.coinService.coinsPut([data]).subscribe(() => {
+      .subscribe(coin => {
+        coin.quantity = inputValue;
+        this.coinService.coinsPut([coin]).subscribe(() => {
           this.electronService.ipcRenderer.invoke('refresh-coin-states');
         });
       })
       .unsubscribe();
   }
 
-  async updateDrinkQuantity(drink: Drink, $event: Event) {
+  updateDrinkQuantity(drink: Drink, $event: Event) {
     const inputValue = +($event.target as HTMLInputElement).value;
     if (inputValue > 20 || inputValue < 0) return;
 
     this.drinks$
       .pipe(map(drinks => drinks.find(d => d.id === drink.id)))
-      .subscribe(data => {
-        data.quantity = inputValue;
-        this.drinkService.drinksPut([data]).subscribe(() => {
+      .subscribe(drink => {
+        drink.quantity = inputValue;
+        this.drinkService.drinksPut([drink]).subscribe(() => {
           this.electronService.ipcRenderer.invoke('refresh-drink-states');
         });
       })

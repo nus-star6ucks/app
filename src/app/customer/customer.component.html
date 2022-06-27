@@ -25,7 +25,9 @@
                 [svgStyle]="{ 'width.px': 36 }"></svg-icon>
               <div class="flex items-center space-x-2">
                 <h2 class="text-2xl tracking-tighter">{{ drink.name }}</h2>
-                <span class="led-small">{{ drink.price }}c</span>
+                <span
+                  class="led-small"
+                  [textContent]="drink.price + 'c'"></span>
               </div>
             </div>
             <span

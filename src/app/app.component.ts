@@ -41,7 +41,7 @@ export class AppComponent implements OnInit {
 
   apiReady = false;
   healthValidationSubscription: Subscription;
-  healthValidationSubject$ = new BehaviorSubject('');
+  healthValidationSubject = new BehaviorSubject('');
 
   _initElectronIPCListeners() {
     this.electronService.ipcRenderer.on('refresh-all-states', () => {
@@ -72,7 +72,7 @@ export class AppComponent implements OnInit {
   }
 
   private _healthValidateAndLoadAll() {
-    this.healthValidationSubscription = this.healthValidationSubject$
+    this.healthValidationSubscription = this.healthValidationSubject
       .pipe(
         switchMap(_ =>
           timer(0, 1000).pipe(
