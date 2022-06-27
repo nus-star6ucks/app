@@ -28,15 +28,22 @@ export class MachineryComponent implements OnInit {
     titleService.setTitle('VMCS - Machinery Panel');
   }
 
-  machine = this.dataService.machines$.pipe(map(machines => machines?.[0]));
-  drinks = this.dataService.drinks$;
-  coins = this.dataService.coins$;
-  users = this.dataService.users$;
+  machine$ = this.dataService.machines$.pipe(map(machines => machines?.[0]));
+  drinks$ = this.dataService.drinks$;
+  coins$ = this.dataService.coins$;
+  users$ = this.dataService.users$;
 
-  ngOnInit(): void {}
+  detectChanges = false;
+
+  ngOnInit(): void {
+    this.coins$.subscribe(coins => {
+      console.log(coins);
+      this.detectChanges = !this.detectChanges;
+    });
+  }
 
   switchDoorLocked() {
-    this.machine
+    this.machine$
       .subscribe(machine => {
         machine.doorLocked = !machine.doorLocked;
         this.machineService.machinesPut([machine]).subscribe(() => {
@@ -50,7 +57,7 @@ export class MachineryComponent implements OnInit {
     const inputValue = +($event.target as HTMLInputElement).value;
     if (inputValue > 40 || inputValue < 0) return;
 
-    this.coins
+    this.coins$
       .pipe(map(coins => coins.find(c => c.id === coin.id)))
       .subscribe(data => {
         data.quantity = inputValue;
@@ -65,7 +72,7 @@ export class MachineryComponent implements OnInit {
     const inputValue = +($event.target as HTMLInputElement).value;
     if (inputValue > 20 || inputValue < 0) return;
 
-    this.drinks
+    this.drinks$
       .pipe(map(drinks => drinks.find(d => d.id === drink.id)))
       .subscribe(data => {
         data.quantity = inputValue;

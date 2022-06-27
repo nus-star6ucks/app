@@ -28,14 +28,19 @@ export class SimulatorComponent implements OnInit {
     titleService.setTitle('VMCS - Simulator Control Panel');
   }
 
+  coins$ = this.dataService.coins$;
+  drinks$ = this.dataService.drinks$;
+  machines$ = this.dataService.machines$;
+  users$ = this.dataService.users$;
+
   ngOnInit(): void {
-    this.dataService.coins$.subscribe(coins => {
+    this.coins$.subscribe(coins => {
       const coinsLoaded = coins.length > 0;
-      this.dataService.drinks$.subscribe(drinks => {
+      this.drinks$.subscribe(drinks => {
         const drinksLoaded = drinks.length > 0;
-        this.dataService.machines$.subscribe(machines => {
+        this.machines$.subscribe(machines => {
           const machinesLoaded = machines.length > 0;
-          this.dataService.users$.subscribe(users => {
+          this.users$.subscribe(users => {
             const usersLoaded = users.length > 0;
 
             this.fileLoaded =

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, NgZone, OnInit } from '@angular/core';
 import {
   BehaviorSubject,
   concatMap,
@@ -26,7 +26,8 @@ export class AppComponent implements OnInit {
   constructor(
     private readonly electronService: ElectronService,
     private readonly defaultService: DefaultService,
-    private readonly dataService: DataService
+    private readonly dataService: DataService,
+    private readonly cdr: ChangeDetectorRef
   ) {
     if (electronService.isElectron) {
       console.log(process.env);
@@ -36,33 +37,41 @@ export class AppComponent implements OnInit {
     } else {
       console.log('Run in browser');
     }
-
-    this.electronService.ipcRenderer.on('refresh-all-states', () => {
-      dataService.loadAll();
-    });
-    this.electronService.ipcRenderer.on('refresh-user-states', () => {
-      dataService.loadUsers();
-    });
-    this.electronService.ipcRenderer.on('refresh-machine-states', () => {
-      dataService.loadMachines();
-    });
-    this.electronService.ipcRenderer.on('refresh-drink-states', () => {
-      dataService.loadDrinks();
-    });
-    this.electronService.ipcRenderer.on('refresh-coin-states', () => {
-      dataService.loadCoins();
-    });
   }
 
   apiReady = false;
   healthValidationSubscription: Subscription;
   healthValidationSubject$ = new BehaviorSubject('');
 
-  ngOnInit(): void {
-    this._healthValidate();
+  _initElectronIPCListeners() {
+    this.electronService.ipcRenderer.on('refresh-all-states', () => {
+      console.log('[Refresh States] All');
+      this.dataService.loadAll(this.cdr);
+    });
+    this.electronService.ipcRenderer.on('refresh-user-states', () => {
+      console.log('[Refresh States] Users');
+      this.dataService.loadUsers(this.cdr);
+    });
+    this.electronService.ipcRenderer.on('refresh-machine-states', () => {
+      console.log('[Refresh States] Machines');
+      this.dataService.loadMachines(this.cdr);
+    });
+    this.electronService.ipcRenderer.on('refresh-drink-states', () => {
+      console.log('[Refresh States] Drinks');
+      this.dataService.loadDrinks(this.cdr);
+    });
+    this.electronService.ipcRenderer.on('refresh-coin-states', () => {
+      console.log('[Refresh States] Coins');
+      this.dataService.loadCoins(this.cdr);
+    });
   }
 
-  private _healthValidate() {
+  ngOnInit(): void {
+    this._healthValidateAndLoadAll();
+    this._initElectronIPCListeners();
+  }
+
+  private _healthValidateAndLoadAll() {
     this.healthValidationSubscription = this.healthValidationSubject$
       .pipe(
         switchMap(_ =>
@@ -74,6 +83,7 @@ export class AppComponent implements OnInit {
       )
       .subscribe(() => {
         this.apiReady = true;
+        this.dataService.loadAll(this.cdr);
         this.healthValidationSubscription.unsubscribe();
       });
   }

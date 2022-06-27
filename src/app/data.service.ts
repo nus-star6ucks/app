@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { ChangeDetectorRef, Injectable } from '@angular/core';
 import { BehaviorSubject, lastValueFrom } from 'rxjs';
 import {
   Coin,
@@ -30,38 +30,40 @@ export class DataService {
     private readonly drinkService: DrinkService,
     private readonly machineService: MachineService,
     private readonly userService: UserService
-  ) {
-    this.loadAll();
+  ) {}
+
+  loadAll(cdr: ChangeDetectorRef) {
+    this.loadCoins(cdr);
+    this.loadDrinks(cdr);
+    this.loadMachines(cdr);
+    this.loadUsers(cdr);
   }
 
-  loadAll() {
-    this.loadCoins();
-    this.loadDrinks();
-    this.loadMachines();
-    this.loadUsers();
-  }
-
-  async loadCoins() {
+  loadCoins(cdr: ChangeDetectorRef) {
     this.coinService.coinsGet().subscribe(data => {
       this._coins.next(data);
+      cdr.detectChanges();
     });
   }
 
-  async loadDrinks() {
+  loadDrinks(cdr: ChangeDetectorRef) {
     this.drinkService.drinksGet().subscribe(data => {
       this._drinks.next(data);
+      cdr.detectChanges();
     });
   }
 
-  async loadMachines() {
+  loadMachines(cdr: ChangeDetectorRef) {
     this.machineService.machinesGet().subscribe(data => {
       this._machines.next(data);
+      cdr.detectChanges();
     });
   }
 
-  async loadUsers() {
+  loadUsers(cdr: ChangeDetectorRef) {
     this.userService.usersGet().subscribe(data => {
       this._users.next(data);
+      cdr.detectChanges();
     });
   }
 }
