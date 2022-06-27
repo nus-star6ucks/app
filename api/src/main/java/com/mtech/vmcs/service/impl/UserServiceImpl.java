@@ -2,6 +2,7 @@ package com.mtech.vmcs.service.impl;
 
 import com.mtech.vmcs.model.entity.Machine;
 import com.mtech.vmcs.model.entity.User;
+import com.mtech.vmcs.model.enums.MachineStatus;
 import com.mtech.vmcs.model.enums.UserStatus;
 import com.mtech.vmcs.repository.UserRepository;
 import com.mtech.vmcs.service.MachineService;
@@ -52,9 +53,9 @@ public class UserServiceImpl implements UserService {
               });
       // unlock door
       List<Machine> machines = machineService.getAllMachines();
-      for (Machine machine:
-              machines){
+      for (Machine machine : machines) {
         machine.setDoorLocked(false);
+        machine.setStatus(MachineStatus.UNAVAILABLE.toString());
       }
       machineService.updateMachines(machines);
       return true;
@@ -65,10 +66,11 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public Boolean logout(User user) {
-    for (Machine machine:
-            machineService.getAllMachines()) {
-      if (!machine.getDoorLocked())
-        return false;
+
+    List<Machine> machines = machineService.getAllMachines();
+    for (Machine machine : machines) {
+      if (!machine.getDoorLocked()) return false;
+      machine.setStatus(MachineStatus.NORMAL.toString());
     }
     userRepository
         .findById(user.getId())
@@ -77,6 +79,7 @@ public class UserServiceImpl implements UserService {
               u.setStatus(UserStatus.LOGOUT.toString());
               userRepository.save(u);
             });
+    machineService.updateMachines(machines);
     return true;
   }
 
