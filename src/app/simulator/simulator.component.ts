@@ -88,38 +88,41 @@ export class SimulatorComponent implements OnInit {
 
   async handleEndSimulation() {
     this.electronService.ipcRenderer.invoke('close-other-wins');
-    await this.machineService.machinesStopPost().toPromise();
-    this.fileLoaded = false;
-    this.dataService.coins$
-      .subscribe(coins => {
-        this.coinService.coinsDelete(coins.map(c => c.id)).subscribe(() => {
-          this.electronService.ipcRenderer.invoke('refresh-coin-states');
-        });
-      })
-      .unsubscribe();
-    this.dataService.machines$
-      .subscribe(machines => {
-        this.machineService
-          .machinesDelete(machines.map(c => c.id))
-          .subscribe(() => {
-            this.electronService.ipcRenderer.invoke('refresh-machine-states');
+    this.machineService.machinesStopPost().subscribe(() => {
+      this.fileLoaded = false;
+      this.coins$
+        .subscribe(coins => {
+          this.coinService.coinsDelete(coins.map(c => c.id)).subscribe(() => {
+            this.electronService.ipcRenderer.invoke('refresh-coin-states');
           });
-      })
-      .unsubscribe();
-    this.dataService.drinks$
-      .subscribe(drinks => {
-        this.drinkService.drinksDelete(drinks.map(c => c.id)).subscribe(() => {
-          this.electronService.ipcRenderer.invoke('refresh-drink-states');
-        });
-      })
-      .unsubscribe();
-    this.dataService.users$
-      .subscribe(users => {
-        this.userService.usersDelete(users.map(c => c.id)).subscribe(() => {
-          this.electronService.ipcRenderer.invoke('refresh-user-states');
-        });
-      })
-      .unsubscribe();
+        })
+        .unsubscribe();
+      this.machines$
+        .subscribe(machines => {
+          this.machineService
+            .machinesDelete(machines.map(c => c.id))
+            .subscribe(() => {
+              this.electronService.ipcRenderer.invoke('refresh-machine-states');
+            });
+        })
+        .unsubscribe();
+      this.drinks$
+        .subscribe(drinks => {
+          this.drinkService
+            .drinksDelete(drinks.map(c => c.id))
+            .subscribe(() => {
+              this.electronService.ipcRenderer.invoke('refresh-drink-states');
+            });
+        })
+        .unsubscribe();
+      this.users$
+        .subscribe(users => {
+          this.userService.usersDelete(users.map(c => c.id)).subscribe(() => {
+            this.electronService.ipcRenderer.invoke('refresh-user-states');
+          });
+        })
+        .unsubscribe();
+    });
   }
 
   activateMaintainancePanel() {

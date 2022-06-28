@@ -80,20 +80,24 @@ export class CustomerComponent implements OnInit {
         this.collectedCoins.push({ ...coin, quantity: 1 });
       }
       if (this.totalMoneyInserted >= this.selectedDrink.price) {
-        this.drinkService
-          .drinksPurchasePost({
-            drinkId: this.selectedDrink.id,
-            coins: this.collectedCoins,
-          })
-          .subscribe(({ noChangeAvailable, collectCoins }) => {
-            this.noChangeAvailableDisplay = noChangeAvailable;
-            this.collectCoinsDisplay = collectCoins;
-            if (!noChangeAvailable) {
-              this.collectCanHereDisplay = this.selectedDrink.name;
-            }
-          });
+        this.purchase();
       }
     });
+  }
+
+  purchase() {
+    this.drinkService
+      .drinksPurchasePost({
+        drinkId: this.selectedDrink.id,
+        coins: this.collectedCoins,
+      })
+      .subscribe(({ noChangeAvailable, collectCoins }) => {
+        this.noChangeAvailableDisplay = noChangeAvailable;
+        this.collectCoinsDisplay = collectCoins;
+        if (!noChangeAvailable) {
+          this.collectCanHereDisplay = this.selectedDrink.name;
+        }
+      });
   }
 
   terminateAndReturnCash() {

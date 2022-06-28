@@ -17,4 +17,4 @@ if (!existsSync(join(process.cwd(), 'libraries')))
 
 renameSync(join(process.cwd(), 'api/build/libs', 'vmcs-0.0.1-SNAPSHOT.jar'), join(process.cwd(), 'libraries', 'api.jar'))
 
-console.log('[BUILD] Vite building');
+console.log('[BUILD] Ng building');
