@@ -51,22 +51,12 @@ jobs:
     strategy:
       matrix:
         node-version: [14.x]
-
-        os: [macos-latest, ubuntu-latest]
-        # os: [ubuntu-latest, windows-latest]
+        os: [macos-latest]
         include:
         - os: macos-latest
           OSNAME: mac
           OSEND: dmg
           FILEPART: Installer
-        - os: ubuntu-latest
-          OSNAME: linux
-          OSEND: AppImage
-          FILEPART: Installer
-#         - os: windows-latest
-#           OSNAME: win
-#           OSEND: exe
-#           FILEPART: Setup
 
     steps:
       - name: Checkout code
