@@ -5,13 +5,12 @@ module.exports = {
   appId: 'Star6ucks',
   productName: 'Star6ucks',
   copyright: 'Copyright © 2022 ${author}',
-  asar: true,
+  asar: false,
   directories: {
     output: 'release/${version}',
     buildResources: 'resources',
   },
   extraFiles: ['libraries'],
-  files: ['dist'],
   win: {
     target: [
       {
@@ -35,4 +34,13 @@ module.exports = {
     target: ['AppImage'],
     artifactName: '${productName}-${version}-Installer.${ext}',
   },
-}
+  files: ['**/*', '!**/*.ts', '!*.map', '!package.json', '!package-lock.json'],
+  extraFiles: ['libraries'],
+  extraResources: [
+    {
+      from: 'dist',
+      to: 'app',
+      filter: ['**/*'],
+    },
+  ],
+};
