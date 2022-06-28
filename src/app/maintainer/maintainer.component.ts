@@ -32,10 +32,10 @@ export class MaintainerComponent implements OnInit {
     titleService.setTitle('VMCS - Maintenance Panel');
   }
 
-  machine = this.dataService.machines$.pipe(map(machines => machines?.[0]));
-  drinks = this.dataService.drinks$;
-  coins = this.dataService.coins$;
-  users = this.dataService.users$;
+  machine$ = this.dataService.machines$.pipe(map(machines => machines?.[0]));
+  drinks$ = this.dataService.drinks$;
+  coins$ = this.dataService.coins$;
+  currentUser$ = this.dataService.users$.pipe(map(users => users?.[0]));
 
   ngOnInit(): void {}
 
@@ -57,7 +57,7 @@ export class MaintainerComponent implements OnInit {
   }
 
   async computeTotalCashHeld() {
-    this.coins
+    this.coins$
       .subscribe(coins => {
         const total = coins.reduce(
           (acc, prev) => (acc += prev.value * prev.quantity),
@@ -71,18 +71,15 @@ export class MaintainerComponent implements OnInit {
   async collectAllCash() {
     this.computeTotalCashHeld();
     this.cashCollected = this.totalCashHeld;
-    this.coins
+    this.coins$
       .subscribe(coins => {
         const updatedCoins = coins.map(c => {
           c.quantity = 0;
           return c;
         });
-        this.coinService
-          .coinsPut(updatedCoins)
-          .subscribe(() => {
-            this.electronService.ipcRenderer.invoke('refresh-coin-states');
-          })
-          .unsubscribe();
+        this.coinService.coinsPut(updatedCoins).subscribe(() => {
+          console.log(''); // do nothing
+        });
         this.computeTotalCashHeld();
       })
       .unsubscribe();
@@ -92,31 +89,28 @@ export class MaintainerComponent implements OnInit {
     const inputValue = +($event.target as HTMLInputElement).value;
     if (inputValue < 1) return;
 
-    this.drinks
+    this.drinks$
       .pipe(map(drinks => drinks.find(d => d.id === drink.id)))
-      .subscribe(data => {
+      .subscribe(async drink => {
         drink.price = inputValue;
-        this.drinkService
-          .drinksPut([data])
-          .subscribe(() => {
-            this.electronService.ipcRenderer.invoke('refresh-drink-states');
-          })
-          .unsubscribe();
+        this.drinkService.drinksPut([drink]).subscribe(() => {
+          console.log(''); // do nothing
+        });
       })
       .unsubscribe();
   }
 
   async pressHereWhenFinished() {
-    this.machine
-      .subscribe(machine => {
+    this.machine$
+      .subscribe(async machine => {
         // if the state of the vending machine door is unlocked, then the log-out request shall be ignored.
         if (!machine.doorLocked) return;
 
-        this.userService
-          .usersLogoutPost()
-          .subscribe(() => {
-            this.electronService.ipcRenderer.invoke('refresh-machine-states');
-            this.electronService.ipcRenderer.invoke('refresh-user-states');
+        this.currentUser$
+          .subscribe(currentUser => {
+            this.userService.usersLogoutPost(currentUser).subscribe(() => {
+              this.electronService.ipcRenderer.invoke('refresh-all-states');
+            });
           })
           .unsubscribe();
 
@@ -132,29 +126,24 @@ export class MaintainerComponent implements OnInit {
     this.password = ($event.target as HTMLInputElement).value;
 
     if (this.password.length === 6) {
-      const currentUser = await firstValueFrom(
-        this.dataService.users$.pipe(map(users => users?.[0]))
-      );
-      currentUser.password = this.password;
-      this.userService.usersLoginPost(currentUser).subscribe({
-        complete: () => {
-          this.valid = true;
-          this.machine
-            .subscribe(machine => {
-              machine.doorLocked = false;
-              this.machineService
-                .machinesPut([machine])
-                .subscribe(() => {
+      this.currentUser$
+        .subscribe(currentUser => {
+          currentUser.password = this.password;
+          this.userService.usersLoginPost(currentUser).subscribe(() => {
+            this.valid = true;
+            this.machine$
+              .subscribe(machine => {
+                machine.doorLocked = false;
+                this.machineService.machinesPut([machine]).subscribe(() => {
                   this.electronService.ipcRenderer.invoke(
                     'refresh-machine-states'
                   );
-                })
-                .unsubscribe();
-            })
-            .unsubscribe();
-        },
-        error: () => (this.valid = false),
-      });
+                });
+              })
+              .unsubscribe();
+          });
+        })
+        .unsubscribe();
     }
   }
 }
