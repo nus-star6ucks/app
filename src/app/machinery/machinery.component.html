@@ -1,0 +1,104 @@
+<div>
+  <div class="px-6 mb-4 flex items-center space-x-2 -ml-1">
+    <svg-icon
+      src="assets/images/coffee-machine.svg"
+      [svgStyle]="{ 'width.px': 48 }"></svg-icon>
+    <span class="uppercase font-medium">Machinery Panel</span>
+    <span
+      *ngIf="machine$ | async"
+      class="tag-status"
+      [class.bg-red-600]="(machine$ | async).status === 'stuck'"
+      [class.bg-blue-600]="(machine$ | async).status === 'normal'"
+      [class.bg-gray-600]="(machine$ | async).status === 'unavailable'"
+      >Status: {{ (machine$ | async).status }}</span
+    >
+  </div>
+  <section class="px-6 grid gap-12 grid-cols-2">
+    <div class="space-y-6">
+      <section>
+        <h2 class="font-bold text-lg tracking-tighter mb-2 uppercase">
+          Quantity of Coins
+        </h2>
+        <div class="grid grid-cols-2 gap-2 mb-2">
+          <div
+            *ngFor="let coin of coins$ | async"
+            class="border-2 border-black rounded-md p-4 uppercase flex justify-between items-center">
+            <div class="flex items-center space-x-2 font-semibold">
+              <svg-icon
+                src="assets/images/finance.svg"
+                [svgStyle]="{ 'width.px': 36 }"></svg-icon>
+              <div class="flex items-center space-x-2">
+                <h2 class="text-2xl tracking-tighter">{{ coin.name }}</h2>
+              </div>
+            </div>
+            <input
+              type="number"
+              [readonly]="(machine$ | async)?.doorLocked"
+              min="0"
+              max="40"
+              class="led-small"
+              [value]="coin.quantity"
+              (input)="updateCoinQuantity(coin, $event)" />
+          </div>
+        </div>
+        <p
+          class="border-2 border-black rounded-md font-semibold py-2 px-4 uppercase">
+          Tips: 0 ≤ input value ≤ 40
+        </p>
+      </section>
+    </div>
+    <aside class="space-y-6">
+      <section>
+        <h2 class="font-bold text-lg tracking-tighter mb-2 uppercase">
+          Quantity of Cans
+        </h2>
+        <div class="grid grid-cols-2 gap-2 mb-2">
+          <div
+            *ngFor="let drink of drinks$ | async"
+            class="border-2 border-black rounded-md p-4 uppercase flex justify-between items-center">
+            <div class="flex items-center space-x-2 font-semibold">
+              <svg-icon
+                src="assets/images/cola.svg"
+                [svgStyle]="{ 'width.px': 36 }"></svg-icon>
+              <div class="flex items-center space-x-2">
+                <h2 class="text-xl tracking-tighter">{{ drink.name }}</h2>
+              </div>
+            </div>
+            <input
+              type="number"
+              min="0"
+              max="20"
+              class="led-small"
+              [readonly]="(machine$ | async)?.doorLocked"
+              [value]="drink.quantity"
+              (input)="updateDrinkQuantity(drink, $event)" />
+          </div>
+        </div>
+        <p
+          class="border-2 border-black rounded-md font-semibold py-2 px-4 uppercase">
+          Tips: 0 ≤ input value ≤ 20
+        </p>
+      </section>
+      <section>
+        <div class="flex justify-between items-center mb-2">
+          <h2 class="font-bold text-lg tracking-tighter uppercase">Misc</h2>
+        </div>
+        <div>
+          <button
+            class="font-semibold text-lg flex items-center"
+            (click)="switchDoorLocked()">
+            <svg-icon
+              *ngIf="!(machine$ | async)?.doorLocked"
+              src="assets/images/checkbox.svg"
+              [svgStyle]="{ 'width.px': 36 }"></svg-icon>
+            <svg-icon
+              *ngIf="(machine$ | async)?.doorLocked"
+              src="assets/images/check-correct.svg"
+              [svgStyle]="{ 'width.px': 36 }"></svg-icon>
+            <span class="ml-2">Door Locked</span>
+          </button>
+        </div>
+      </section>
+    </aside>
+  </section>
+</div>

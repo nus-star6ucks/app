@@ -1,0 +1,54 @@
+<div class="mx-auto max-w-md">
+  <header class="text-black py-4 mb-2">
+    <p class="text-center font-bold text-3xl tracking-tighter">
+      Simulator Control Panel
+    </p>
+  </header>
+  <div class="space-y-4 px-4">
+    <div class="grid grid-cols-2 gap-4">
+      <button
+        [disabled]="!fileLoaded"
+        [class.with-click]="fileLoaded"
+        class="btn-solid bg-white py-4 aspect-square w-full"
+        (click)="activateCustomerPanel()">
+        Activate Customer Panel
+      </button>
+      <button
+        [disabled]="!fileLoaded"
+        class="btn-solid bg-teal-100 py-4 aspect-square w-full"
+        [class.with-click]="fileLoaded"
+        (click)="activateMaintainancePanel()">
+        Activate Maintenance Panel
+      </button>
+      <button
+        [disabled]="!fileLoaded"
+        class="btn-solid bg-red-50 py-4 aspect-square w-full"
+        [class.with-click]="fileLoaded"
+        (click)="activateMachineryPanel()">
+        Activate Machinery Panel
+      </button>
+    </div>
+  </div>
+  <footer
+    class="fixed bottom-0 left-0 px-4 pb-4 space-y-2 max-w-md w-full mx-auto">
+    <button
+      type="button"
+      [class]="!fileLoaded ? blockButtonActiveClass : blockButtonInactiveClass"
+      [disabled]="fileLoaded"
+      (click)="filePath ? handleStartSimulation() : fileUpload.click()">
+      Begin Simulation
+    </button>
+    <button
+      [class]="fileLoaded ? blockButtonActiveClass : blockButtonInactiveClass"
+      [disabled]="!fileLoaded"
+      (click)="handleEndSimulation()">
+      End Simulation
+    </button>
+  </footer>
+  <input
+    accept="application/JSON"
+    type="file"
+    class="hidden"
+    (change)="onFileSelected($event)"
+    #fileUpload />
+</div>

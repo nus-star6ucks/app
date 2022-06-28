@@ -1,0 +1,162 @@
+<div>
+  <div class="px-6 mb-4 flex items-center space-x-2 -ml-1">
+    <svg-icon
+      src="assets/images/coffee-machine.svg"
+      [svgStyle]="{ 'width.px': 48 }"></svg-icon>
+    <span class="uppercase font-medium">Maintenance Panel</span>
+    <span
+      *ngIf="machine$ | async"
+      class="tag-status"
+      [class.bg-red-600]="(machine$ | async).status === 'stuck'"
+      [class.bg-blue-600]="(machine$ | async).status === 'normal'"
+      [class.bg-gray-600]="(machine$ | async).status === 'unavailable'"
+      >Status: {{ (machine$ | async).status }}</span
+    >
+  </div>
+  <section class="px-6 grid gap-12 grid-cols-2">
+    <div class="space-y-6">
+      <section>
+        <h2 class="font-bold text-lg tracking-tighter mb-2 uppercase">
+          Quantity of Coins Available
+        </h2>
+        <div class="space-y-3">
+          <button
+            *ngFor="let coin of coins$ | async"
+            [class.with-click]="allowToUse"
+            class="btn-solid w-full flex items-center justify-between space-x-2 px-4 py-2"
+            [disabled]="!allowToUse"
+            (click)="selectedCoin = coin">
+            <div class="flex items-center space-x-2">
+              <svg-icon
+                src="assets/images/finance.svg"
+                [svgStyle]="{ 'width.px': 36 }"></svg-icon>
+              <h2 class="text-2xl tracking-tighter">{{ coin.name }}</h2>
+            </div>
+            <span
+              *ngIf="selectedCoin && selectedCoin.id === coin.id"
+              class="led-small"
+              >{{ coin.quantity }}</span
+            >
+          </button>
+        </div>
+      </section>
+      <section>
+        <h2 class="font-bold text-lg tracking-tighter mb-2 uppercase">
+          Quantity of brands Available
+        </h2>
+        <div class="space-y-3">
+          <button
+            *ngFor="let drink of drinks$ | async"
+            [disabled]="!allowToUse"
+            [class.with-click]="allowToUse"
+            class="w-full btn-solid flex items-center justify-between space-x-2 px-4 py-2"
+            (click)="selectedDrink = drink">
+            <div class="flex items-center space-x-2">
+              <svg-icon
+                src="assets/images/cola.svg"
+                [svgStyle]="{ 'width.px': 36 }"></svg-icon>
+              <div class="flex items-center space-x-2">
+                <h2 class="text-2xl tracking-tighter">{{ drink.name }}</h2>
+              </div>
+            </div>
+            <span
+              *ngIf="selectedDrink && selectedDrink.id === drink.id"
+              class="led-small"
+              >{{ drink.quantity }}</span
+            >
+          </button>
+        </div>
+      </section>
+    </div>
+    <aside class="space-y-6">
+      <section class="space-y-2">
+        <div class="flex justify-between items-center">
+          <h2 class="font-bold text-lg tracking-tighter uppercase">Misc</h2>
+        </div>
+        <section class="grid grid-cols-2 gap-2">
+          <div class="border-2 border-black rounded-md p-4 uppercase">
+            <p class="font-bold tracking-tighter">Brand Price</p>
+            <span class="flex font-bold space-x-2 w-24">
+              <input
+                type="number"
+                class="px-1 text-sm w-full font-bold border-2 border-black rounded-md transition-all"
+                width="100%"
+                min="0"
+                [value]="selectedDrink?.price"
+                [readonly]="!allowToUse"
+                (input)="updateDrinkPrice(selectedDrink, $event)" />
+              <span>c</span>
+            </span>
+          </div>
+          <div class="border-2 border-black rounded-md p-4 uppercase">
+            <span class="font-bold">
+              <span class="tracking-tighter">Collect Cash</span>
+              <span *ngIf="cashCollected > -1" class="ml-2 led-small"
+                >{{ cashCollected }}c</span
+              >
+            </span>
+
+            <p class="font-bold mt-1">
+              <button
+                class="w-full btn-solid-small text-xs p-1"
+                [class.with-click]="allowToUse"
+                [disabled]="!allowToUse"
+                (click)="collectAllCash()">
+                Press to Collect All Cash
+              </button>
+            </p>
+          </div>
+          <div class="border-2 border-black rounded-md p-4 uppercase">
+            <span class="font-bold">
+              <span class="tracking-tighter">Total Cash</span>
+              <span
+                *ngIf="displayTotalCashHeld && totalCashHeld > -1"
+                class="ml-2 led-small text-center"
+                >{{ totalCashHeld }}c
+              </span>
+            </span>
+            <p class="font-bold mt-1">
+              <button
+                [disabled]="!allowToUse"
+                [class.with-click]="allowToUse"
+                class="w-full btn-solid-small text-xs p-1"
+                (click)="showTotalCashHeld()">
+                Show Total Cash Held
+              </button>
+            </p>
+          </div>
+          <button
+            [disabled]="!allowToUse"
+            [class.with-click]="allowToUse"
+            class="btn-solid bg-purple-100 py-4 rounded-md font-bold w-full"
+            (click)="pressHereWhenFinished()">
+            Press Here When Finished
+          </button>
+        </section>
+      </section>
+      <section class="space-y-2">
+        <div class="flex justify-between items-center">
+          <h2 class="font-bold text-lg tracking-tighter uppercase">Password</h2>
+        </div>
+        <div class="flex justify-between items-center">
+          <span
+            class="led bg-teal-600"
+            [class.opacity-30]="!valid || password.length < 6"
+            >Valid Password</span
+          >
+          <span
+            class="led bg-red-600"
+            [class.opacity-30]="valid || password.length < 6"
+            >Invalid Password</span
+          >
+        </div>
+        <input
+          type="password"
+          maxLength="6"
+          class="p-1 w-full font-bold border-2 border-black rounded-md transition-all"
+          width="100%"
+          (input)="validate($event)" />
+      </section>
+    </aside>
+  </section>
+</div>
