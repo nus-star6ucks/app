@@ -31,35 +31,35 @@
     ],
     "coins": [
         {
-            "id": 1,
+            "id": 3,
             "name": "5c",
             "value": 5,
             "quantity": 22,
             "weight": 1
         },
         {
-            "id": 2,
+            "id": 4,
             "name": "10c",
             "value": 10,
             "quantity": 37,
             "weight": 1
         },
         {
-            "id": 3,
+            "id": 5,
             "name": "20c",
             "value": 20,
             "quantity": 9,
             "weight": 1
         },
         {
-            "id": 4,
+            "id": 6,
             "name": "50c",
             "value": 50,
             "quantity": 12,
             "weight": 1
         },
         {
-            "id": 5,
+            "id": 7,
             "name": "$1",
             "value": 100,
             "quantity": 10,
