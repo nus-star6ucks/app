@@ -46,7 +46,8 @@ class DrinkServiceImplTest {
 
     Map<String, Object> response = purchase(storedCoins);
 
-    assertResponse(response, 25, true);
+    // Assert expectedCoinValue = 25 noChangeAvailable = false;
+    assertResponse(response, 25, false);
   }
 
   @Test
@@ -92,12 +93,12 @@ class DrinkServiceImplTest {
     assertResponse(response, 20, true);
   }
 
-  private void assertResponse(Map<String, Object> response, int expectedCoinValue, boolean expectedChange) {
+  private void assertResponse(Map<String, Object> response, int expectedCoinValue, boolean noAppropriateChange) {
     Integer collectCoins = (Integer) response.get("collectCoins");
     Boolean noChangeAvailable = (Boolean) response.get("noChangeAvailable");
 
     Assertions.assertEquals(expectedCoinValue, collectCoins);
-    Assertions.assertEquals(expectedChange, noChangeAvailable);
+    Assertions.assertEquals(noAppropriateChange, noChangeAvailable);
   }
 
   private Map<String, Object> purchase(List<Coin> storedCoins) {
