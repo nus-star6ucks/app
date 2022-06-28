@@ -39,6 +39,10 @@ export class MachineryComponent implements OnInit {
     this.machine$
       .subscribe(machine => {
         machine.doorLocked = !machine.doorLocked;
+
+        // handles stuck status...
+        if (machine.doorLocked) machine.status = 'normal';
+
         this.machineService.machinesPut([machine]).subscribe(() => {
           this.electronService.ipcRenderer.invoke('refresh-machine-states');
         });

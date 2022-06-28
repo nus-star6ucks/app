@@ -1,8 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { map } from 'rxjs';
+import { ElectronService } from '../core/services';
 import { DataService } from '../data.service';
-import { Coin, CoinService, Drink, DrinkService } from '../http';
+import {
+  Coin,
+  CoinService,
+  Drink,
+  DrinkService,
+  MachineService,
+} from '../http';
 
 @Component({
   selector: 'app-customer',
@@ -14,6 +21,8 @@ export class CustomerComponent implements OnInit {
     private readonly coinService: CoinService,
     private readonly drinkService: DrinkService,
     private readonly dataService: DataService,
+    private readonly machineService: MachineService,
+    private readonly electronService: ElectronService,
     private readonly titleService: Title
   ) {
     titleService.setTitle('VMCS - Customer Panel');
@@ -47,6 +56,8 @@ export class CustomerComponent implements OnInit {
   collectCoinsDisplay = 0;
   collectCanHereDisplay = 'NO CAN';
   noChangeAvailableDisplay = false;
+
+  faultOnNextTx = false;
 
   get totalMoneyInserted(): number {
     return this.collectedCoins.reduce(
@@ -97,7 +108,29 @@ export class CustomerComponent implements OnInit {
         if (!noChangeAvailable) {
           this.collectCanHereDisplay = this.selectedDrink.name;
         }
+
+        if (this.faultOnNextTx) this.revertTx();
       });
+  }
+
+  revertTx() {
+    this.drinkService.drinksPurchaseUndoPost().subscribe(() => {
+      this.machine$
+        .subscribe(machine => {
+          machine.status = 'stuck';
+          this.collectCanHereDisplay = 'STUCK';
+          this.machineService.machinesPut([machine]).subscribe(() => {
+            this.electronService.ipcRenderer.invoke('refresh-machine-states');
+
+            this.collectCoinsDisplay = this.collectedCoins.reduce(
+              (acc, curr) => (acc += curr.value * curr.quantity),
+              0
+            );
+            this.selectedDrink = null;
+          });
+        })
+        .unsubscribe();
+    });
   }
 
   terminateAndReturnCash() {
