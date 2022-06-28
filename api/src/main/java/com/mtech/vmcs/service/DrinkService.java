@@ -19,4 +19,6 @@ public interface DrinkService {
   void deleteDrinks(List<Long> drinkIds);
 
   Map<String, Object> purchase(PurchaseOrder purchaseOrder);
+
+  void undoPurchase();
 }

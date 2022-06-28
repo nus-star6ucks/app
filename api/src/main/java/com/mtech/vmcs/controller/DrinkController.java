@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin
 @Controller
@@ -46,7 +47,13 @@ public class DrinkController {
   }
 
   @PostMapping("/purchase")
-  public ResponseEntity purchase(@RequestBody PurchaseOrder purchaseOrder) {
+  public ResponseEntity<Map<String, Object>> purchase(@RequestBody PurchaseOrder purchaseOrder) {
     return new ResponseEntity<>(drinkService.purchase(purchaseOrder), HttpStatus.OK);
+  }
+
+  @PostMapping("/purchase/undo")
+  public ResponseEntity<PurchaseOrder> undoPurchase() {
+    drinkService.undoPurchase();
+    return new ResponseEntity<>(HttpStatus.OK);
   }
 }
