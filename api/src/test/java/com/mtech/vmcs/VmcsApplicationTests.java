@@ -11,13 +11,6 @@ import org.springframework.test.context.ActiveProfiles;
 @SpringBootTest
 class VmcsApplicationTests {
 
-  @Autowired private DrinkRepository drinkRepository;
-
   @Test
-  void contextLoads() {
-
-    Drink drink = new Drink(123L, "Fanta", 85, 20, 1);
-    drinkRepository.save(drink);
-    System.out.println("Success");
-  }
+  void contextLoads() {}
 }
