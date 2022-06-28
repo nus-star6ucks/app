@@ -6,6 +6,7 @@ import com.mtech.vmcs.model.entity.PurchaseOrder;
 import com.mtech.vmcs.repository.DrinkRepository;
 import com.mtech.vmcs.service.CoinService;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -20,11 +21,14 @@ import static org.mockito.Mockito.when;
 class DrinkServiceImplTest {
 
   private static final Coin COIN_5C = new Coin(1L, "5c", 5, 1, 1F);
-  private static final Coin COIN_10C = new Coin(10L, "10c", 10, 1, 1F);
-  private static final Coin COIN_20C = new Coin(20L, "20c", 20, 1, 1F);
-  private static final Coin COIN_$1 = new Coin(100L, "100c", 100, 1, 1F);
+  private static final Coin COIN_10C = new Coin(2L, "10c", 10, 1, 1F);
+  private static final Coin COIN_20C = new Coin(3L, "20c", 20, 1, 1F);
+  private static final Coin COIN_50C = new Coin(4L, "50c", 50, 1, 1F);
+  private static final Coin COIN_$1 = new Coin(5L, "$1", 100, 1, 1F);
   private static final long DRINK_ID = 1L;
   private Drink drink = new Drink(DRINK_ID, "Coca-Cola", 75, 1, 1);
+
+  List<Coin> storedCoins;
 
   @Mock
   DrinkRepository drinkRepository;
@@ -35,16 +39,20 @@ class DrinkServiceImplTest {
   @InjectMocks
   DrinkServiceImpl drinkService;
 
+  @BeforeEach
+  void setUp() {
+    storedCoins = Arrays.asList(COIN_5C, COIN_10C, COIN_20C, COIN_50C, COIN_$1);
+  }
+
   @Test
   public void testHasEnoughCoins() {
-    /* Stored coins: 5c + 20c
+    /*  Stored coins: 5c + 10c + 20c + 50c + $1
      *  Drink price: 75c
      *  Insert coins: $1
      * */
 
-    List<Coin> storedCoins = Arrays.asList(COIN_5C, COIN_20C);
-
-    Map<String, Object> response = purchase(storedCoins);
+    drink.setPrice(75);
+    Map<String, Object> response = purchase();
 
     // Assert expectedCoinValue = 25 noChangeAvailable = false;
     assertResponse(response, 25, false);
@@ -52,43 +60,26 @@ class DrinkServiceImplTest {
 
   @Test
   public void testNoChangeNeeded() {
-    /* Stored coins: 0c
+    /*  Stored coins: 5c + 10c + 20c + 50c + $1
      *  Drink price: 100c
      *  Insert coins: $1
      * */
 
-    List<Coin> storedCoins = Collections.emptyList();
     drink.setPrice(100);
-
-    Map<String, Object> response = purchase(storedCoins);
+    Map<String, Object> response = purchase();
 
     assertResponse(response, 0, false);
   }
 
   @Test
-  public void testNotEnoughCoins() {
-    /* Stored coins: 5c
-     *  Drink price: 75c
-     *  Insert coins: $1
-     * */
-
-    List<Coin> storedCoins = Collections.singletonList(COIN_5C);
-
-    Map<String, Object> response = purchase(storedCoins);
-
-    assertResponse(response, 5, true);
-  }
-
-  @Test
   public void testNoEnoughCoinsOfAppropriateDenominations() {
-    /* Stored coins: 10c + 20c
-     *  Drink price: 75c
+    /* Stored coins: 5c + 10c + 20c + 50c + $1
+     *  Drink price: 80c
      *  Insert coins: $1
      * */
 
-    List<Coin> storedCoins = Arrays.asList(COIN_10C, COIN_20C);
-
-    Map<String, Object> response = purchase(storedCoins);
+    drink.setPrice(80);
+    Map<String, Object> response = purchase();
 
     assertResponse(response, 20, true);
   }
@@ -101,7 +92,7 @@ class DrinkServiceImplTest {
     Assertions.assertEquals(noAppropriateChange, noChangeAvailable);
   }
 
-  private Map<String, Object> purchase(List<Coin> storedCoins) {
+  private Map<String, Object> purchase() {
     // Mock stored coins and drinks
     when(coinService.getAllCoins()).thenReturn(storedCoins);
 
@@ -109,12 +100,13 @@ class DrinkServiceImplTest {
     when(drinkRepository.findAll()).thenReturn(drinks);
 
     // Mock inserted coins
-    List<Coin> insertedCoins = Collections.singletonList(COIN_$1);
+
+    Coin insertedCoins = new Coin(5L, "$1", 100, 1, 1F);
 
     // Create purchase order
     PurchaseOrder order = PurchaseOrder.builder()
       .drinkId(DRINK_ID)
-      .coins(insertedCoins)
+      .coins(Collections.singletonList(insertedCoins))
       .build();
 
     // Purchase
