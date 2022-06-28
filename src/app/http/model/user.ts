@@ -15,7 +15,7 @@ export interface User {
   /**
    * ex. Maintainer
    */
-  role: string;
+  role: User.RoleEnum;
   /**
    * 6 alphanumeric chars
    */
@@ -23,5 +23,18 @@ export interface User {
   /**
    * [\'login\', \'logout\']
    */
-  status: string;
+  status: User.StatusEnum;
+}
+export namespace User {
+  export type RoleEnum = 'Customer' | 'Maintainer' | 'Controller';
+  export const RoleEnum = {
+    Customer: 'Customer' as RoleEnum,
+    Maintainer: 'Maintainer' as RoleEnum,
+    Controller: 'Controller' as RoleEnum,
+  };
+  export type StatusEnum = 'login' | 'logout';
+  export const StatusEnum = {
+    Login: 'login' as StatusEnum,
+    Logout: 'logout' as StatusEnum,
+  };
 }

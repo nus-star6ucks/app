@@ -24,7 +24,7 @@ import { CustomHttpParameterCodec } from '../encoder';
 import { Observable } from 'rxjs';
 
 import { Drink } from '../model/models';
-import { InlineObject1 } from '../model/models';
+import { InlineObject } from '../model/models';
 import { InlineResponse200 } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS } from '../variables';
@@ -320,30 +320,30 @@ export class DrinkService {
 
   /**
    * Purchase
-   * @param inlineObject1
+   * @param inlineObject
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public drinksPurchasePost(
-    inlineObject1?: InlineObject1,
+    inlineObject?: InlineObject,
     observe?: 'body',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' }
   ): Observable<InlineResponse200>;
   public drinksPurchasePost(
-    inlineObject1?: InlineObject1,
+    inlineObject?: InlineObject,
     observe?: 'response',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' }
   ): Observable<HttpResponse<InlineResponse200>>;
   public drinksPurchasePost(
-    inlineObject1?: InlineObject1,
+    inlineObject?: InlineObject,
     observe?: 'events',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' }
   ): Observable<HttpEvent<InlineResponse200>>;
   public drinksPurchasePost(
-    inlineObject1?: InlineObject1,
+    inlineObject?: InlineObject,
     observe: any = 'body',
     reportProgress: boolean = false,
     options?: { httpHeaderAccept?: 'application/json' }
@@ -380,7 +380,7 @@ export class DrinkService {
 
     return this.httpClient.post<InlineResponse200>(
       `${this.configuration.basePath}/drinks/purchase`,
-      inlineObject1,
+      inlineObject,
       {
         responseType: <any>responseType,
         withCredentials: this.configuration.withCredentials,

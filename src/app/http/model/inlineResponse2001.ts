@@ -15,15 +15,33 @@ export interface InlineResponse2001 {
   /**
    * ex. $1, 50 c
    */
-  name: string;
+  name: InlineResponse2001.NameEnum;
   /**
    * face value ($1 for 100)
    */
-  value: number;
+  value: InlineResponse2001.ValueEnum;
   /**
    * stock
    */
   quantity: number;
   weight: number;
   isValid: boolean;
+}
+export namespace InlineResponse2001 {
+  export type NameEnum = '5c' | '10c' | '20c' | '50c' | '$1';
+  export const NameEnum = {
+    _5c: '5c' as NameEnum,
+    _10c: '10c' as NameEnum,
+    _20c: '20c' as NameEnum,
+    _50c: '50c' as NameEnum,
+    _1: '$1' as NameEnum,
+  };
+  export type ValueEnum = 5 | 10 | 20 | 50 | 100;
+  export const ValueEnum = {
+    NUMBER_5: 5 as ValueEnum,
+    NUMBER_10: 10 as ValueEnum,
+    NUMBER_20: 20 as ValueEnum,
+    NUMBER_50: 50 as ValueEnum,
+    NUMBER_100: 100 as ValueEnum,
+  };
 }

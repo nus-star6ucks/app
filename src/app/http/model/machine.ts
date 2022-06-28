@@ -17,4 +17,8 @@ export interface Machine {
    */
   name: string;
   doorLocked: boolean;
+  /**
+   * e.g., normal, unavailable, stuck
+   */
+  status: string;
 }

@@ -253,25 +253,25 @@ export class UserService {
     inlineObject2?: InlineObject2,
     observe?: 'body',
     reportProgress?: boolean,
-    options?: { httpHeaderAccept?: 'application/json' }
+    options?: { httpHeaderAccept?: '*/*' | 'application/json' }
   ): Observable<object>;
   public usersLoginPost(
     inlineObject2?: InlineObject2,
     observe?: 'response',
     reportProgress?: boolean,
-    options?: { httpHeaderAccept?: 'application/json' }
+    options?: { httpHeaderAccept?: '*/*' | 'application/json' }
   ): Observable<HttpResponse<object>>;
   public usersLoginPost(
     inlineObject2?: InlineObject2,
     observe?: 'events',
     reportProgress?: boolean,
-    options?: { httpHeaderAccept?: 'application/json' }
+    options?: { httpHeaderAccept?: '*/*' | 'application/json' }
   ): Observable<HttpEvent<object>>;
   public usersLoginPost(
     inlineObject2?: InlineObject2,
     observe: any = 'body',
     reportProgress: boolean = false,
-    options?: { httpHeaderAccept?: 'application/json' }
+    options?: { httpHeaderAccept?: '*/*' | 'application/json' }
   ): Observable<any> {
     let headers = this.defaultHeaders;
 
@@ -279,7 +279,7 @@ export class UserService {
       options && options.httpHeaderAccept;
     if (httpHeaderAcceptSelected === undefined) {
       // to determine the Accept header
-      const httpHeaderAccepts: string[] = ['application/json'];
+      const httpHeaderAccepts: string[] = ['*/*', 'application/json'];
       httpHeaderAcceptSelected =
         this.configuration.selectHeaderAccept(httpHeaderAccepts);
     }
@@ -327,25 +327,25 @@ export class UserService {
     user?: User,
     observe?: 'body',
     reportProgress?: boolean,
-    options?: { httpHeaderAccept?: 'application/json' }
+    options?: { httpHeaderAccept?: '*/*' }
   ): Observable<object>;
   public usersLogoutPost(
     user?: User,
     observe?: 'response',
     reportProgress?: boolean,
-    options?: { httpHeaderAccept?: 'application/json' }
+    options?: { httpHeaderAccept?: '*/*' }
   ): Observable<HttpResponse<object>>;
   public usersLogoutPost(
     user?: User,
     observe?: 'events',
     reportProgress?: boolean,
-    options?: { httpHeaderAccept?: 'application/json' }
+    options?: { httpHeaderAccept?: '*/*' }
   ): Observable<HttpEvent<object>>;
   public usersLogoutPost(
     user?: User,
     observe: any = 'body',
     reportProgress: boolean = false,
-    options?: { httpHeaderAccept?: 'application/json' }
+    options?: { httpHeaderAccept?: '*/*' }
   ): Observable<any> {
     let headers = this.defaultHeaders;
 
@@ -353,7 +353,7 @@ export class UserService {
       options && options.httpHeaderAccept;
     if (httpHeaderAcceptSelected === undefined) {
       // to determine the Accept header
-      const httpHeaderAccepts: string[] = ['application/json'];
+      const httpHeaderAccepts: string[] = ['*/*'];
       httpHeaderAcceptSelected =
         this.configuration.selectHeaderAccept(httpHeaderAccepts);
     }

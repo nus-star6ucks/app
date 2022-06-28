@@ -279,25 +279,25 @@ export class MachineService {
     machine?: Array<Machine>,
     observe?: 'body',
     reportProgress?: boolean,
-    options?: { httpHeaderAccept?: 'application/json' }
+    options?: { httpHeaderAccept?: '*/*' }
   ): Observable<object>;
   public machinesPost(
     machine?: Array<Machine>,
     observe?: 'response',
     reportProgress?: boolean,
-    options?: { httpHeaderAccept?: 'application/json' }
+    options?: { httpHeaderAccept?: '*/*' }
   ): Observable<HttpResponse<object>>;
   public machinesPost(
     machine?: Array<Machine>,
     observe?: 'events',
     reportProgress?: boolean,
-    options?: { httpHeaderAccept?: 'application/json' }
+    options?: { httpHeaderAccept?: '*/*' }
   ): Observable<HttpEvent<object>>;
   public machinesPost(
     machine?: Array<Machine>,
     observe: any = 'body',
     reportProgress: boolean = false,
-    options?: { httpHeaderAccept?: 'application/json' }
+    options?: { httpHeaderAccept?: '*/*' }
   ): Observable<any> {
     let headers = this.defaultHeaders;
 
@@ -305,7 +305,7 @@ export class MachineService {
       options && options.httpHeaderAccept;
     if (httpHeaderAcceptSelected === undefined) {
       // to determine the Accept header
-      const httpHeaderAccepts: string[] = ['application/json'];
+      const httpHeaderAccepts: string[] = ['*/*'];
       httpHeaderAcceptSelected =
         this.configuration.selectHeaderAccept(httpHeaderAccepts);
     }

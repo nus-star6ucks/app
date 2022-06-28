@@ -15,7 +15,7 @@ export interface InlineObject2 {
   /**
    * ex. Maintainer
    */
-  role: string;
+  role: InlineObject2.RoleEnum;
   /**
    * 6 alphanumeric chars
    */
@@ -23,5 +23,18 @@ export interface InlineObject2 {
   /**
    * [\'login\', \'logout\']
    */
-  status: string;
+  status: InlineObject2.StatusEnum;
+}
+export namespace InlineObject2 {
+  export type RoleEnum = 'Customer' | 'Maintainer' | 'Controller';
+  export const RoleEnum = {
+    Customer: 'Customer' as RoleEnum,
+    Maintainer: 'Maintainer' as RoleEnum,
+    Controller: 'Controller' as RoleEnum,
+  };
+  export type StatusEnum = 'login' | 'logout';
+  export const StatusEnum = {
+    Login: 'login' as StatusEnum,
+    Logout: 'logout' as StatusEnum,
+  };
 }

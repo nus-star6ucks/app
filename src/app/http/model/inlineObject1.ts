@@ -9,12 +9,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { Coin } from './coin';
 
 export interface InlineObject1 {
-  drinkId: number;
   /**
-   * 合并 object 的 quantity
+   * the file path of JSON file
    */
-  coins: Array<Coin>;
+  filePath?: string;
 }
