@@ -3,7 +3,15 @@
     <svg-icon
       src="assets/images/coffee-machine.svg"
       [svgStyle]="{ 'width.px': 48 }"></svg-icon>
-    <span class="uppercase font-medium">{{ (machine | async)?.name }}</span>
+    <span class="uppercase font-medium">{{ (machine$ | async)?.name }}</span>
+    <span
+      *ngIf="machine$ | async"
+      class="tag-status"
+      [class.bg-red-600]="(machine$ | async).status === 'stuck'"
+      [class.bg-blue-600]="(machine$ | async).status === 'normal'"
+      [class.bg-gray-600]="(machine$ | async).status === 'unavailable'"
+      >Status: {{ (machine$ | async).status }}</span
+    >
   </div>
   <section class="px-6 grid gap-12 grid-cols-2">
     <div class="space-y-6">
@@ -13,8 +21,8 @@
         </h2>
         <div class="space-y-3">
           <button
-            *ngFor="let drink of drinks | async"
-            [disabled]="drink.quantity === 0 || !(machine | async)?.doorLocked"
+            *ngFor="let drink of drinks$ | async"
+            [disabled]="drink.quantity === 0 || !(machine$ | async)?.doorLocked"
             class="w-full cursor-pointer btn-solid flex items-center justify-between space-x-2 p-4"
             [class.active]="selectedDrink && drink.id === selectedDrink.id"
             (click)="selectDrink(drink)"
@@ -51,13 +59,17 @@
         </div>
         <div class="flex space-x-2 justify-between">
           <button
-            *ngFor="let coin of coins | async"
+            *ngFor="let coin of coins$ | async"
             class="btn-solid-small px-2 h-10"
             [class.with-click]="
-              !(!selectedDrink || !(machine | async)?.doorLocked || txCompleted)
+              !(
+                !selectedDrink ||
+                !(machine$ | async)?.doorLocked ||
+                txCompleted
+              )
             "
             [disabled]="
-              !selectedDrink || !(machine | async)?.doorLocked || txCompleted
+              !selectedDrink || !(machine$ | async)?.doorLocked || txCompleted
             "
             (click)="insertCoin(coin)">
             {{ coin.name }}
@@ -75,9 +87,9 @@
             <button
               class="btn-solid-small text-xs p-1"
               [class.with-click]="
-                !(txCompleted || !(machine | async)?.doorLocked)
+                !(txCompleted || !(machine$ | async)?.doorLocked)
               "
-              [disabled]="txCompleted || !(machine | async)?.doorLocked"
+              [disabled]="txCompleted || !(machine$ | async)?.doorLocked"
               (click)="terminateAndReturnCash()">
               Terminate and Return Cash
             </button>

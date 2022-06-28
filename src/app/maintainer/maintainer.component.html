@@ -4,6 +4,14 @@
       src="assets/images/coffee-machine.svg"
       [svgStyle]="{ 'width.px': 48 }"></svg-icon>
     <span class="uppercase font-medium">Maintenance Panel</span>
+    <span
+      *ngIf="machine$ | async"
+      class="tag-status"
+      [class.bg-red-600]="(machine$ | async).status === 'stuck'"
+      [class.bg-blue-600]="(machine$ | async).status === 'normal'"
+      [class.bg-gray-600]="(machine$ | async).status === 'unavailable'"
+      >Status: {{ (machine$ | async).status }}</span
+    >
   </div>
   <section class="px-6 grid gap-12 grid-cols-2">
     <div class="space-y-6">

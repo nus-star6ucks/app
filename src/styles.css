@@ -167,6 +167,10 @@ body {
   @apply text-white px-1 rounded-sm font-semibold uppercase;
 }
 
+.tag-status {
+  @apply uppercase font-medium text-white px-2 text-sm
+}
+
 input[type='number'] {
   -moz-appearance:textfield;
 }

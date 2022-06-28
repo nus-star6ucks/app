@@ -20,14 +20,14 @@ export class CustomerComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.machine.subscribe(machine => {
+    this.machine$.subscribe(machine => {
       if (!machine?.doorLocked) this.terminateAndReturnCash();
     });
   }
 
-  machine = this.dataService.machines$.pipe(map(machines => machines?.[0]));
-  drinks = this.dataService.drinks$;
-  coins = this.dataService.coins$.pipe(
+  machine$ = this.dataService.machines$.pipe(map(machines => machines?.[0]));
+  drinks$ = this.dataService.drinks$;
+  coins$ = this.dataService.coins$.pipe(
     map(coins => [
       ...coins,
       {
@@ -39,7 +39,7 @@ export class CustomerComponent implements OnInit {
       },
     ])
   );
-  users = this.dataService.users$;
+  users$ = this.dataService.users$;
 
   selectedDrink: Drink | null = null;
   invalidCoin = false;
@@ -64,7 +64,7 @@ export class CustomerComponent implements OnInit {
     this.selectedDrink = drink;
   }
 
-  insertCoin(coin: Coin) {
+  insertCoin(coin: Coin | any) {
     this.coinService.coinsCheckCoinPost(coin).subscribe(async ({ isValid }) => {
       if (!isValid) {
         this.invalidCoin = true;

@@ -2,15 +2,9 @@ import { ChangeDetectorRef, Component, NgZone, OnInit } from '@angular/core';
 import {
   BehaviorSubject,
   concatMap,
-  from,
-  interval,
-  map,
-  Observable,
   retry,
-  Subject,
   Subscription,
   switchMap,
-  takeWhile,
   timer,
 } from 'rxjs';
 import { ElectronService } from './core/services';
