@@ -12,6 +12,9 @@ import com.mtech.vmcs.service.CoinService;
 import com.mtech.vmcs.service.DrinkService;
 import com.mtech.vmcs.service.MachineService;
 import com.mtech.vmcs.service.UserService;
+import com.mtech.vmcs.service.impl.initialfiledata.IInitialFileDataAdapter;
+import com.mtech.vmcs.service.impl.initialfiledata.InitialJsonFileDataAdapter;
+import com.mtech.vmcs.service.impl.initialfiledata.InitialXmlFileDataAdapter;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -55,13 +58,17 @@ public class MachineServiceImpl implements MachineService {
   @SneakyThrows
   @Override
   public void startSimulation(String filePath) {
-    JsonNode jsonNode = objectMapper.readTree(new File(filePath));
+    IInitialFileDataAdapter fileDataAdapter = new InitialJsonFileDataAdapter(filePath);
+//    or: IInitialFileDataAdapter alternativeFileDataAdapter = new InitialXmlFileDataAdapter(filePath);
+
+    JsonNode jsonNode = fileDataAdapter.read();
+
     List<User> users = objectMapper.readerForListOf(User.class).readValue(jsonNode.get("users"));
     List<Machine> machines =
-        objectMapper.readerForListOf(Machine.class).readValue(jsonNode.get("machines"));
+      objectMapper.readerForListOf(Machine.class).readValue(jsonNode.get("machines"));
     List<Coin> coins = objectMapper.readerForListOf(Coin.class).readValue(jsonNode.get("coins"));
     List<Drink> drinks =
-        objectMapper.readerForListOf(Drink.class).readValue(jsonNode.get("drinks"));
+      objectMapper.readerForListOf(Drink.class).readValue(jsonNode.get("drinks"));
 
     userService.createUsers(users);
     createMachines(machines);
@@ -72,11 +79,15 @@ public class MachineServiceImpl implements MachineService {
   @SneakyThrows
   @Override
   public void stopSimulation(String filePath) {
+    IInitialFileDataAdapter fileDataAdapter = new InitialJsonFileDataAdapter(filePath);
+//    IInitialFileDataAdapter alternativeFileDataAdapter = new InitialXmlFileDataAdapter(filePath);
+
     ObjectNode objectNode = objectMapper.createObjectNode();
     objectNode.set("users", objectMapper.valueToTree(userService.getAllUsers()));
     objectNode.set("machines", objectMapper.valueToTree(getAllMachines()));
     objectNode.set("coins", objectMapper.valueToTree(coinService.getAllCoins()));
     objectNode.set("drinks", objectMapper.valueToTree(drinkService.getAllDrinks()));
-    objectMapper.writeValue(new File(filePath), objectNode);
+
+    fileDataAdapter.write(objectNode);
   }
 }
