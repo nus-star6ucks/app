@@ -20,11 +20,11 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class DrinkServiceImplTest {
 
-  private static final Coin COIN_5C = new Coin(1L, "5c", 5, 1, 1F);
-  private static final Coin COIN_10C = new Coin(2L, "10c", 10, 1, 1F);
-  private static final Coin COIN_20C = new Coin(3L, "20c", 20, 1, 1F);
-  private static final Coin COIN_50C = new Coin(4L, "50c", 50, 1, 1F);
-  private static final Coin COIN_$1 = new Coin(5L, "$1", 100, 1, 1F);
+  private Coin COIN_5C = new Coin(1L, "5c", 5, 1, 1F);
+  private Coin COIN_10C = new Coin(2L, "10c", 10, 1, 1F);
+  private Coin COIN_20C = new Coin(3L, "20c", 20, 1, 1F);
+  private Coin COIN_50C = new Coin(4L, "50c", 50, 1, 1F);
+  private Coin COIN_$1 = new Coin(5L, "$1", 100, 1, 1F);
   private static final long DRINK_ID = 1L;
   private Drink drink = new Drink(DRINK_ID, "Coca-Cola", 75, 1, 1);
 
@@ -73,12 +73,13 @@ class DrinkServiceImplTest {
 
   @Test
   public void testNoEnoughCoinsOfAppropriateDenominations() {
-    /* Stored coins: 5c + 10c + 20c + 50c + $1
-     *  Drink price: 80c
+    /* Stored coins: 10c + 20c + 50c + $1
+     *  Drink price: 75
      *  Insert coins: $1
      * */
 
-    drink.setPrice(80);
+    COIN_5C.setQuantity(0);
+    drink.setPrice(75);
     Map<String, Object> response = purchase();
 
     assertResponse(response, 20, true);
