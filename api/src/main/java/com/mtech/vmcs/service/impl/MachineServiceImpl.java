@@ -15,7 +15,9 @@ import com.mtech.vmcs.service.UserService;
 import com.mtech.vmcs.service.impl.initialfiledata.IInitialFileDataAdapter;
 import com.mtech.vmcs.service.impl.initialfiledata.InitialFileDataBean;
 import com.mtech.vmcs.service.impl.initialfiledata.InitialJsonFileDataAdapter;
+import com.mtech.vmcs.service.impl.initialfiledata.InitialYamlFileDataAdapter;
 import lombok.SneakyThrows;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -56,8 +58,8 @@ public class MachineServiceImpl implements MachineService {
   @SneakyThrows
   @Override
   public void startSimulation(String filePath) {
-    IInitialFileDataAdapter fileDataAdapter = new InitialJsonFileDataAdapter(filePath);
-//    or: IInitialFileDataAdapter alternativeFileDataAdapter = new InitialXmlFileDataAdapter(filePath);
+    String ext = FilenameUtils.getExtension(filePath);
+    IInitialFileDataAdapter fileDataAdapter = ext.equals("yaml") ? new InitialYamlFileDataAdapter(filePath) : new InitialJsonFileDataAdapter(filePath);
 
     InitialFileDataBean initialFileData = fileDataAdapter.read();
 
@@ -70,8 +72,8 @@ public class MachineServiceImpl implements MachineService {
   @SneakyThrows
   @Override
   public void stopSimulation(String filePath) {
-    IInitialFileDataAdapter fileDataAdapter = new InitialJsonFileDataAdapter(filePath);
-//    or: IInitialFileDataAdapter alternativeFileDataAdapter = new InitialXmlFileDataAdapter(filePath);
+    String ext = FilenameUtils.getExtension(filePath);
+    IInitialFileDataAdapter fileDataAdapter = ext.equals("yaml") ? new InitialYamlFileDataAdapter(filePath) : new InitialJsonFileDataAdapter(filePath);
 
     InitialFileDataBean initialFileData = new InitialFileDataBean();
     initialFileData.setMachines(getAllMachines());
