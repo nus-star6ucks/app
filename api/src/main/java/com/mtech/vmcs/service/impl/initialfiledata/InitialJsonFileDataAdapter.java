@@ -15,16 +15,14 @@ public class InitialJsonFileDataAdapter implements IInitialFileDataAdapter {
   }
 
   @Override
-  public JsonNode read() throws IOException {
+  public InitialFileDataBean read() throws IOException {
     ObjectMapper objectMapper = new ObjectMapper();
-
-    return objectMapper.readTree(this.file);
+    return objectMapper.readValue(this.file, InitialFileDataBean.class);
   }
 
   @Override
-  public void write(ObjectNode objectNode) throws IOException {
+  public void write(InitialFileDataBean initialFileData) throws IOException {
     ObjectMapper objectMapper = new ObjectMapper();
-
-    objectMapper.writeValue(this.file, objectNode);
+    objectMapper.writeValue(this.file, initialFileData);
   }
 }

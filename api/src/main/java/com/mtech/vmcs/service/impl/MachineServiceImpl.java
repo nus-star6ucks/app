@@ -13,14 +13,13 @@ import com.mtech.vmcs.service.DrinkService;
 import com.mtech.vmcs.service.MachineService;
 import com.mtech.vmcs.service.UserService;
 import com.mtech.vmcs.service.impl.initialfiledata.IInitialFileDataAdapter;
+import com.mtech.vmcs.service.impl.initialfiledata.InitialFileDataBean;
 import com.mtech.vmcs.service.impl.initialfiledata.InitialJsonFileDataAdapter;
-import com.mtech.vmcs.service.impl.initialfiledata.InitialXmlFileDataAdapter;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -29,7 +28,6 @@ import java.util.stream.StreamSupport;
 public class MachineServiceImpl implements MachineService {
 
   @Autowired private MachineRepository machineRepository;
-  @Autowired private ObjectMapper objectMapper;
   @Autowired @Lazy private UserService userService;
   @Autowired @Lazy private DrinkService drinkService;
   @Autowired @Lazy private CoinService coinService;
@@ -61,33 +59,26 @@ public class MachineServiceImpl implements MachineService {
     IInitialFileDataAdapter fileDataAdapter = new InitialJsonFileDataAdapter(filePath);
 //    or: IInitialFileDataAdapter alternativeFileDataAdapter = new InitialXmlFileDataAdapter(filePath);
 
-    JsonNode jsonNode = fileDataAdapter.read();
+    InitialFileDataBean initialFileData = fileDataAdapter.read();
 
-    List<User> users = objectMapper.readerForListOf(User.class).readValue(jsonNode.get("users"));
-    List<Machine> machines =
-      objectMapper.readerForListOf(Machine.class).readValue(jsonNode.get("machines"));
-    List<Coin> coins = objectMapper.readerForListOf(Coin.class).readValue(jsonNode.get("coins"));
-    List<Drink> drinks =
-      objectMapper.readerForListOf(Drink.class).readValue(jsonNode.get("drinks"));
-
-    userService.createUsers(users);
-    createMachines(machines);
-    coinService.createCoins(coins);
-    drinkService.createDrinks(drinks);
+    userService.createUsers(initialFileData.getUsers());
+    createMachines(initialFileData.getMachines());
+    coinService.createCoins(initialFileData.getCoins());
+    drinkService.createDrinks(initialFileData.getDrinks());
   }
 
   @SneakyThrows
   @Override
   public void stopSimulation(String filePath) {
     IInitialFileDataAdapter fileDataAdapter = new InitialJsonFileDataAdapter(filePath);
-//    IInitialFileDataAdapter alternativeFileDataAdapter = new InitialXmlFileDataAdapter(filePath);
+//    or: IInitialFileDataAdapter alternativeFileDataAdapter = new InitialXmlFileDataAdapter(filePath);
 
-    ObjectNode objectNode = objectMapper.createObjectNode();
-    objectNode.set("users", objectMapper.valueToTree(userService.getAllUsers()));
-    objectNode.set("machines", objectMapper.valueToTree(getAllMachines()));
-    objectNode.set("coins", objectMapper.valueToTree(coinService.getAllCoins()));
-    objectNode.set("drinks", objectMapper.valueToTree(drinkService.getAllDrinks()));
+    InitialFileDataBean initialFileData = new InitialFileDataBean();
+    initialFileData.setMachines(getAllMachines());
+    initialFileData.setCoins(coinService.getAllCoins());
+    initialFileData.setDrinks(drinkService.getAllDrinks());
+    initialFileData.setUsers(userService.getAllUsers());
 
-    fileDataAdapter.write(objectNode);
+    fileDataAdapter.write(initialFileData);
   }
 }

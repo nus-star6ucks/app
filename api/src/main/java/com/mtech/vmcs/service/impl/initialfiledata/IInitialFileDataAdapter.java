@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.IOException;
 
 public interface IInitialFileDataAdapter {
-  JsonNode read() throws IOException;
+  InitialFileDataBean read() throws IOException;
 
-  void write(ObjectNode objectNode) throws IOException;
+  void write(InitialFileDataBean initialFileData) throws IOException;
 }
