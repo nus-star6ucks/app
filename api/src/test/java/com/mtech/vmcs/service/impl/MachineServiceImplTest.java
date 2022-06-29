@@ -1,8 +1,6 @@
 package com.mtech.vmcs.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.mtech.vmcs.model.entity.Coin;
 import com.mtech.vmcs.model.entity.Drink;
 import com.mtech.vmcs.model.entity.Machine;
@@ -11,22 +9,18 @@ import com.mtech.vmcs.repository.MachineRepository;
 import com.mtech.vmcs.service.impl.initialfiledata.InitialFileDataBean;
 import com.mtech.vmcs.service.impl.initialfiledata.InitialJsonFileDataAdapter;
 import com.mtech.vmcs.service.impl.initialfiledata.InitialYamlFileDataAdapter;
-import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.context.event.annotation.BeforeTestMethod;
 
 import java.io.*;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -51,6 +45,7 @@ class MachineServiceImplTest {
   @Test
   public void whenGotFromYamlInitialFile_thenReadCorrect() throws IOException {
     final String testFilePath = "test_init_file.yaml";
+
     File yamlOutput = new File(testFilePath);
     FileWriter fileWriter = new FileWriter(yamlOutput);
     fileWriter.write("---\n" +
