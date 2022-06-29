@@ -144,12 +144,15 @@ function stopSpringServer(port: number | string) {
     .post(`${baseUrl}/actuator/shutdown`, null, {
       headers: { 'Content-Type': 'application/json' },
     })
-    .then(() => log.info('Server stopped'))
+    .then(() => {
+      log.info('Server stopped')
+      serverProcess = null;
+      app.quit();
+    })
     .catch(error => {
       log.error('Failed to stop the server gracefully.', error);
       if (serverProcess) {
         log.info(`Killing server process ${serverProcess.pid}`);
-
         const kill = require('tree-kill');
         kill(serverProcess.pid, 'SIGTERM', function (err: any) {
           log.info('Server process killed', err);
@@ -158,10 +161,6 @@ function stopSpringServer(port: number | string) {
         });
       }
     })
-    .finally(() => {
-      serverProcess = null;
-      app.quit(); // quit again
-    });
 }
 
 try {
