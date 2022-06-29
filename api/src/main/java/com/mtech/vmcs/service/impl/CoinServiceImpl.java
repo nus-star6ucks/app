@@ -1,7 +1,5 @@
 package com.mtech.vmcs.service.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.mtech.vmcs.model.entity.Coin;
 import com.mtech.vmcs.repository.CoinRepository;
 import com.mtech.vmcs.service.CoinService;
@@ -39,11 +37,9 @@ public class CoinServiceImpl implements CoinService {
   }
 
   @Override
-  public Boolean checkCoin(Coin coin){
-    for (Coin everyCoin:
-         getAllCoins()) {
-      if (everyCoin.getWeight().equals(coin.getWeight()))
-        return true;
+  public Boolean checkCoin(Coin coin) {
+    for (Coin everyCoin : getAllCoins()) {
+      if (everyCoin.getWeight().equals(coin.getWeight())) return true;
     }
     return false;
   }

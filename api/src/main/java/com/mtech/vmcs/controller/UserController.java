@@ -39,9 +39,9 @@ public class UserController {
 
   @PostMapping("/logout")
   public ResponseEntity<User> logout(@RequestBody User user) {
-    if (userService.logout(user)){
+    if (userService.logout(user)) {
       return new ResponseEntity<>(HttpStatus.OK);
-    } else{
+    } else {
       return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
   }

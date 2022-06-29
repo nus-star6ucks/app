@@ -8,6 +8,6 @@ import java.util.List;
 @Setter
 @Getter
 public class PurchaseOrder {
-    private Long drinkId;
-    private List<Coin> coins;
+  private Long drinkId;
+  private List<Coin> coins;
 }
