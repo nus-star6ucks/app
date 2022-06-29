@@ -22,7 +22,11 @@
         <div class="space-y-3">
           <button
             *ngFor="let drink of drinks$ | async"
-            [disabled]="drink.quantity === 0 || !(machine$ | async)?.doorLocked"
+            [disabled]="
+              drink.quantity === 0 ||
+              !(machine$ | async)?.doorLocked ||
+              (machine$ | async).status !== 'normal'
+            "
             class="w-full cursor-pointer btn-solid flex items-center justify-between space-x-2 p-4"
             [class.active]="selectedDrink && drink.id === selectedDrink.id"
             (click)="selectDrink(drink)"
@@ -69,7 +73,10 @@
               )
             "
             [disabled]="
-              !selectedDrink || !(machine$ | async)?.doorLocked || txCompleted
+              !selectedDrink ||
+              !(machine$ | async)?.doorLocked ||
+              txCompleted ||
+              (machine$ | async).status !== 'normal'
             "
             (click)="insertCoin(coin)">
             {{ coin.name }}
@@ -89,7 +96,11 @@
               [class.with-click]="
                 !(txCompleted || !(machine$ | async)?.doorLocked)
               "
-              [disabled]="txCompleted || !(machine$ | async)?.doorLocked"
+              [disabled]="
+                txCompleted ||
+                !(machine$ | async)?.doorLocked ||
+                (machine$ | async).status !== 'normal'
+              "
               (click)="terminateAndReturnCash()">
               Terminate and Return Cash
             </button>
@@ -99,7 +110,7 @@
           <span class="led-small">{{ collectCanHereDisplay }}</span>
           <button
             class="btn-solid-small text-xs ml-2 p-1 with-click"
-            *ngIf="txCompleted"
+            *ngIf="txCompleted && (machine$ | async).status === 'normal'"
             (click)="takeout()">
             Take out
           </button>
@@ -114,6 +125,26 @@
         <div class="border-2 border-black rounded-md p-4 uppercase">
           <span class="led-small">{{ totalMoneyInserted }}c</span>
           <p class="font-bold">Total Money Inserted</p>
+        </div>
+      </section>
+      <section>
+        <div class="flex justify-between items-center mb-2">
+          <h2 class="font-bold text-lg tracking-tighter uppercase">Misc</h2>
+        </div>
+        <div>
+          <button
+            (click)="faultOnNextTx = !faultOnNextTx"
+            class="font-semibold text-lg flex items-center">
+            <svg-icon
+              *ngIf="!faultOnNextTx"
+              src="assets/images/checkbox.svg"
+              [svgStyle]="{ 'width.px': 36 }"></svg-icon>
+            <svg-icon
+              *ngIf="faultOnNextTx"
+              src="assets/images/check-correct.svg"
+              [svgStyle]="{ 'width.px': 36 }"></svg-icon>
+            <span class="ml-2">Simulate Can Stuck</span>
+          </button>
         </div>
       </section>
     </aside>

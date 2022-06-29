@@ -24,8 +24,8 @@ import { CustomHttpParameterCodec } from '../encoder';
 import { Observable } from 'rxjs';
 
 import { Drink } from '../model/models';
-import { InlineObject } from '../model/models';
-import { InlineResponse200 } from '../model/models';
+import { InlineObject1 } from '../model/models';
+import { InlineResponse2001 } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS } from '../variables';
 import { Configuration } from '../configuration';
@@ -180,6 +180,7 @@ export class DrinkService {
         headers: headers,
         observe: observe,
         reportProgress: reportProgress,
+        body: requestBody,
       }
     );
   }
@@ -319,30 +320,30 @@ export class DrinkService {
 
   /**
    * Purchase
-   * @param inlineObject
+   * @param inlineObject1
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public drinksPurchasePost(
-    inlineObject?: InlineObject,
+    inlineObject1?: InlineObject1,
     observe?: 'body',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' }
-  ): Observable<InlineResponse200>;
+  ): Observable<InlineResponse2001>;
   public drinksPurchasePost(
-    inlineObject?: InlineObject,
+    inlineObject1?: InlineObject1,
     observe?: 'response',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' }
-  ): Observable<HttpResponse<InlineResponse200>>;
+  ): Observable<HttpResponse<InlineResponse2001>>;
   public drinksPurchasePost(
-    inlineObject?: InlineObject,
+    inlineObject1?: InlineObject1,
     observe?: 'events',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' }
-  ): Observable<HttpEvent<InlineResponse200>>;
+  ): Observable<HttpEvent<InlineResponse2001>>;
   public drinksPurchasePost(
-    inlineObject?: InlineObject,
+    inlineObject1?: InlineObject1,
     observe: any = 'body',
     reportProgress: boolean = false,
     options?: { httpHeaderAccept?: 'application/json' }
@@ -377,9 +378,69 @@ export class DrinkService {
       responseType = 'text';
     }
 
-    return this.httpClient.post<InlineResponse200>(
+    return this.httpClient.post<InlineResponse2001>(
       `${this.configuration.basePath}/drinks/purchase`,
-      inlineObject,
+      inlineObject1,
+      {
+        responseType: <any>responseType,
+        withCredentials: this.configuration.withCredentials,
+        headers: headers,
+        observe: observe,
+        reportProgress: reportProgress,
+      }
+    );
+  }
+
+  /**
+   * Undo Purchase
+   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+   * @param reportProgress flag to report request and response progress.
+   */
+  public drinksPurchaseUndoPost(
+    observe?: 'body',
+    reportProgress?: boolean,
+    options?: { httpHeaderAccept?: '*/*' }
+  ): Observable<InlineResponse2001>;
+  public drinksPurchaseUndoPost(
+    observe?: 'response',
+    reportProgress?: boolean,
+    options?: { httpHeaderAccept?: '*/*' }
+  ): Observable<HttpResponse<InlineResponse2001>>;
+  public drinksPurchaseUndoPost(
+    observe?: 'events',
+    reportProgress?: boolean,
+    options?: { httpHeaderAccept?: '*/*' }
+  ): Observable<HttpEvent<InlineResponse2001>>;
+  public drinksPurchaseUndoPost(
+    observe: any = 'body',
+    reportProgress: boolean = false,
+    options?: { httpHeaderAccept?: '*/*' }
+  ): Observable<any> {
+    let headers = this.defaultHeaders;
+
+    let httpHeaderAcceptSelected: string | undefined =
+      options && options.httpHeaderAccept;
+    if (httpHeaderAcceptSelected === undefined) {
+      // to determine the Accept header
+      const httpHeaderAccepts: string[] = ['*/*'];
+      httpHeaderAcceptSelected =
+        this.configuration.selectHeaderAccept(httpHeaderAccepts);
+    }
+    if (httpHeaderAcceptSelected !== undefined) {
+      headers = headers.set('Accept', httpHeaderAcceptSelected);
+    }
+
+    let responseType: 'text' | 'json' = 'json';
+    if (
+      httpHeaderAcceptSelected &&
+      httpHeaderAcceptSelected.startsWith('text')
+    ) {
+      responseType = 'text';
+    }
+
+    return this.httpClient.post<InlineResponse2001>(
+      `${this.configuration.basePath}/drinks/purchase/undo`,
+      null,
       {
         responseType: <any>responseType,
         withCredentials: this.configuration.withCredentials,
