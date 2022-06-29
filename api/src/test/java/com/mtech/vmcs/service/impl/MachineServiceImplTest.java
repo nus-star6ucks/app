@@ -6,7 +6,7 @@ import com.mtech.vmcs.model.entity.Drink;
 import com.mtech.vmcs.model.entity.Machine;
 import com.mtech.vmcs.model.entity.User;
 import com.mtech.vmcs.repository.MachineRepository;
-import com.mtech.vmcs.service.impl.initialfiledata.InitialFileDataBean;
+import com.mtech.vmcs.model.entity.InitialFileData;
 import com.mtech.vmcs.service.impl.initialfiledata.InitialJsonFileDataAdapter;
 import com.mtech.vmcs.service.impl.initialfiledata.InitialYamlFileDataAdapter;
 import org.junit.jupiter.api.AfterEach;
@@ -84,7 +84,7 @@ class MachineServiceImplTest {
     fileWriter.close();
 
     InitialYamlFileDataAdapter fileDataAdapter = new InitialYamlFileDataAdapter(testFilePath);
-    InitialFileDataBean initialFileData = fileDataAdapter.read();
+    InitialFileData initialFileData = fileDataAdapter.read();
 
     final ObjectMapper mapper = new ObjectMapper();
 
@@ -143,7 +143,7 @@ class MachineServiceImplTest {
       "  quantity: 0\n" +
       "  weight: 1.0\n";
     InitialYamlFileDataAdapter fileDataAdapter = new InitialYamlFileDataAdapter(testFilePath);
-    InitialFileDataBean initialFileData = new InitialFileDataBean();
+    InitialFileData initialFileData = new InitialFileData();
 
     initialFileData.setUsers(Collections.singletonList(new User(25L, "Maintainer", "123891", "logout")));
     initialFileData.setMachines(Collections.singletonList(new Machine(26L, "Star6ucks", true, "normal")));
@@ -198,7 +198,7 @@ class MachineServiceImplTest {
     fileWriter.close();
 
     InitialJsonFileDataAdapter fileDataAdapter = new InitialJsonFileDataAdapter(testFilePath);
-    InitialFileDataBean initialFileData = fileDataAdapter.read();
+    InitialFileData initialFileData = fileDataAdapter.read();
 
     final ObjectMapper mapper = new ObjectMapper();
 
@@ -225,7 +225,7 @@ class MachineServiceImplTest {
     final String testFilePath = "test_init_file.json";
     final String expectedOutput = "{\"users\":[{\"id\":25,\"role\":\"Maintainer\",\"password\":\"123891\",\"status\":\"logout\"}],\"machines\":[{\"id\":26,\"name\":\"Star6ucks\",\"doorLocked\":true,\"status\":\"normal\"}],\"drinks\":[{\"id\":32,\"name\":\"Coca-Cola\",\"price\":75,\"quantity\":4,\"slotNum\":1},{\"id\":33,\"name\":\"Fanta\",\"price\":89,\"quantity\":7,\"slotNum\":2}],\"coins\":[{\"id\":27,\"name\":\"5c\",\"value\":5,\"quantity\":0,\"weight\":1.0},{\"id\":28,\"name\":\"10c\",\"value\":10,\"quantity\":0,\"weight\":1.0}]}";
     InitialJsonFileDataAdapter fileDataAdapter = new InitialJsonFileDataAdapter(testFilePath);
-    InitialFileDataBean initialFileData = new InitialFileDataBean();
+    InitialFileData initialFileData = new InitialFileData();
 
     initialFileData.setUsers(Collections.singletonList(new User(25L, "Maintainer", "123891", "logout")));
     initialFileData.setMachines(Collections.singletonList(new Machine(26L, "Star6ucks", true, "normal")));

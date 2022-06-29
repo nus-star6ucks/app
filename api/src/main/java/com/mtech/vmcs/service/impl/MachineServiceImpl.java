@@ -1,19 +1,13 @@
 package com.mtech.vmcs.service.impl;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.mtech.vmcs.model.entity.Coin;
-import com.mtech.vmcs.model.entity.Drink;
 import com.mtech.vmcs.model.entity.Machine;
-import com.mtech.vmcs.model.entity.User;
 import com.mtech.vmcs.repository.MachineRepository;
 import com.mtech.vmcs.service.CoinService;
 import com.mtech.vmcs.service.DrinkService;
 import com.mtech.vmcs.service.MachineService;
 import com.mtech.vmcs.service.UserService;
-import com.mtech.vmcs.service.impl.initialfiledata.IInitialFileDataAdapter;
-import com.mtech.vmcs.service.impl.initialfiledata.InitialFileDataBean;
+import com.mtech.vmcs.service.IInitialFileDataAdapter;
+import com.mtech.vmcs.model.entity.InitialFileData;
 import com.mtech.vmcs.service.impl.initialfiledata.InitialJsonFileDataAdapter;
 import com.mtech.vmcs.service.impl.initialfiledata.InitialYamlFileDataAdapter;
 import lombok.SneakyThrows;
@@ -61,7 +55,7 @@ public class MachineServiceImpl implements MachineService {
     String ext = FilenameUtils.getExtension(filePath);
     IInitialFileDataAdapter fileDataAdapter = ext.equals("yaml") ? new InitialYamlFileDataAdapter(filePath) : new InitialJsonFileDataAdapter(filePath);
 
-    InitialFileDataBean initialFileData = fileDataAdapter.read();
+    InitialFileData initialFileData = fileDataAdapter.read();
 
     userService.createUsers(initialFileData.getUsers());
     createMachines(initialFileData.getMachines());
@@ -75,7 +69,7 @@ public class MachineServiceImpl implements MachineService {
     String ext = FilenameUtils.getExtension(filePath);
     IInitialFileDataAdapter fileDataAdapter = ext.equals("yaml") ? new InitialYamlFileDataAdapter(filePath) : new InitialJsonFileDataAdapter(filePath);
 
-    InitialFileDataBean initialFileData = new InitialFileDataBean();
+    InitialFileData initialFileData = new InitialFileData();
     initialFileData.setMachines(getAllMachines());
     initialFileData.setCoins(coinService.getAllCoins());
     initialFileData.setDrinks(drinkService.getAllDrinks());
