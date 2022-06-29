@@ -51,12 +51,12 @@ public class CoinServiceImpl implements CoinService {
     return false;
   }
 
-  public Map<String, Object> issueChange(PurchaseOrder purchaseOrder, Integer drinkPrice, Integer totalCoins) {
+  public Map<String, Object> issueChange(List<Coin> insertedCoins, Integer drinkPrice) {
     // update coin (1)
-    List<Coin> coins = purchaseOrder.getCoins();
+    Integer totalCoins = 0;
 
     List<Coin> storedCoins = getAllCoins();
-    for (Coin coin : coins) {
+    for (Coin coin : insertedCoins) {
       for (Coin storedCoin : storedCoins) {
         if (storedCoin.getValue().equals(coin.getValue())) {
           storedCoin.setQuantity(storedCoin.getQuantity() + coin.getQuantity());

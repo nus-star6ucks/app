@@ -19,5 +19,5 @@ public interface CoinService {
 
   Boolean checkCoin(Coin coin);
 
-  Map<String, Object> issueChange(PurchaseOrder purchaseOrder, Integer drinkPrice, Integer totalCoins);
+  Map<String, Object> issueChange(List<Coin> insertedCoins, Integer drinkPrice);
 }

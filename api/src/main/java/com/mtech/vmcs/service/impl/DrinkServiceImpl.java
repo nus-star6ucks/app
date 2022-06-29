@@ -58,7 +58,6 @@ public class DrinkServiceImpl implements DrinkService {
     storeRecord(drinkId);
 
     Integer drinkPrice = 0;
-    Integer totalCoins = 0;
 
     // update drink
     for (Drink drink : drinks) {
@@ -70,7 +69,9 @@ public class DrinkServiceImpl implements DrinkService {
     }
     updateDrinks(drinks);
 
-    return coinService.issueChange(purchaseOrder, drinkPrice, totalCoins);
+    List<Coin> insertedCoins = purchaseOrder.getCoins();
+
+    return coinService.issueChange(insertedCoins, drinkPrice);
   }
 
 
