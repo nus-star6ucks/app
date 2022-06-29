@@ -4,17 +4,17 @@ import java.util.Stack;
 
 public class MementoStack<T> {
 
-    Stack<T> stack = new Stack<>();
+  Stack<T> stack = new Stack<>();
 
-    public void push(T state) {
-        stack.push(state);
-    }
+  public void push(T state) {
+    stack.push(state);
+  }
 
-    public T pop() {
-        return stack.pop();
-    }
+  public T pop() {
+    return stack.pop();
+  }
 
-    public void clear() {
-        stack.clear();
-    }
+  public void clear() {
+    stack.clear();
+  }
 }
