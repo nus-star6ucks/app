@@ -9,15 +9,15 @@ import java.util.Map;
 
 public interface CoinService {
 
-  List<Coin> getAllCoins();
+    List<Coin> getAllCoins();
 
-  void createCoins(List<Coin> coins);
+    void createCoins(List<Coin> coins);
 
-  void updateCoins(List<Coin> coins);
+    void updateCoins(List<Coin> coins);
 
-  void deleteCoins(List<Long> coinIds);
+    void deleteCoins(List<Long> coinIds);
 
-  Boolean checkCoin(Coin coin);
+    Boolean checkCoin(Coin coin);
 
-  Map<String, Object> issueChange(List<Coin> insertedCoins, Integer drinkPrice);
+    Map<String, Object> issueChange(List<Coin> insertedCoins, Integer drinkPrice);
 }
