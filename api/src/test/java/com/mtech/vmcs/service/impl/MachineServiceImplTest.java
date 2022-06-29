@@ -5,26 +5,23 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class DrinkServiceImplTest {
+class MachineServiceImplTest {
 
   @Test
-  void getDrinksByName() {}
+  void getAllMachines() {}
 
   @Test
-  void getAllDrinks() {}
+  void createMachines() {}
 
   @Test
-  void createDrinks() {}
+  void updateMachines() {}
 
   @Test
-  void updateDrinks() {}
+  void deleteMachines() {}
 
   @Test
-  void deleteDrinks() {}
+  void startSimulation() {}
 
   @Test
-  void purchase() {}
-
-  @Test
-  void undoPurchase() {}
+  void stopSimulation() {}
 }
