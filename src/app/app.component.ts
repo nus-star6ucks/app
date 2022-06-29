@@ -2,6 +2,9 @@ import { ChangeDetectorRef, Component, NgZone, OnInit } from '@angular/core';
 import {
   BehaviorSubject,
   concatMap,
+  interval,
+  map,
+  mergeMap,
   retry,
   Subscription,
   switchMap,
@@ -66,14 +69,10 @@ export class AppComponent implements OnInit {
   }
 
   private _healthValidateAndLoadAll() {
-    this.healthValidationSubscription = this.healthValidationSubject
+    this.healthValidationSubscription = interval(1000)
       .pipe(
-        switchMap(_ =>
-          timer(0, 1000).pipe(
-            concatMap(_ => this.defaultService.actuatorHealthGet()),
-            retry()
-          )
-        )
+        mergeMap(() => this.defaultService.actuatorHealthGet()),
+        retry()
       )
       .subscribe(() => {
         this.apiReady = true;
