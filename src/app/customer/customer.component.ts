@@ -9,6 +9,7 @@ import {
   Drink,
   DrinkService,
   MachineService,
+  OrderService,
 } from '../http';
 
 @Component({
@@ -22,6 +23,7 @@ export class CustomerComponent implements OnInit {
     private readonly drinkService: DrinkService,
     private readonly dataService: DataService,
     private readonly machineService: MachineService,
+    private readonly orderService: OrderService,
     private readonly electronService: ElectronService,
     private readonly titleService: Title
   ) {
@@ -97,8 +99,8 @@ export class CustomerComponent implements OnInit {
   }
 
   purchase() {
-    this.drinkService
-      .drinksPurchasePost({
+    this.orderService
+      .ordersPurchasePost({
         drinkId: this.selectedDrink.id,
         coins: this.collectedCoins,
       })
@@ -114,7 +116,7 @@ export class CustomerComponent implements OnInit {
   }
 
   revertTx() {
-    this.drinkService.drinksPurchaseUndoPost().subscribe(() => {
+    this.orderService.ordersPurchaseUndoPost().subscribe(() => {
       this.machine$
         .subscribe(machine => {
           machine.status = 'stuck';

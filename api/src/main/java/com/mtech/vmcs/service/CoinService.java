@@ -3,6 +3,7 @@ package com.mtech.vmcs.service;
 import com.mtech.vmcs.model.entity.Coin;
 
 import java.util.List;
+import java.util.Map;
 
 public interface CoinService {
 
@@ -15,4 +16,6 @@ public interface CoinService {
   void deleteCoins(List<Long> coinIds);
 
   Boolean checkCoin(Coin coin);
+
+  Map<String, Object> issueChange(List<Coin> coins, Integer drinkPrice);
 }
