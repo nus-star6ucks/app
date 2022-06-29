@@ -1,7 +1,6 @@
 package com.mtech.vmcs.service.impl;
 
 import com.mtech.vmcs.model.entity.Coin;
-import com.mtech.vmcs.model.entity.PurchaseOrder;
 import com.mtech.vmcs.repository.CoinRepository;
 import com.mtech.vmcs.service.CoinService;
 import org.springframework.beans.factory.annotation.Autowired;

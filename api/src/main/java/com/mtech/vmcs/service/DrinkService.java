@@ -8,17 +8,17 @@ import java.util.Map;
 
 public interface DrinkService {
 
-  List<Drink> getDrinksByName(String name);
+    List<Drink> getDrinksByName(String name);
 
-  List<Drink> getAllDrinks();
+    List<Drink> getAllDrinks();
 
-  void createDrinks(List<Drink> drinks);
+    void createDrinks(List<Drink> drinks);
 
-  void updateDrinks(List<Drink> drinks);
+    void updateDrinks(List<Drink> drinks);
 
-  void deleteDrinks(List<Long> drinkIds);
+    void deleteDrinks(List<Long> drinkIds);
 
-  Map<String, Object> purchase(PurchaseOrder purchaseOrder);
+    Map<String, Object> purchase(PurchaseOrder purchaseOrder);
 
-  void undoPurchase();
+    void undoPurchase();
 }
