@@ -6,6 +6,8 @@ export * from './drink.service';
 import { DrinkService } from './drink.service';
 export * from './machine.service';
 import { MachineService } from './machine.service';
+export * from './order.service';
+import { OrderService } from './order.service';
 export * from './user.service';
 import { UserService } from './user.service';
 export const APIS = [
@@ -13,5 +15,6 @@ export const APIS = [
   DefaultService,
   DrinkService,
   MachineService,
+  OrderService,
   UserService,
 ];

@@ -3,6 +3,7 @@ export * from './drink';
 export * from './inlineObject';
 export * from './inlineObject1';
 export * from './inlineObject2';
+export * from './inlineObject3';
 export * from './inlineResponse200';
 export * from './inlineResponse2001';
 export * from './machine';

@@ -25,7 +25,7 @@ import { Observable } from 'rxjs';
 
 import { Coin } from '../model/models';
 import { Drink } from '../model/models';
-import { InlineResponse200 } from '../model/models';
+import { InlineResponse2001 } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS } from '../variables';
 import { Configuration } from '../configuration';
@@ -123,19 +123,19 @@ export class CoinService {
     observe?: 'body',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' }
-  ): Observable<InlineResponse200>;
+  ): Observable<InlineResponse2001>;
   public coinsCheckCoinPost(
     coin?: Coin,
     observe?: 'response',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' }
-  ): Observable<HttpResponse<InlineResponse200>>;
+  ): Observable<HttpResponse<InlineResponse2001>>;
   public coinsCheckCoinPost(
     coin?: Coin,
     observe?: 'events',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' }
-  ): Observable<HttpEvent<InlineResponse200>>;
+  ): Observable<HttpEvent<InlineResponse2001>>;
   public coinsCheckCoinPost(
     coin?: Coin,
     observe: any = 'body',
@@ -172,7 +172,7 @@ export class CoinService {
       responseType = 'text';
     }
 
-    return this.httpClient.post<InlineResponse200>(
+    return this.httpClient.post<InlineResponse2001>(
       `${this.configuration.basePath}/coins/checkCoin`,
       coin,
       {

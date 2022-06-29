@@ -24,8 +24,8 @@ import { CustomHttpParameterCodec } from '../encoder';
 import { Observable } from 'rxjs';
 
 import { Drink } from '../model/models';
-import { InlineObject1 } from '../model/models';
-import { InlineResponse2001 } from '../model/models';
+import { InlineObject2 } from '../model/models';
+import { InlineResponse200 } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS } from '../variables';
 import { Configuration } from '../configuration';
@@ -320,30 +320,30 @@ export class DrinkService {
 
   /**
    * Purchase
-   * @param inlineObject1
+   * @param inlineObject2
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public drinksPurchasePost(
-    inlineObject1?: InlineObject1,
+    inlineObject2?: InlineObject2,
     observe?: 'body',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' }
-  ): Observable<InlineResponse2001>;
+  ): Observable<InlineResponse200>;
   public drinksPurchasePost(
-    inlineObject1?: InlineObject1,
+    inlineObject2?: InlineObject2,
     observe?: 'response',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' }
-  ): Observable<HttpResponse<InlineResponse2001>>;
+  ): Observable<HttpResponse<InlineResponse200>>;
   public drinksPurchasePost(
-    inlineObject1?: InlineObject1,
+    inlineObject2?: InlineObject2,
     observe?: 'events',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' }
-  ): Observable<HttpEvent<InlineResponse2001>>;
+  ): Observable<HttpEvent<InlineResponse200>>;
   public drinksPurchasePost(
-    inlineObject1?: InlineObject1,
+    inlineObject2?: InlineObject2,
     observe: any = 'body',
     reportProgress: boolean = false,
     options?: { httpHeaderAccept?: 'application/json' }
@@ -378,9 +378,9 @@ export class DrinkService {
       responseType = 'text';
     }
 
-    return this.httpClient.post<InlineResponse2001>(
+    return this.httpClient.post<InlineResponse200>(
       `${this.configuration.basePath}/drinks/purchase`,
-      inlineObject1,
+      inlineObject2,
       {
         responseType: <any>responseType,
         withCredentials: this.configuration.withCredentials,
@@ -400,17 +400,17 @@ export class DrinkService {
     observe?: 'body',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: '*/*' }
-  ): Observable<InlineResponse2001>;
+  ): Observable<InlineResponse200>;
   public drinksPurchaseUndoPost(
     observe?: 'response',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: '*/*' }
-  ): Observable<HttpResponse<InlineResponse2001>>;
+  ): Observable<HttpResponse<InlineResponse200>>;
   public drinksPurchaseUndoPost(
     observe?: 'events',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: '*/*' }
-  ): Observable<HttpEvent<InlineResponse2001>>;
+  ): Observable<HttpEvent<InlineResponse200>>;
   public drinksPurchaseUndoPost(
     observe: any = 'body',
     reportProgress: boolean = false,
@@ -438,7 +438,7 @@ export class DrinkService {
       responseType = 'text';
     }
 
-    return this.httpClient.post<InlineResponse2001>(
+    return this.httpClient.post<InlineResponse200>(
       `${this.configuration.basePath}/drinks/purchase/undo`,
       null,
       {
