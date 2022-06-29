@@ -109,6 +109,6 @@ Example import file (save the following as any `.json` file).
 
 ## Note
 
-1. The core front-end code is under `packages/renderer/src` (the rest is not of concern), and `openapi` is Apifox-generated code, which is also not of concern.
+1. The core front-end code is under `/src` (the rest is not of concern), and `/src/app/http` is Apifox-generated code, which is also not of concern.
 2. the core back-end code is under `api/`
 
