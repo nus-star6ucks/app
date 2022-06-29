@@ -1,23 +1,21 @@
 package com.mtech.vmcs.service.impl;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.mtech.vmcs.model.entity.Coin;
-import com.mtech.vmcs.model.entity.Drink;
 import com.mtech.vmcs.model.entity.Machine;
-import com.mtech.vmcs.model.entity.User;
 import com.mtech.vmcs.repository.MachineRepository;
 import com.mtech.vmcs.service.CoinService;
 import com.mtech.vmcs.service.DrinkService;
 import com.mtech.vmcs.service.MachineService;
 import com.mtech.vmcs.service.UserService;
+import com.mtech.vmcs.service.IInitialFileDataAdapter;
+import com.mtech.vmcs.model.entity.InitialFileData;
+import com.mtech.vmcs.service.impl.initialfiledata.InitialJsonFileDataAdapter;
+import com.mtech.vmcs.service.impl.initialfiledata.InitialYamlFileDataAdapter;
 import lombok.SneakyThrows;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -26,7 +24,6 @@ import java.util.stream.StreamSupport;
 public class MachineServiceImpl implements MachineService {
 
   @Autowired private MachineRepository machineRepository;
-  @Autowired private ObjectMapper objectMapper;
   @Autowired @Lazy private UserService userService;
   @Autowired @Lazy private DrinkService drinkService;
   @Autowired @Lazy private CoinService coinService;
@@ -55,28 +52,29 @@ public class MachineServiceImpl implements MachineService {
   @SneakyThrows
   @Override
   public void startSimulation(String filePath) {
-    JsonNode jsonNode = objectMapper.readTree(new File(filePath));
-    List<User> users = objectMapper.readerForListOf(User.class).readValue(jsonNode.get("users"));
-    List<Machine> machines =
-        objectMapper.readerForListOf(Machine.class).readValue(jsonNode.get("machines"));
-    List<Coin> coins = objectMapper.readerForListOf(Coin.class).readValue(jsonNode.get("coins"));
-    List<Drink> drinks =
-        objectMapper.readerForListOf(Drink.class).readValue(jsonNode.get("drinks"));
+    String ext = FilenameUtils.getExtension(filePath);
+    IInitialFileDataAdapter fileDataAdapter = ext.equals("yaml") ? new InitialYamlFileDataAdapter(filePath) : new InitialJsonFileDataAdapter(filePath);
 
-    userService.createUsers(users);
-    createMachines(machines);
-    coinService.createCoins(coins);
-    drinkService.createDrinks(drinks);
+    InitialFileData initialFileData = fileDataAdapter.read();
+
+    userService.createUsers(initialFileData.getUsers());
+    createMachines(initialFileData.getMachines());
+    coinService.createCoins(initialFileData.getCoins());
+    drinkService.createDrinks(initialFileData.getDrinks());
   }
 
   @SneakyThrows
   @Override
   public void stopSimulation(String filePath) {
-    ObjectNode objectNode = objectMapper.createObjectNode();
-    objectNode.set("users", objectMapper.valueToTree(userService.getAllUsers()));
-    objectNode.set("machines", objectMapper.valueToTree(getAllMachines()));
-    objectNode.set("coins", objectMapper.valueToTree(coinService.getAllCoins()));
-    objectNode.set("drinks", objectMapper.valueToTree(drinkService.getAllDrinks()));
-    objectMapper.writeValue(new File(filePath), objectNode);
+    String ext = FilenameUtils.getExtension(filePath);
+    IInitialFileDataAdapter fileDataAdapter = ext.equals("yaml") ? new InitialYamlFileDataAdapter(filePath) : new InitialJsonFileDataAdapter(filePath);
+
+    InitialFileData initialFileData = new InitialFileData();
+    initialFileData.setMachines(getAllMachines());
+    initialFileData.setCoins(coinService.getAllCoins());
+    initialFileData.setDrinks(drinkService.getAllDrinks());
+    initialFileData.setUsers(userService.getAllUsers());
+
+    fileDataAdapter.write(initialFileData);
   }
 }
