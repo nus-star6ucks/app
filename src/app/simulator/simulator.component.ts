@@ -124,7 +124,7 @@ export class SimulatorComponent implements OnInit {
     });
   }
 
-  activateMaintainancePanel() {
+  activateMaintenancePanel() {
     this._newWindow('/maintainer', {
       width: 1035,
       height: 660,
