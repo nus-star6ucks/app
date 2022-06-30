@@ -11,6 +11,16 @@ import {
   MachineService,
   OrderService,
 } from '../http';
+import {
+  SCoinInserted,
+  SDispensed,
+  SDrinkSelected,
+  SFault,
+  SNoChange,
+  SReady,
+  STerminated,
+} from './state/concreteState';
+import { CustomerContext } from './state/state';
 
 @Component({
   selector: 'app-customer',
@@ -20,7 +30,6 @@ import {
 export class CustomerComponent implements OnInit {
   constructor(
     private readonly coinService: CoinService,
-    private readonly drinkService: DrinkService,
     private readonly dataService: DataService,
     private readonly machineService: MachineService,
     private readonly orderService: OrderService,
@@ -32,8 +41,43 @@ export class CustomerComponent implements OnInit {
 
   ngOnInit(): void {
     this.machine$.subscribe(machine => {
-      if (!machine?.doorLocked) this.terminateAndReturnCash();
+      if (typeof machine === 'undefined') return;
+      if (machine.doorLocked === false) {
+        this.terminateAndReturnCash();
+      } else if (machine?.status !== 'normal') {
+        this.context.State = new SFault();
+      }
     });
+  }
+
+  context = new CustomerContext(new SReady());
+
+  get isDrinkSelected(): boolean {
+    return this.context.State instanceof SDrinkSelected;
+  }
+
+  get isDispensed(): boolean {
+    return this.context.State instanceof SDispensed;
+  }
+
+  get isReady(): boolean {
+    return this.context.State instanceof SReady;
+  }
+
+  get isTerminated(): boolean {
+    return this.context.State instanceof STerminated;
+  }
+
+  get isCoinInserted(): boolean {
+    return this.context.State instanceof SCoinInserted;
+  }
+
+  get isNochange(): boolean {
+    return this.context.State instanceof SNoChange;
+  }
+
+  get isFault(): boolean {
+    return this.context.State instanceof SFault;
   }
 
   machine$ = this.dataService.machines$.pipe(map(machines => machines?.[0]));
@@ -57,7 +101,6 @@ export class CustomerComponent implements OnInit {
   collectedCoins: Coin[] = [];
   collectCoinsDisplay = 0;
   collectCanHereDisplay = 'NO CAN';
-  noChangeAvailableDisplay = false;
 
   faultOnNextTx = false;
 
@@ -68,16 +111,17 @@ export class CustomerComponent implements OnInit {
     );
   }
 
-  get txCompleted(): boolean {
-    return this.collectCanHereDisplay !== 'NO CAN';
-  }
-
   selectDrink(drink: Drink) {
+    if (!(this.context.State instanceof SReady)) return;
     if (drink.quantity === 0 || this.selectedDrink) return;
+
     this.selectedDrink = drink;
+    this.context.State = new SCoinInserted();
   }
 
   insertCoin(coin: Coin | any) {
+    if (!(this.context.State instanceof SCoinInserted)) return;
+
     this.coinService.coinsCheckCoinPost(coin).subscribe(async ({ isValid }) => {
       if (!isValid) {
         this.invalidCoin = true;
@@ -105,17 +149,23 @@ export class CustomerComponent implements OnInit {
         coins: this.collectedCoins,
       })
       .subscribe(({ noChangeAvailable, collectCoins }) => {
-        this.noChangeAvailableDisplay = noChangeAvailable;
+        if (noChangeAvailable) this.context.State = new SNoChange();
         this.collectCoinsDisplay = collectCoins;
+
         if (!noChangeAvailable) {
+          this.context.State = new SDispensed();
           this.collectCanHereDisplay = this.selectedDrink.name;
         }
 
-        if (this.faultOnNextTx) this.revertTx();
+        if (this.faultOnNextTx) {
+          this.revertTx();
+        }
       });
   }
 
   revertTx() {
+    this.context.State = new SFault();
+
     this.orderService.ordersPurchaseUndoPost().subscribe(() => {
       this.machine$
         .subscribe(machine => {
@@ -123,7 +173,6 @@ export class CustomerComponent implements OnInit {
           this.collectCanHereDisplay = 'STUCK';
           this.machineService.machinesPut([machine]).subscribe(() => {
             this.electronService.ipcRenderer.invoke('refresh-machine-states');
-
             this.collectCoinsDisplay = this.collectedCoins.reduce(
               (acc, curr) => (acc += curr.value * curr.quantity),
               0
@@ -136,24 +185,28 @@ export class CustomerComponent implements OnInit {
   }
 
   terminateAndReturnCash() {
+    this.context.State = new STerminated();
     this.collectCoinsDisplay = this.collectedCoins.reduce(
       (acc, curr) => (acc += curr.value * curr.quantity),
       0
     );
     this.collectedCoins = [];
     this.invalidCoin = false;
-    this.noChangeAvailableDisplay = false;
     this.selectedDrink = null;
   }
 
   takeout() {
-    if (!this.txCompleted) return;
+    if (
+      !(this.context.State instanceof SDispensed) &&
+      !(this.context.State instanceof STerminated)
+    )
+      return;
 
     this.collectCanHereDisplay = 'NO CAN';
     this.collectCoinsDisplay = 0;
     this.collectedCoins = [];
     this.invalidCoin = false;
-    this.noChangeAvailableDisplay = false;
     this.selectedDrink = null;
+    this.context.State = new SReady();
   }
 }
