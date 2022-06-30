@@ -89,6 +89,7 @@ export class SimulatorComponent implements OnInit {
     this.electronService.ipcRenderer.invoke('close-other-wins');
     this.machineService.machinesStopPost().subscribe(() => {
       this.fileLoaded = false;
+
       this.coins$
         .subscribe(coins => {
           this.coinService.coinsDelete(coins.map(c => c.id)).subscribe(() => {
@@ -96,6 +97,7 @@ export class SimulatorComponent implements OnInit {
           });
         })
         .unsubscribe();
+
       this.machines$
         .subscribe(machines => {
           this.machineService
@@ -105,6 +107,7 @@ export class SimulatorComponent implements OnInit {
             });
         })
         .unsubscribe();
+
       this.drinks$
         .subscribe(drinks => {
           this.drinkService
@@ -114,6 +117,7 @@ export class SimulatorComponent implements OnInit {
             });
         })
         .unsubscribe();
+
       this.users$
         .subscribe(users => {
           this.userService.usersDelete(users.map(c => c.id)).subscribe(() => {
