@@ -2,6 +2,7 @@ package com.mtech.vmcs.model.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+
 import java.util.List;
 
 @Getter

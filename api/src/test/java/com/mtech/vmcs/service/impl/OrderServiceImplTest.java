@@ -1,6 +1,5 @@
 package com.mtech.vmcs.service.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mtech.vmcs.model.entity.Coin;
 import com.mtech.vmcs.model.entity.Drink;
 import com.mtech.vmcs.model.entity.PurchaseOrder;
@@ -18,26 +17,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class OrderServiceImplTest {
 
-  @Mock
-  CoinService coinService;
-  @Mock
-  DrinkService drinkService;
-  @Mock
-  DrinkRepository drinkRepository;
-  @InjectMocks
-  OrderServiceImpl orderService;
-  @Test
-  void purchase() {
-  }
+  @Mock CoinService coinService;
+  @Mock DrinkService drinkService;
+  @Mock DrinkRepository drinkRepository;
+  @InjectMocks OrderServiceImpl orderService;
 
   @Test
-  void undoPurchase(){
+  void purchase() {}
+
+  @Test
+  void undoPurchase() {
     MementoStack<PurchaseOrder> mementoStack = orderService.getMementoStack();
     PurchaseOrder purchaseOrder = new PurchaseOrder();
     List<Coin> coins = new ArrayList<>();
