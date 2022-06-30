@@ -114,7 +114,7 @@ export class CustomerComponent implements OnInit {
   selectDrink(drink: Drink) {
     if (!(this.context.State instanceof SReady)) return;
     if (drink.quantity === 0 || this.selectedDrink) return;
-
+    this.context.request();
     this.selectedDrink = drink;
     this.context.request();
   }
