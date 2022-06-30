@@ -116,7 +116,7 @@ export class CustomerComponent implements OnInit {
     if (drink.quantity === 0 || this.selectedDrink) return;
 
     this.selectedDrink = drink;
-    this.context.State = new SCoinInserted();
+    this.context.request();
   }
 
   insertCoin(coin: Coin | any) {
@@ -143,17 +143,20 @@ export class CustomerComponent implements OnInit {
   }
 
   purchase() {
+    if (!(this.context.State instanceof SCoinInserted)) return;
+
     this.orderService
       .ordersPurchasePost({
         drinkId: this.selectedDrink.id,
         coins: this.collectedCoins,
       })
       .subscribe(({ noChangeAvailable, collectCoins }) => {
-        if (noChangeAvailable) this.context.State = new SNoChange();
+        if (noChangeAvailable)
+          (this.context.State as SCoinInserted).noChange(this.context);
         this.collectCoinsDisplay = collectCoins;
 
         if (!noChangeAvailable) {
-          this.context.State = new SDispensed();
+          (this.context.State as SCoinInserted).next(this.context);
           this.collectCanHereDisplay = this.selectedDrink.name;
         }
 
@@ -207,6 +210,6 @@ export class CustomerComponent implements OnInit {
     this.collectedCoins = [];
     this.invalidCoin = false;
     this.selectedDrink = null;
-    this.context.State = new SReady();
+    this.context.request();
   }
 }
