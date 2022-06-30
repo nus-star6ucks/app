@@ -60,11 +60,11 @@ public class CoinServiceImpl implements CoinService {
       totalCoins += coin.getQuantity() * coin.getValue();
     }
 
-    ArrayList<Integer> quantity = new ArrayList<>(); // coin的quantity列表
-    ArrayList<Integer> value = new ArrayList<>(); // coin的value列表
+    ArrayList<Integer> quantity = new ArrayList<>(); // coin quantity List
+    ArrayList<Integer> value = new ArrayList<>(); // coin value List
     quantity.add(0);
     value.add(0);
-    Integer returnCoins = totalCoins - drinkPrice; // 应找回的金额
+    Integer returnCoins = totalCoins - drinkPrice; // the coins needed to return
     for (Coin storedCoin : storedCoins) {
       quantity.add(storedCoin.getQuantity());
       value.add(storedCoin.getValue());

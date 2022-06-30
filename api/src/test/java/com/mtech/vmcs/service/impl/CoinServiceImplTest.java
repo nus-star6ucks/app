@@ -34,4 +34,25 @@ class CoinServiceImplTest {
 
     verify(coinRepository, times(1)).findAll();
   }
+
+  @Test
+  void createCoins() {
+    coinService.createCoins(anyList());
+    verify(coinRepository, times(1)).saveAll(anyIterable());
+  }
+
+  @Test
+  void updateCoins() {
+    coinService.updateCoins(anyList());
+    verify(coinRepository, times(1)).saveAll(anyIterable());
+  }
+
+  @Test
+  void deleteCoins() {
+    coinService.deleteCoins(anyList());
+    verify(coinRepository, times(1)).deleteAllById(anyIterable());
+  }
+
+  @Test
+  void checkCoin() {}
 }
