@@ -1,13 +1,9 @@
 package com.mtech.vmcs.service.impl;
 
+import com.mtech.vmcs.model.entity.InitialFileData;
 import com.mtech.vmcs.model.entity.Machine;
 import com.mtech.vmcs.repository.MachineRepository;
-import com.mtech.vmcs.service.CoinService;
-import com.mtech.vmcs.service.DrinkService;
-import com.mtech.vmcs.service.MachineService;
-import com.mtech.vmcs.service.UserService;
-import com.mtech.vmcs.service.IInitialFileDataAdapter;
-import com.mtech.vmcs.model.entity.InitialFileData;
+import com.mtech.vmcs.service.*;
 import com.mtech.vmcs.service.impl.initialfiledata.InitialJsonFileDataAdapter;
 import com.mtech.vmcs.service.impl.initialfiledata.InitialYamlFileDataAdapter;
 import lombok.SneakyThrows;
@@ -53,7 +49,10 @@ public class MachineServiceImpl implements MachineService {
   @Override
   public void startSimulation(String filePath) {
     String ext = FilenameUtils.getExtension(filePath);
-    IInitialFileDataAdapter fileDataAdapter = ext.equals("yaml") ? new InitialYamlFileDataAdapter(filePath) : new InitialJsonFileDataAdapter(filePath);
+    IInitialFileDataAdapter fileDataAdapter =
+        ext.equals("yaml")
+            ? new InitialYamlFileDataAdapter(filePath)
+            : new InitialJsonFileDataAdapter(filePath);
 
     InitialFileData initialFileData = fileDataAdapter.read();
 
@@ -67,7 +66,10 @@ public class MachineServiceImpl implements MachineService {
   @Override
   public void stopSimulation(String filePath) {
     String ext = FilenameUtils.getExtension(filePath);
-    IInitialFileDataAdapter fileDataAdapter = ext.equals("yaml") ? new InitialYamlFileDataAdapter(filePath) : new InitialJsonFileDataAdapter(filePath);
+    IInitialFileDataAdapter fileDataAdapter =
+        ext.equals("yaml")
+            ? new InitialYamlFileDataAdapter(filePath)
+            : new InitialJsonFileDataAdapter(filePath);
 
     InitialFileData initialFileData = new InitialFileData();
     initialFileData.setMachines(getAllMachines());

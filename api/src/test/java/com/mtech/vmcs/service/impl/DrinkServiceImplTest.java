@@ -1,24 +1,22 @@
 package com.mtech.vmcs.service.impl;
 
-import com.mtech.vmcs.model.entity.Drink;
 import com.mtech.vmcs.repository.DrinkRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Collections;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.*;
+
 @ExtendWith(MockitoExtension.class)
 class DrinkServiceImplTest {
-  @Mock
-  DrinkRepository drinkRepository;
-  @InjectMocks
-  DrinkServiceImpl drinkService;
+  @Mock DrinkRepository drinkRepository;
+  @InjectMocks DrinkServiceImpl drinkService;
+
   @Test
   void getDrinksByName() {
     drinkService.getDrinksByName(anyString());
