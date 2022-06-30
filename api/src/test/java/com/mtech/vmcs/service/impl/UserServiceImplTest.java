@@ -59,7 +59,7 @@ class UserServiceImplTest {
   }
 
   @Test
-  void login() {
+  void loginSuccess() {
     maintainer = new User(76L, "Maintainer", "123891", "logout");
     when(userRepository.findAllByRole("Maintainer"))
         .thenReturn(Collections.singletonList(maintainer));
@@ -67,8 +67,15 @@ class UserServiceImplTest {
     // login successfully
     when(userRepository.findById(76L)).thenReturn(Optional.of(maintainer));
     assertTrue(userService.login(maintainer));
+  }
 
-    // login failed
+  @Test
+  void loginFailed() {
+    maintainer = new User(76L, "Maintainer", "123891", "logout");
+    when(userRepository.findAllByRole("Maintainer"))
+        .thenReturn(Collections.singletonList(maintainer));
+
+    // login failed when password is wrong
     User maintainerWrongPass = new User(76L, "Maintainer", "123456", "logout");
     assertFalse(userService.login(maintainerWrongPass));
   }
