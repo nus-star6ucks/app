@@ -46,7 +46,11 @@ jacocoTestReport {
   }
   afterEvaluate {
     classDirectories.setFrom(files(classDirectories.files.collect {
-      fileTree(dir: it, exclude: 'com/mtech/vmcs/controller/')
+      fileTree(dir: it,
+        exclude: ['com/mtech/vmcs/controller/',
+                  'com/mtech/vmcs/model/',
+                  'com/mtech/vmcs/VmcsApplication.class'
+        ])
     }))
   }
 }
