@@ -1,0 +1,50 @@
+{
+    "users": [
+        {
+            "id": 13,
+            "role": "Maintainer",
+            "password": "123891",
+            "status": "logout"
+        }
+    ],
+    "machines": [
+        {
+            "id": 14,
+            "name": "Star6ucks",
+            "doorLocked": true,
+            "status": "normal"
+        }
+    ],
+    "coins": [
+        { "id": 15, "name": "5c", "value": 5, "quantity": 2, "weight": 1.0 },
+        { "id": 16, "name": "10c", "value": 10, "quantity": 0, "weight": 1.0 },
+        { "id": 17, "name": "20c", "value": 20, "quantity": 1, "weight": 1.0 },
+        { "id": 18, "name": "50c", "value": 50, "quantity": 1, "weight": 1.0 },
+        { "id": 19, "name": "$1", "value": 100, "quantity": 1, "weight": 1.0 }
+    ],
+    "drinks": [
+        {
+            "id": 20,
+            "name": "Coca-Cola",
+            "price": 75,
+            "quantity": 4,
+            "slotNum": 1
+        },
+        { "id": 21, "name": "Fanta", "price": 89, "quantity": 7, "slotNum": 2 },
+        { "id": 22, "name": "Sarsi", "price": 70, "quantity": 8, "slotNum": 3 },
+        {
+            "id": 23,
+            "name": "Soya Bean",
+            "price": 60,
+            "quantity": 0,
+            "slotNum": 4
+        },
+        {
+            "id": 24,
+            "name": "Coca-Cola",
+            "price": 75,
+            "quantity": 1,
+            "slotNum": 5
+        }
+    ]
+}
