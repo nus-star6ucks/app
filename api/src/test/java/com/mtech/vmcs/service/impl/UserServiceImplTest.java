@@ -57,7 +57,7 @@ class UserServiceImplTest {
 
   @Test
   void deleteUsers() {
-    userService.updateUsers(anyList());
+    userService.deleteUsers(anyList());
     verify(userRepository, times(1)).deleteAllById(anyIterable());
   }
 

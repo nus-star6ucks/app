@@ -88,5 +88,7 @@ public class OrderServiceImpl implements OrderService {
     mementoStack.push(snapshot);
   }
 
-
+  public MementoStack<PurchaseOrder> getMementoStack(){
+    return mementoStack;
+  }
 }

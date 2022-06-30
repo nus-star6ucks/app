@@ -1,30 +1,52 @@
 package com.mtech.vmcs.service.impl;
 
+import com.mtech.vmcs.model.entity.Drink;
+import com.mtech.vmcs.repository.DrinkRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Collections;
 
 @ExtendWith(MockitoExtension.class)
 class DrinkServiceImplTest {
+  @Mock
+  DrinkRepository drinkRepository;
+  @InjectMocks
+  DrinkServiceImpl drinkService;
+  @Test
+  void getDrinksByName() {
+    drinkService.getDrinksByName(anyString());
+    verify(drinkRepository, times(1)).findAllByName(anyString());
+  }
 
   @Test
-  void getDrinksByName() {}
+  void getAllDrinks() {
+    when(drinkRepository.findAll()).thenReturn(Collections.EMPTY_LIST);
+    assertNotNull(drinkService.getAllDrinks());
+    verify(drinkRepository, times(1)).findAll();
+  }
 
   @Test
-  void getAllDrinks() {}
+  void createDrinks() {
+    drinkService.createDrinks(anyList());
+    verify(drinkRepository, times(1)).saveAll(anyIterable());
+  }
 
   @Test
-  void createDrinks() {}
+  void updateDrinks() {
+    drinkService.updateDrinks(anyList());
+    verify(drinkRepository, times(1)).saveAll(anyIterable());
+  }
 
   @Test
-  void updateDrinks() {}
-
-  @Test
-  void deleteDrinks() {}
-
-  @Test
-  void purchase() {}
-
-  @Test
-  void undoPurchase() {}
+  void deleteDrinks() {
+    drinkService.deleteDrinks(anyList());
+    verify(drinkRepository, times(1)).deleteAllById(anyIterable());
+  }
 }
