@@ -8,7 +8,7 @@
       *ngIf="machine$ | async"
       class="tag-status"
       [class.bg-red-600]="(machine$ | async).status === 'stuck'"
-      [class.bg-blue-600]="(machine$ | async).status === 'normal'"
+      [class.bg-teal-600]="(machine$ | async).status === 'normal'"
       [class.bg-gray-600]="(machine$ | async).status === 'unavailable'"
       >Status: {{ (machine$ | async).status }}</span
     >
