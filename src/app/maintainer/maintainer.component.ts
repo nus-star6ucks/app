@@ -109,7 +109,7 @@ export class MaintainerComponent implements OnInit {
         this.currentUser$
           .subscribe(currentUser => {
             this.userService.usersLogoutPost(currentUser).subscribe(() => {
-              this.electronService.ipcRenderer.invoke('refresh-all-states');
+              this.electronService.ipcRenderer.invoke('refresh-machine-states');
             });
           })
           .unsubscribe();
