@@ -21,9 +21,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
-
+import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
-
 
 @ExtendWith(MockitoExtension.class)
 class MachineServiceImplTest {
@@ -240,16 +239,28 @@ class MachineServiceImplTest {
   }
 
   @Test
-  void getAllMachines() {}
+  void getAllMachines() {
+    when(machineRepository.findAll()).thenReturn(Collections.EMPTY_LIST);
+    assertNotNull(machineService.getAllMachines());
+    verify(machineRepository, times(1)).findAll();
+  }
 
   @Test
-  void createMachines() {}
+  void createMachines() {
+    machineService.createMachines(anyList());
+    verify(machineRepository, times(1)).saveAll(anyIterable());
+  }
 
   @Test
-  void updateMachines() {}
+  void updateMachines() {
+    machineService.updateMachines(anyList());
+    verify(machineRepository, times(1)).saveAll(anyIterable());
+  }
 
   @Test
-  void deleteMachines() {}
+  void deleteMachines() {
+    machineService.deleteMachines(anyList());
+    verify(machineRepository, times(1)).deleteAllById(anyIterable());
+  }
 }
-
 
