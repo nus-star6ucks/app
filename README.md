@@ -8,9 +8,9 @@
 3. Run `VmcsApplication.java` on `api/src/main/.../vmcs` through IntelliJ IDEA or VSCode, Spring Boot will take the local port `8081`.
 4. Enter `npm run dev` in the project root directory and electron will take the local port `3344`.
 
-## Config
+## Initial Files
 
-Example import file (save the following as any `.json` file).
+Example import file (save the following as any `.json` file, [YAML version](https://raw.githubusercontent.com/nus-star6ucks/app/dev/example.yaml)).
 
 ```json
 {
