@@ -42,7 +42,6 @@ export class SimulatorComponent implements OnInit {
           const machinesLoaded = machines.length > 0;
           this.users$.subscribe(users => {
             const usersLoaded = users.length > 0;
-
             this.fileLoaded =
               coinsLoaded && drinksLoaded && machinesLoaded && usersLoaded;
           });

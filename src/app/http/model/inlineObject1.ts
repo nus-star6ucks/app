@@ -11,8 +11,30 @@
  */
 
 export interface InlineObject1 {
+  id: number;
   /**
-   * the file path of JSON file
+   * ex. Maintainer
    */
-  filePath?: string;
+  role: InlineObject1.RoleEnum;
+  /**
+   * 6 alphanumeric chars
+   */
+  password: string;
+  /**
+   * [\'login\', \'logout\']
+   */
+  status: InlineObject1.StatusEnum;
+}
+export namespace InlineObject1 {
+  export type RoleEnum = 'Customer' | 'Maintainer' | 'Controller';
+  export const RoleEnum = {
+    Customer: 'Customer' as RoleEnum,
+    Maintainer: 'Maintainer' as RoleEnum,
+    Controller: 'Controller' as RoleEnum,
+  };
+  export type StatusEnum = 'login' | 'logout';
+  export const StatusEnum = {
+    Login: 'login' as StatusEnum,
+    Logout: 'logout' as StatusEnum,
+  };
 }

@@ -45,15 +45,4 @@ public class DrinkController {
     drinkService.deleteDrinks(drinkIds);
     return new ResponseEntity<>(HttpStatus.OK);
   }
-
-  @PostMapping("/purchase")
-  public ResponseEntity<Map<String, Object>> purchase(@RequestBody PurchaseOrder purchaseOrder) {
-    return new ResponseEntity<>(drinkService.purchase(purchaseOrder), HttpStatus.OK);
-  }
-
-  @PostMapping("/purchase/undo")
-  public ResponseEntity<PurchaseOrder> undoPurchase() {
-    drinkService.undoPurchase();
-    return new ResponseEntity<>(HttpStatus.OK);
-  }
 }

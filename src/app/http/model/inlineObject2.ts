@@ -9,32 +9,12 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { Coin } from './coin';
 
 export interface InlineObject2 {
-  id: number;
+  drinkId: number;
   /**
-   * ex. Maintainer
+   * 合并 object 的 quantity
    */
-  role: InlineObject2.RoleEnum;
-  /**
-   * 6 alphanumeric chars
-   */
-  password: string;
-  /**
-   * [\'login\', \'logout\']
-   */
-  status: InlineObject2.StatusEnum;
-}
-export namespace InlineObject2 {
-  export type RoleEnum = 'Customer' | 'Maintainer' | 'Controller';
-  export const RoleEnum = {
-    Customer: 'Customer' as RoleEnum,
-    Maintainer: 'Maintainer' as RoleEnum,
-    Controller: 'Controller' as RoleEnum,
-  };
-  export type StatusEnum = 'login' | 'logout';
-  export const StatusEnum = {
-    Login: 'login' as StatusEnum,
-    Logout: 'logout' as StatusEnum,
-  };
+  coins: Array<Coin>;
 }

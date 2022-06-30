@@ -131,16 +131,7 @@ export class MaintainerComponent implements OnInit {
           currentUser.password = this.password;
           this.userService.usersLoginPost(currentUser).subscribe(() => {
             this.valid = true;
-            this.machine$
-              .subscribe(machine => {
-                machine.doorLocked = false;
-                this.machineService.machinesPut([machine]).subscribe(() => {
-                  this.electronService.ipcRenderer.invoke(
-                    'refresh-machine-states'
-                  );
-                });
-              })
-              .unsubscribe();
+            this.electronService.ipcRenderer.invoke('refresh-machine-states');
           });
         })
         .unsubscribe();

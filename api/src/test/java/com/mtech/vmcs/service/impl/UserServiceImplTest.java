@@ -22,13 +22,16 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class UserServiceImplTest {
 
-  @Mock UserRepository userRepository;
+    @Mock
+    UserRepository userRepository;
 
-  @Mock MachineService machineService;
+    @Mock
+    MachineService machineService;
 
-  @InjectMocks UserServiceImpl userService;
+    @InjectMocks
+    UserServiceImpl userService;
 
-  User maintainer;
+    User maintainer;
 
   @BeforeEach
   void setUp() {}
