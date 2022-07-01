@@ -22,7 +22,7 @@
         <div class="space-y-3">
           <button
             *ngFor="let drink of drinks$ | async"
-            [disabled]="drink.quantity === 0 || isFault"
+            [disabled]="drink.quantity === 0 || isFault || isTerminated"
             class="w-full cursor-pointer btn-solid flex items-center justify-between space-x-2 p-4"
             [class.active]="selectedDrink && drink.id === selectedDrink.id"
             (click)="selectDrink(drink)"
@@ -77,7 +77,7 @@
             <button
               class="btn-solid-small text-xs p-1"
               [class.with-click]="!(isFault || isDispensed)"
-              [disabled]="isFault || isDispensed"
+              [disabled]="isFault || isDispensed || isTerminated"
               (click)="terminateAndReturnCash()">
               Terminate and Return Cash
             </button>
@@ -99,9 +99,9 @@
           }}</span>
           <button
             class="btn-solid-small text-xs ml-2 p-1 with-click"
-            *ngIf="collectCoinsDisplay > 0 && isTerminated"
+            *ngIf="isTerminated"
             (click)="takeout()">
-            Take out
+            {{ collectCoinsDisplay > 0 ? 'Take out' : 'Next' }}
           </button>
           <p class="font-bold">Collect Coins</p>
         </div>
