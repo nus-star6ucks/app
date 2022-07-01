@@ -169,10 +169,10 @@ export class CustomerComponent implements OnInit {
           (this.context.State as SCoinInserted).next(this.context);
         }
 
-        this.collectCanHereDisplay = this.selectedDrink.name;
-
         if (this.faultOnNextTx) {
           this.revertTx();
+        } else {
+          this.collectCanHereDisplay = this.selectedDrink.name;
         }
       });
   }
@@ -190,6 +190,8 @@ export class CustomerComponent implements OnInit {
           this.collectCanHereDisplay = 'STUCK';
           this.machineService.machinesPut([machine]).subscribe(() => {
             this.electronService.ipcRenderer.invoke('refresh-machine-states');
+            this.terminateAndReturnCash();
+            this.collectCanHereDisplay = this.selectedDrink.name;
             this.collectCoinsDisplay = this.collectedCoins.reduce(
               (acc, curr) => (acc += curr.value * curr.quantity),
               0
