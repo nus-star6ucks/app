@@ -76,8 +76,10 @@
           <p class="font-bold mt-1">
             <button
               class="btn-solid-small text-xs p-1"
-              [class.with-click]="!(isFault || isDispensed)"
-              [disabled]="isFault || isDispensed || isTerminated"
+              [class.with-click]="
+                !(isFault || isDispensed || isTerminated || isNochange)
+              "
+              [disabled]="isFault || isDispensed || isTerminated || isNochange"
               (click)="terminateAndReturnCash()">
               Terminate and Return Cash
             </button>
@@ -87,7 +89,7 @@
           <span class="led-small">{{ collectCanHereDisplay }}</span>
           <button
             class="btn-solid-small text-xs ml-2 p-1 with-click"
-            *ngIf="isDispensed"
+            *ngIf="isDispensed || isNochange"
             (click)="takeout()">
             Take out
           </button>

@@ -167,8 +167,9 @@ export class CustomerComponent implements OnInit {
 
         if (!noChangeAvailable) {
           (this.context.State as SCoinInserted).next(this.context);
-          this.collectCanHereDisplay = this.selectedDrink.name;
         }
+
+        this.collectCanHereDisplay = this.selectedDrink.name;
 
         if (this.faultOnNextTx) {
           this.revertTx();
@@ -215,7 +216,8 @@ export class CustomerComponent implements OnInit {
   takeout() {
     if (
       !(this.context.State instanceof SDispensed) &&
-      !(this.context.State instanceof STerminated)
+      !(this.context.State instanceof STerminated) &&
+      !(this.context.State instanceof SNoChange)
     )
       return;
 
