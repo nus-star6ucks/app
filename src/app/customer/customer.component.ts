@@ -44,8 +44,15 @@ export class CustomerComponent implements OnInit {
       if (typeof machine === 'undefined') return;
       if (machine.doorLocked === false) {
         this.terminateAndReturnCash();
+        this.context.State = new SFault();
       } else if (machine?.status !== 'normal') {
         this.context.State = new SFault();
+      } else if (machine.status === 'normal') {
+        if (this.collectCoinsDisplay > 0) {
+          this.context.State = new STerminated();
+        } else {
+          this.context.State = new SReady();
+        }
       }
     });
   }
@@ -151,14 +158,18 @@ export class CustomerComponent implements OnInit {
         coins: this.collectedCoins,
       })
       .subscribe(({ noChangeAvailable, collectCoins }) => {
+        this.electronService.ipcRenderer.invoke('refresh-coin-states');
+        this.electronService.ipcRenderer.invoke('refresh-drink-states');
+
         if (noChangeAvailable)
           (this.context.State as SCoinInserted).noChange(this.context);
         this.collectCoinsDisplay = collectCoins;
 
         if (!noChangeAvailable) {
           (this.context.State as SCoinInserted).next(this.context);
-          this.collectCanHereDisplay = this.selectedDrink.name;
         }
+
+        this.collectCanHereDisplay = this.selectedDrink.name;
 
         if (this.faultOnNextTx) {
           this.revertTx();
@@ -172,6 +183,9 @@ export class CustomerComponent implements OnInit {
     this.orderService.ordersPurchaseUndoPost().subscribe(() => {
       this.machine$
         .subscribe(machine => {
+          this.electronService.ipcRenderer.invoke('refresh-coin-states');
+          this.electronService.ipcRenderer.invoke('refresh-drink-states');
+
           machine.status = 'stuck';
           this.collectCanHereDisplay = 'STUCK';
           this.machineService.machinesPut([machine]).subscribe(() => {
@@ -189,6 +203,7 @@ export class CustomerComponent implements OnInit {
 
   terminateAndReturnCash() {
     this.context.State = new STerminated();
+
     this.collectCoinsDisplay = this.collectedCoins.reduce(
       (acc, curr) => (acc += curr.value * curr.quantity),
       0
@@ -201,9 +216,16 @@ export class CustomerComponent implements OnInit {
   takeout() {
     if (
       !(this.context.State instanceof SDispensed) &&
-      !(this.context.State instanceof STerminated)
+      !(this.context.State instanceof STerminated) &&
+      !(this.context.State instanceof SFault) &&
+      !(this.context.State instanceof SNoChange)
     )
       return;
+
+    if (this.context.State instanceof SFault) {
+      this.collectCoinsDisplay = 0;
+      return;
+    }
 
     this.collectCanHereDisplay = 'NO CAN';
     this.collectCoinsDisplay = 0;

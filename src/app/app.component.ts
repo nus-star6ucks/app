@@ -24,7 +24,8 @@ export class AppComponent implements OnInit {
     private readonly electronService: ElectronService,
     private readonly defaultService: DefaultService,
     private readonly dataService: DataService,
-    private readonly cdr: ChangeDetectorRef
+    private readonly cdr: ChangeDetectorRef,
+    private zone: NgZone
   ) {
     if (electronService.isElectron) {
       console.log(process.env);
@@ -42,24 +43,34 @@ export class AppComponent implements OnInit {
 
   _initElectronIPCListeners() {
     this.electronService.ipcRenderer.on('refresh-all-states', () => {
-      console.log('[Refresh States] All');
-      this.dataService.loadAll(this.cdr);
+      this.zone.run(() => {
+        console.log('[Refresh States] All');
+        this.dataService.loadAll(this.cdr);
+      });
     });
     this.electronService.ipcRenderer.on('refresh-user-states', () => {
-      console.log('[Refresh States] Users');
-      this.dataService.loadUsers(this.cdr);
+      this.zone.run(() => {
+        console.log('[Refresh States] Users');
+        this.dataService.loadUsers(this.cdr);
+      });
     });
     this.electronService.ipcRenderer.on('refresh-machine-states', () => {
-      console.log('[Refresh States] Machines');
-      this.dataService.loadMachines(this.cdr);
+      this.zone.run(() => {
+        console.log('[Refresh States] Machines');
+        this.dataService.loadMachines(this.cdr);
+      });
     });
     this.electronService.ipcRenderer.on('refresh-drink-states', () => {
-      console.log('[Refresh States] Drinks');
-      this.dataService.loadDrinks(this.cdr);
+      this.zone.run(() => {
+        console.log('[Refresh States] Drinks');
+        this.dataService.loadDrinks(this.cdr);
+      });
     });
     this.electronService.ipcRenderer.on('refresh-coin-states', () => {
-      console.log('[Refresh States] Coins');
-      this.dataService.loadCoins(this.cdr);
+      this.zone.run(() => {
+        console.log('[Refresh States] Coins');
+        this.dataService.loadCoins(this.cdr);
+      });
     });
   }
 
