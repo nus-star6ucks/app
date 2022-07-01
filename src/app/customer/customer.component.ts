@@ -125,7 +125,6 @@ export class CustomerComponent implements OnInit {
     this.selectedDrink = drink;
     this.context.request();
   }
-
   insertCoin(coin: Coin | any) {
     if (!(this.context.State instanceof SCoinInserted)) return;
 
