@@ -26,7 +26,8 @@ Example import file (save the following as any `.json` file, [YAML version](http
         {
             "id": 1,
             "name": "Star6ucks",
-            "doorLocked": true
+            "doorLocked": true,
+            "status": "normal"
         }
     ],
     "coins": [
