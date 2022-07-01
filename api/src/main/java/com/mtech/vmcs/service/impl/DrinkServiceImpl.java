@@ -16,11 +16,6 @@ public class DrinkServiceImpl implements DrinkService {
   @Autowired private DrinkRepository drinkRepository;
 
   @Override
-  public List<Drink> getDrinksByName(String name) {
-    return drinkRepository.findAllByName(name);
-  }
-
-  @Override
   public List<Drink> getAllDrinks() {
     return StreamSupport.stream(drinkRepository.findAll().spliterator(), false)
         .collect(Collectors.toList());

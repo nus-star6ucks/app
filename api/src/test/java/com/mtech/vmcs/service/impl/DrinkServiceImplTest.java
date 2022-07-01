@@ -18,12 +18,6 @@ class DrinkServiceImplTest {
   @InjectMocks DrinkServiceImpl drinkService;
 
   @Test
-  void getDrinksByName() {
-    drinkService.getDrinksByName(anyString());
-    verify(drinkRepository, times(1)).findAllByName(anyString());
-  }
-
-  @Test
   void getAllDrinks() {
     when(drinkRepository.findAll()).thenReturn(Collections.EMPTY_LIST);
     assertNotNull(drinkService.getAllDrinks());

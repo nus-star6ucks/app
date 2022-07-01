@@ -19,17 +19,15 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class CoinServiceImplTest {
 
+  List<Coin> storedCoins;
+  List<Coin> insertedCoins;
+  @Mock CoinRepository coinRepository;
+  @InjectMocks CoinServiceImpl coinService;
   private Coin COIN_5C = new Coin(1L, "5c", 5, 1, 1F);
   private Coin COIN_10C = new Coin(2L, "10c", 10, 1, 1F);
   private Coin COIN_20C = new Coin(3L, "20c", 20, 1, 1F);
   private Coin COIN_50C = new Coin(4L, "50c", 50, 1, 1F);
   private Coin COIN_$1 = new Coin(5L, "$1", 100, 1, 1F);
-  List<Coin> storedCoins;
-  List<Coin> insertedCoins;
-
-  @Mock CoinRepository coinRepository;
-
-  @InjectMocks CoinServiceImpl coinService;
 
   @Test
   public void getAllCoins() {
