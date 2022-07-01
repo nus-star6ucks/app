@@ -21,11 +21,6 @@ public class DrinkController {
     return new ResponseEntity<>(drinkService.getAllDrinks(), HttpStatus.OK);
   }
 
-  @GetMapping("/{name}")
-  public ResponseEntity<List<Drink>> getDrinksByName(@PathVariable(value = "name") String name) {
-    return new ResponseEntity<>(drinkService.getDrinksByName(name), HttpStatus.OK);
-  }
-
   @PostMapping
   public ResponseEntity<List<Drink>> createDrinks(@RequestBody List<Drink> drinks) {
     drinkService.createDrinks(drinks);
