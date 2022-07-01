@@ -217,9 +217,15 @@ export class CustomerComponent implements OnInit {
     if (
       !(this.context.State instanceof SDispensed) &&
       !(this.context.State instanceof STerminated) &&
+      !(this.context.State instanceof SFault) &&
       !(this.context.State instanceof SNoChange)
     )
       return;
+
+    if (this.context.State instanceof SFault) {
+      this.collectCoinsDisplay = 0;
+      return;
+    }
 
     this.collectCanHereDisplay = 'NO CAN';
     this.collectCoinsDisplay = 0;

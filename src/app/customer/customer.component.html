@@ -101,7 +101,7 @@
           }}</span>
           <button
             class="btn-solid-small text-xs ml-2 p-1 with-click"
-            *ngIf="isTerminated"
+            *ngIf="isTerminated || (isFault && collectCoinsDisplay > 0)"
             (click)="takeout()">
             {{ collectCoinsDisplay > 0 ? 'Take out' : 'Next' }}
           </button>
