@@ -22,11 +22,7 @@
         <div class="space-y-3">
           <button
             *ngFor="let drink of drinks$ | async"
-            [disabled]="
-              drink.quantity === 0 ||
-              !(machine$ | async)?.doorLocked ||
-              (machine$ | async).status !== 'normal'
-            "
+            [disabled]="drink.quantity === 0 || isFault"
             class="w-full cursor-pointer btn-solid flex items-center justify-between space-x-2 p-4"
             [class.active]="selectedDrink && drink.id === selectedDrink.id"
             (click)="selectDrink(drink)"
@@ -65,19 +61,8 @@
           <button
             *ngFor="let coin of coins$ | async"
             class="btn-solid-small px-2 h-10"
-            [class.with-click]="
-              !(
-                !selectedDrink ||
-                !(machine$ | async)?.doorLocked ||
-                txCompleted
-              )
-            "
-            [disabled]="
-              !selectedDrink ||
-              !(machine$ | async)?.doorLocked ||
-              txCompleted ||
-              (machine$ | async).status !== 'normal'
-            "
+            [class.with-click]="isCoinInserted"
+            [disabled]="!isCoinInserted"
             (click)="insertCoin(coin)">
             {{ coin.name }}
           </button>
@@ -85,22 +70,14 @@
       </section>
       <section class="grid grid-cols-2 gap-2">
         <div class="border-2 border-black rounded-md p-4 uppercase">
-          <span
-            class="led bg-red-600"
-            [class.opacity-30]="!noChangeAvailableDisplay"
+          <span class="led bg-red-600" [class.opacity-30]="!isNochange"
             >No Change Available</span
           >
           <p class="font-bold mt-1">
             <button
               class="btn-solid-small text-xs p-1"
-              [class.with-click]="
-                !(txCompleted || !(machine$ | async)?.doorLocked)
-              "
-              [disabled]="
-                txCompleted ||
-                !(machine$ | async)?.doorLocked ||
-                (machine$ | async).status !== 'normal'
-              "
+              [class.with-click]="!(isFault || isDispensed)"
+              [disabled]="isFault || isDispensed"
               (click)="terminateAndReturnCash()">
               Terminate and Return Cash
             </button>
@@ -110,7 +87,7 @@
           <span class="led-small">{{ collectCanHereDisplay }}</span>
           <button
             class="btn-solid-small text-xs ml-2 p-1 with-click"
-            *ngIf="txCompleted && (machine$ | async).status === 'normal'"
+            *ngIf="isDispensed"
             (click)="takeout()">
             Take out
           </button>
@@ -120,6 +97,12 @@
           <span class="led-small">{{
             invalidCoin ? 'INVALID' : collectCoinsDisplay + 'c'
           }}</span>
+          <button
+            class="btn-solid-small text-xs ml-2 p-1 with-click"
+            *ngIf="collectCoinsDisplay > 0 && isTerminated"
+            (click)="takeout()">
+            Take out
+          </button>
           <p class="font-bold">Collect Coins</p>
         </div>
         <div class="border-2 border-black rounded-md p-4 uppercase">
