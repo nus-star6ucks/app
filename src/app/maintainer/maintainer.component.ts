@@ -78,7 +78,7 @@ export class MaintainerComponent implements OnInit {
           return c;
         });
         this.coinService.coinsPut(updatedCoins).subscribe(() => {
-          console.log(''); // do nothing
+          this.electronService.ipcRenderer.invoke('refresh-coin-states');
         });
         this.computeTotalCashHeld();
       })
