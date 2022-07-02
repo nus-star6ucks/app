@@ -111,6 +111,7 @@ export class MaintainerComponent implements OnInit {
             this.userService.usersLogoutPost(currentUser).subscribe(() => {
               this.electronService.ipcRenderer.invoke('refresh-machine-states');
               this.electronService.ipcRenderer.invoke('refresh-drink-states');
+              this.electronService.ipcRenderer.invoke('refresh-user-states');
             });
           })
           .unsubscribe();
@@ -130,9 +131,16 @@ export class MaintainerComponent implements OnInit {
       this.currentUser$
         .subscribe(currentUser => {
           currentUser.password = this.password;
-          this.userService.usersLoginPost(currentUser).subscribe(() => {
-            this.valid = true;
-            this.electronService.ipcRenderer.invoke('refresh-machine-states');
+          this.userService.usersLoginPost(currentUser).subscribe({
+            complete: () => {
+              this.valid = true;
+              this.electronService.ipcRenderer.invoke('refresh-machine-states');
+              this.electronService.ipcRenderer.invoke('refresh-user-states');
+            },
+            error: () => {
+              this.valid = false;
+              this.electronService.ipcRenderer.invoke('refresh-machine-states');
+            },
           });
         })
         .unsubscribe();
